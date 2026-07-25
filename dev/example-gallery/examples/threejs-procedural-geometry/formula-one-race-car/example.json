@@ -1,0 +1,37 @@
+{
+  "title": "Formula One Race Car",
+  "description": "A complete open-wheel race car built as one continuous parameter-curve loft from nose to engine cover, with a recess-opening cockpit section, superellipse sidepods carrying a real inlet aperture, spanwise airfoil wing lofts, a two-plane livery projector, a load-deflected tyre carcass, and per-part triangle evidence.",
+  "backend": "WebGPU / TSL node materials",
+  "techniques": [
+    "monotone parameter-curve tracks driving one continuous hull loft",
+    "semantic section control points with a cockpit recess parameter",
+    "superellipse sidepod sections with undercut and aero shelf",
+    "spanwise airfoil lofts with chord, incidence, camber and dihedral",
+    "authored outline plates with holes, bevels and 3D warps",
+    "two-plane world-normal livery projector",
+    "measured tyre carcass with baked contact-patch deflection",
+    "generated carbon twill, sidewall and display textures",
+    "per-part triangle diagnostics"
+  ],
+  "defaultViewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "defaultDpr": 1,
+  "debugModes": [
+    { "value": "final", "label": "Final" },
+    { "value": "topology", "label": "Assembly topology" },
+    { "value": "no-livery", "label": "Bare structure" },
+    { "value": "projector", "label": "Projector planes" },
+    { "value": "rolling", "label": "Rolling carcass" }
+  ],
+  "controls": [
+    "orbit",
+    "pan",
+    "pause",
+    "timeScale",
+    "dpr",
+    "debugMode",
+    "capture"
+  ]
+}

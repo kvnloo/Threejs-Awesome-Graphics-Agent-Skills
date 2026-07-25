@@ -1,0 +1,38 @@
+{
+  "title": "Sport Motorcycle",
+  "description": "A complete supersport machine emitted from one steering-geometry contract: a slot-tagged mesh writer, revolved wheels with tangentially varying spoke arms, a rotor alpha mask, an upright-frame twin-spar rail, bore-local engine volumes, superellipse bodywork with real panel shells, a hanging chain, and a signed-volume orientation guard.",
+  "backend": "WebGPU / TSL node materials",
+  "techniques": [
+    "steering-axis placement of every front-end part from rake and triple offset",
+    "semantic mesh writer with per-part material slots",
+    "revolve, parallel-transport and upright-frame sweeps",
+    "thick panel shells with authored rim thickness",
+    "superellipse bodywork sections with exponent-carried creases",
+    "petal rotor alpha mask and spoke-arm lofts",
+    "catenary-sampled chain with per-link plates",
+    "signed-volume orientation guard",
+    "per-slot triangle diagnostics"
+  ],
+  "defaultViewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "defaultDpr": 1,
+  "debugModes": [
+    { "value": "final", "label": "Final" },
+    { "value": "topology", "label": "Assembly topology" },
+    { "value": "slots", "label": "Material slots" },
+    { "value": "normals", "label": "World normals" },
+    { "value": "nobody", "label": "Bodywork removed" },
+    { "value": "noglass", "label": "No glass" }
+  ],
+  "controls": [
+    "orbit",
+    "pan",
+    "pause",
+    "timeScale",
+    "dpr",
+    "debugMode",
+    "capture"
+  ]
+}

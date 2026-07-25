@@ -68,12 +68,14 @@
     "threejs-procedural-geometry": {
       "classification": "example-required",
       "evidence": [
+        "threejs-procedural-geometry/formula-one-race-car",
+        "threejs-procedural-geometry/sport-motorcycle",
         "threejs-procedural-geometry/porcelain-brass-submarine",
         "threejs-procedural-geometry/sculpted-gallery-frame",
         "threejs-procedural-vegetation/structured-ash-growth",
         "threejs-procedural-architecture/procedural-financial-tower"
       ],
-      "rationale": "Complete hard-surface assemblies, shell and fin lofts, profile sweeps, branch rings, and semantic mesh compilation cannot be reconstructed reliably from prose alone."
+      "rationale": "Complete hard-surface assemblies, vehicle-scale parameter-curve lofts, recess-opening sections, spanwise airfoil lofts, paint projectors, shell and fin lofts, profile sweeps, branch rings, and semantic mesh compilation cannot be reconstructed reliably from prose alone."
     },
     "threejs-procedural-materials": {
       "classification": "example-required",
@@ -106,9 +108,10 @@
     "threejs-procedural-vfx": {
       "classification": "example-required",
       "evidence": [
-        "threejs-procedural-vfx/reentry-plasma"
+        "threejs-procedural-vfx/reentry-plasma",
+        "threejs-procedural-vfx/holographic-shape-transition"
       ],
-      "rationale": "Layered shells, wakes, sparks, pooling, and HDR contribution hierarchy require runnable evidence."
+      "rationale": "Layered shells, wakes, sparks, pooling, additive rim-shell projections with footprint-filtered banding, and HDR contribution hierarchy require runnable evidence."
     },
     "threejs-raymarched-space-effects": {
       "classification": "example-required",
@@ -154,7 +157,7 @@
         "threejs-spectral-ocean/stylized-above-below-ocean",
         "threejs-spectral-ocean/submerged-snell-ocean"
       ],
-      "rationale": "Spectral synthesis, staged FFTs, derivatives, persistent foam, hybrid refraction, surface-anchored Snell reprojection, and full underwater-medium optics are implementation-critical."
+      "rationale": "Spectral synthesis, staged FFTs, derivatives, persistent foam, hybrid refraction, exact dielectric Snell/TIR optics with forward-projected structures, and full underwater-medium optics are implementation-critical."
     },
     "threejs-temporal-surfaces": {
       "classification": "example-required",

@@ -4,7 +4,9 @@
     "threejs-procedural-geometry/porcelain-brass-submarine": [
       {
         "source": "author-local-submarine",
-        "files": ["submarine.html"],
+        "files": [
+          "submarine.html"
+        ],
         "mechanisms": [
           "240-sample tilted-collar hull plan compiled to 56 rings by 128 radial segments with accumulated-distance UVs",
           "shared grid loft, Z-axis lathe, parallel-transport tube sweep, and lens-section fin loft emitters",
@@ -845,60 +847,58 @@
         "source": "pearl-sea-park",
         "files": [
           "src/core/prng.ts",
-          "src/core/quality.ts",
-          "src/core/noise2.ts",
           "src/render/tslNoise.ts",
           "src/render/grade.ts",
           "src/render/pipeline.ts",
-          "src/sea/oceanSpectrum.ts",
-          "src/sea/fftCompute.ts",
-          "src/sea/waveSim.ts",
-          "src/sea/oceanSurfaceMaterial.ts",
-          "src/sea/oceanSkirtGeometry.ts",
-          "src/sea/caustics.ts",
-          "src/sea/current.ts",
-          "src/sea/medium.ts",
-          "src/sea/seaSystem.ts",
           "src/sky/sun.ts",
           "src/sky/skyRadiance.ts",
           "src/sky/skySystem.ts",
+          "src/sea/opticalConstants.ts",
+          "src/sea/oceanSpectrum.ts",
+          "src/sea/fftCompute.ts",
+          "src/sea/waveSim.ts",
+          "src/sea/oceanSkirtGeometry.ts",
+          "src/sea/caustics.ts",
+          "src/sea/current.ts",
+          "src/sea/oceanFoam.ts",
+          "src/sea/wakeFoamMap.ts",
+          "src/sea/interfaceStructureLayer.ts",
+          "src/sea/oceanSurfaceMaterial.ts",
+          "src/sea/seabedRadiance.ts",
+          "src/sea/medium.ts",
+          "src/sea/seaSystem.ts",
+          "src/sea/waterlineProbe.ts",
+          "src/world/seabedSurface.ts",
           "src/world/terrain.ts",
-          "src/world/terrainHeight.ts",
-          "src/world/arrival.ts",
           "dev_docs/systems/sea-and-sky.md",
           "dev_docs/systems/undersea-medium.md",
           "dev_docs/systems/render-pipeline.md"
         ],
         "mechanisms": [
-          "three deterministic 256 squared JONSWAP and TMA cascades transformed as packed height and horizontal-displacement fields in WebGPU workgroups",
-          "fold-aware double-sided ocean shading controlled by one camera-medium state",
-          "water-to-air Snell refraction reprojected from the displaced interface with depth-side and ray-alignment rejection",
-          "exact dielectric Fresnel with total internal reflection and a shared HDR sky function",
-          "per-channel aquatic extinction and directional in-scatter composited over scene depth before bloom",
-          "differential-area caustics shared by lit underwater surfaces and a full-resolution jittered god-ray march",
-          "camera-following drifting particulates plus AgX output and a generated 32-cube display grade",
-          "procedural sand-bed ripples, a horizon-closing far saucer, and a simplified seabed-rooted water-crossing inspection tower"
+          "three deterministic 256 squared JONSWAP and TMA cascades transformed as packed height and horizontal-displacement fields in WebGPU workgroups with explicit barriers",
+          "fold-aware double-sided ocean shading controlled by one camera-medium state, with pixel-footprint cascade, vertex-displacement and normal-flatten keeps",
+          "exact unpolarised dielectric Fresnel on both sides with a derivative-filtered critical-angle transmission mask",
+          "total internal reflection against a physically bright silvery-teal underside close to the medium's horizontal ambient",
+          "transmitted-sun lobe convolved with the measured per-pixel normal spread and rescaled by the surviving exponent, conserving lobe energy at the window rim",
+          "critical-angle-bracketed crossing solve and forward projection of opposite-medium opaque structures into a shared half-resolution target",
+          "per-channel aquatic extinction and directional in-scatter composited over scene depth before bloom, with a coherent above-water no-op branch",
+          "differential-area caustics drawn three by three into one wrapping tile, read by surfaces through a footprint fade to their conserved mean and by the god-ray march through the exact sampler",
+          "full-resolution jittered god-ray march over the bounded caustic field with tiered step counts",
+          "camera-following curl-driven particulates blended through opacityNode",
+          "four-population foam coverage feeding one thickness-graded shading path with mean-preserving footprint keeps",
+          "procedural sand ripples restored analytically as a direct-light ratio, a horizon-closing far saucer, and AgX output with a generated 32-cube grade and vignette"
         ],
         "boundary": "reference-extraction",
         "divergences": [
-          "the camera-medium state is fixed submerged because this inspection example intentionally prevents waterline crossing",
-          "the tower keeps the seabed-rooted piles, underwater bracing, deck, canopy, and headframe silhouette but is simplified as explicitly requested",
-          "the focused render graph omits GTAO, adaptive exposure readback, dynamic-resolution control, and cached shadow clipmaps because they are not part of the underwater optical effect",
-          "the focused seabed keeps a perfectly flat central plateau and the exact 680-to-1150-metre noisy saucer rise while omitting gameplay-specific basins, trenches, and dunes"
+          "the camera-medium state is fixed submerged because this inspection example intentionally prevents waterline crossing, so the displaced-waterline probe and its asynchronous height copy are not built",
+          "the above-water optical tier is not wired: the world-anchored undersea radiance capture, the bounded planar mirror reflection pass and the baked surface sun-shadow mask are omitted, and the material's optional node bundles for them are declared as local interfaces",
+          "the vessel wake foam field is available but constructed as null, because the inspection scene has no vessels to splat into it",
+          "marine aerial perspective is omitted: it is an above-water term and a strict no-op underwater",
+          "the focused render graph omits GTAO, adaptive exposure readback, dynamic-resolution control and cached shadow clipmaps because they are not part of the underwater optical effect",
+          "the bare-seabed height field bake is reduced to the direct-light share constant the surface material consumes, because its only other consumer is the omitted above-water transmission path",
+          "the focused seabed keeps a perfectly flat central plateau and the exact 680-to-1150-metre noisy saucer rise while omitting scene-specific basins, trenches and dunes",
+          "the tower keeps the seabed-rooted piles, underwater bracing, deck, canopy and headframe silhouette but is simplified as explicitly requested, and is registered with the interface layer as the scene-scale forward-projection case"
         ]
-      },
-      {
-        "source": "pearl-sea-park-sand-normal-fix",
-        "files": [
-          "src/world/terrain.ts"
-        ],
-        "mechanisms": [
-          "procedural sand-ripple slopes accumulated onto the geometry normal in terrain-local space",
-          "the resolved terrain-local normal transformed exactly once through transformNormalToView",
-          "the resulting view-space vector returned to the node-material normal hook so camera rotation does not rotate the apparent lighting"
-        ],
-        "boundary": "reference-extraction",
-        "divergences": []
       }
     ],
     "threejs-temporal-surfaces/touch-history-frost": [
@@ -1194,7 +1194,10 @@
     "threejs-procedural-materials/hybrid-soil-moss-surface": [
       {
         "source": "grass-system-threejs",
-        "files": ["src/main.js", "src/model.js"],
+        "files": [
+          "src/main.js",
+          "src/model.js"
+        ],
         "mechanisms": [
           "five-octave simplex mound field shared by vertex displacement and finite-difference macro normals",
           "coverage-thresholded broad mounds with fine drift and edge taper",
@@ -1205,25 +1208,66 @@
           "model-locked upward-facing moss accumulation with displaced thickness and shared moss identity"
         ],
         "assets": [
-          { "sourcePath": "public/Ground103_1K-JPG_AmbientOcclusion.jpg", "localPath": "skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/Ground103_1K-JPG_AmbientOcclusion.jpg" },
-          { "sourcePath": "public/Ground103_1K-JPG_Color.jpg", "localPath": "skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/Ground103_1K-JPG_Color.jpg" },
-          { "sourcePath": "public/Ground103_1K-JPG_Displacement.jpg", "localPath": "skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/Ground103_1K-JPG_Displacement.jpg" },
-          { "sourcePath": "public/Ground103_1K-JPG_NormalGL.jpg", "localPath": "skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/Ground103_1K-JPG_NormalGL.jpg" },
-          { "sourcePath": "public/Ground103_1K-JPG_Roughness.jpg", "localPath": "skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/Ground103_1K-JPG_Roughness.jpg" },
-          { "sourcePath": "public/Moss002_1K-JPG_AmbientOcclusion.jpg", "localPath": "skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/moss/Moss002_1K-JPG_AmbientOcclusion.jpg" },
-          { "sourcePath": "public/Moss002_1K-JPG_Color.jpg", "localPath": "skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/moss/Moss002_1K-JPG_Color.jpg" },
-          { "sourcePath": "public/Moss002_1K-JPG_NormalGL.jpg", "localPath": "skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/moss/Moss002_1K-JPG_NormalGL.jpg" },
-          { "sourcePath": "public/Moss002_1K-JPG_Roughness.jpg", "localPath": "skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/moss/Moss002_1K-JPG_Roughness.jpg" },
-          { "sourcePath": "public/old_rusty_car_2.glb", "localPath": "dev/example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/old_rusty_car_2.glb" }
+          {
+            "sourcePath": "public/Ground103_1K-JPG_AmbientOcclusion.jpg",
+            "localPath": "skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/Ground103_1K-JPG_AmbientOcclusion.jpg"
+          },
+          {
+            "sourcePath": "public/Ground103_1K-JPG_Color.jpg",
+            "localPath": "skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/Ground103_1K-JPG_Color.jpg"
+          },
+          {
+            "sourcePath": "public/Ground103_1K-JPG_Displacement.jpg",
+            "localPath": "skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/Ground103_1K-JPG_Displacement.jpg"
+          },
+          {
+            "sourcePath": "public/Ground103_1K-JPG_NormalGL.jpg",
+            "localPath": "skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/Ground103_1K-JPG_NormalGL.jpg"
+          },
+          {
+            "sourcePath": "public/Ground103_1K-JPG_Roughness.jpg",
+            "localPath": "skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/Ground103_1K-JPG_Roughness.jpg"
+          },
+          {
+            "sourcePath": "public/Moss002_1K-JPG_AmbientOcclusion.jpg",
+            "localPath": "skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/moss/Moss002_1K-JPG_AmbientOcclusion.jpg"
+          },
+          {
+            "sourcePath": "public/Moss002_1K-JPG_Color.jpg",
+            "localPath": "skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/moss/Moss002_1K-JPG_Color.jpg"
+          },
+          {
+            "sourcePath": "public/Moss002_1K-JPG_NormalGL.jpg",
+            "localPath": "skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/moss/Moss002_1K-JPG_NormalGL.jpg"
+          },
+          {
+            "sourcePath": "public/Moss002_1K-JPG_Roughness.jpg",
+            "localPath": "skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/moss/Moss002_1K-JPG_Roughness.jpg"
+          },
+          {
+            "sourcePath": "public/old_rusty_car_2.glb",
+            "localPath": "dev/example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/old_rusty_car_2.glb"
+          }
         ],
         "boundary": "reference-extraction",
-        "divergences": ["the example is named as a hybrid PBR/procedural material because soil and moss identity remain texture-backed", "grass, clouds, post-processing, and GUI are omitted", "the rusty-car GLB is reused from the existing gallery asset instead of copied again", "diagnostic branches are added without changing the final material path"]
+        "divergences": [
+          "the example is named as a hybrid PBR/procedural material because soil and moss identity remain texture-backed",
+          "grass, clouds, post-processing, and GUI are omitted",
+          "the rusty-car GLB is reused from the existing gallery asset instead of copied again",
+          "diagnostic branches are added without changing the final material path"
+        ]
       }
     ],
     "threejs-procedural-vegetation/procedural-surface-ivy": [
       {
         "source": "vegetation-generator-threejs",
-        "files": ["src/ivy.ts", "src/flowers.ts", "src/leafTexture.ts", "src/wind.ts", "src/bvh.ts"],
+        "files": [
+          "src/ivy.ts",
+          "src/flowers.ts",
+          "src/leafTexture.ts",
+          "src/wind.ts",
+          "src/bvh.ts"
+        ],
         "mechanisms": [
           "seeded Catmull-Rom main stem repeatedly reprojected onto arbitrary target meshes",
           "tangent-plane creep, alternating recursive branches, surface loss droop, and BVH first-hit acceleration",
@@ -1232,28 +1276,47 @@
           "instanced bud-to-umbel bloom spring and deterministic growth reveal"
         ],
         "boundary": "reference-extraction",
-        "divergences": ["the gallery owns a deterministic pre-authored stroke instead of pointer painting UI", "tree mode, app controls, HUD, and imported-model workflow are omitted", "the original TypeScript modules are copied byte-for-byte and a thin entry module only re-exports them for the gallery transpiler"]
+        "divergences": [
+          "the gallery owns a deterministic pre-authored stroke instead of pointer painting UI",
+          "tree mode, app controls, HUD, and imported-model workflow are omitted",
+          "the original TypeScript modules are copied byte-for-byte and a thin entry module only re-exports them for the gallery transpiler"
+        ]
       }
     ],
     "threejs-temporal-surfaces/refractive-window-rain": [
       {
         "source": "rainy-window",
-        "files": ["js/script.js", "shaders/rain.frag"],
+        "files": [
+          "js/script.js",
+          "shaders/rain.frag"
+        ],
         "mechanisms": [
           "static plus two travelling droplet layers with hashed cell offsets and trail droplets",
           "finite-difference coverage normal driving background refraction",
           "stochastic disc blur with runtime iteration budget",
           "aspect-fill correction, cool color shift, optional lightning, vignette, and brightness"
         ],
-        "assets": [{ "sourcePath": "media/image.webp", "localPath": "dev/example-gallery/examples/threejs-temporal-surfaces/refractive-window-rain/assets/background.webp" }],
+        "assets": [
+          {
+            "sourcePath": "media/image.webp",
+            "localPath": "dev/example-gallery/examples/threejs-temporal-surfaces/refractive-window-rain/assets/background.webp"
+          }
+        ],
         "boundary": "reference-extraction",
-        "divergences": ["the original fragment shader is copied byte-for-byte", "the gallery preserves the fixed fullscreen orthographic pass and disables camera interaction", "wallpaper integration, file picker, GUI, and video background handling remain dev/runtime concerns"]
+        "divergences": [
+          "the original fragment shader is copied byte-for-byte",
+          "the gallery preserves the fixed fullscreen orthographic pass and disables camera interaction",
+          "wallpaper integration, file picker, GUI, and video background handling remain dev/runtime concerns"
+        ]
       }
     ],
     "threejs-parallax-occlusion-mapping/silhouette-relief": [
       {
         "source": "threejs-silhouette-pom",
-        "files": ["ParallaxOcclusion.js", "index.html"],
+        "files": [
+          "ParallaxOcclusion.js",
+          "index.html"
+        ],
         "mechanisms": [
           "adaptive tangent-space TSL height march with final-layer interpolation and gradient-safe sampling",
           "bounded flat and curvature-aware silhouette coverage with horizon chase and trimming",
@@ -1262,7 +1325,94 @@
           "maskShadowNode carving plus marched shadow depth and received-shadow positions"
         ],
         "boundary": "reference-extraction",
-        "divergences": ["ParallaxOcclusion.js is copied byte-for-byte", "the gallery retains the full procedural wall, deck, columns, and two-pipe composition", "GUI, inspector, and optional bloom are omitted while the camera is constrained above the deck"]
+        "divergences": [
+          "ParallaxOcclusion.js is copied byte-for-byte",
+          "the gallery retains the full procedural wall, deck, columns, and two-pipe composition",
+          "GUI, inspector, and optional bloom are omitted while the camera is constrained above the deck"
+        ]
+      }
+    ],
+    "threejs-procedural-vfx/holographic-shape-transition": [
+      {
+        "source": "holographic-shader-visualizer",
+        "files": [
+          "src/shaders/vertexShader.glsl.js",
+          "src/shaders/fragmentShader.glsl.js",
+          "src/constants/params.js",
+          "src/utils/threeHelpers.js",
+          "src/hooks/useHologram.js"
+        ],
+        "mechanisms": [
+          "additive depth-write-free projection shell whose silhouette is carried by squared Fresnel incidence with a grazing falloff",
+          "object-space scanline bands phased on world height at 20 bands per metre drifting at 0.2 metres per second",
+          "height-phased glitch gate built from three incommensurate sines through a smoothstep, displacing world XZ",
+          "one shared normalised sweep range spanning the union of every shape's bounding box with 0.1 metre end margins",
+          "complementary fragment discards that hand the current shape to the next without overlapping coverage",
+          "index-gated participation so an arbitrarily large shape library costs one skipped draw each",
+          "linear 1.5 second progress ramp inside a 4 second dwell with a 0.5 radian per second two-axis spin"
+        ],
+        "boundary": "reference-extraction",
+        "divergences": [
+          "rim incidence is resolved in view space from the inverse-transpose normal matrix and the displaced point's view position instead of a bare model-basis normal multiply, which is exact for rotation and uniform scale and correct under non-uniform scale",
+          "the scanline band is footprint-filtered with fwidth and dissolved into its own 0.25 mean between two samples per period and one, because the band is an unfiltered aliasing source at any frequency",
+          "the tween library is replaced by the mathematically identical linear zero-to-one ramp over the same 1.5 seconds",
+          "renderer, camera, orbit limits, ambient/directional/point lights, the metallic plinth, and the three geometries live in the gallery adapter",
+          "the presentation HUD, screen-wide scanline overlay, vignette, and colour control panel are omitted",
+          "the gallery adds scanline, Fresnel, sweep-range, and glitch-magnitude diagnostic modes through one uniform without changing the final branch"
+        ]
+      }
+    ],
+    "threejs-procedural-geometry/formula-one-race-car": [
+      {
+        "source": "author-local-vehicles",
+        "files": [
+          "f1_race_car.html"
+        ],
+        "mechanisms": [
+          "shape-preserving monotone cubic parameter tracks sampled at 168 longitudinal stations driving one continuous nose-to-engine-cover loft at 96 ring resolution",
+          "thirteen-point semantic half-section whose cockpit recess opens and closes inside the section itself, so nose, tub and engine cover stay one surface",
+          "four-quadrant superellipse sidepod sections with independent exponents plus a lower-outboard undercut and a flat shoulder shelf",
+          "spanwise airfoil lofts carrying chord, incidence, camber, camber position, blunt trailing edge and dihedral per station",
+          "authored outline plates extruded with bevels, real holes and three-dimensional warps for endplates, fences, strakes and louvres",
+          "two-plane world-normal livery projector with a normalised plane blend and an under-car kill mask",
+          "measured tyre carcass revolved from a bead-to-crown profile with a baked contact-patch deflection and a second undeflected carcass",
+          "per-part triangle and vertex evidence over 62 emitted geometries totalling 375,964 unique triangles"
+        ],
+        "boundary": "reference-extraction",
+        "divergences": [
+          "renderer, camera, orbit controls, ground and lighting live in the gallery adapter, which uses the shared inspection studio rig rather than the generated white cyclorama environment and bloom",
+          "the studio cyclorama sweep geometry and its analytic contact-occlusion ground node are gallery-owned scene dressing",
+          "the boot veil, presentation HUD, authored view presets, exposure slider and part-report button are omitted",
+          "the gallery exposes topology, bare-structure, projector-plane and rolling-carcass diagnostics through the model's own uniforms",
+          "the gallery uses the package-installed Three.js revision while retaining the supplied dimension, geometry, material and motion contracts"
+        ]
+      }
+    ],
+    "threejs-procedural-geometry/sport-motorcycle": [
+      {
+        "source": "author-local-vehicles",
+        "files": [
+          "motorcycle.html"
+        ],
+        "mechanisms": [
+          "steering-geometry spine: every front-end part is placed at a stated distance along the fork axis, so rake and triple-clamp offset propagate to yokes, bars, calipers and fender without a hand-placed transform",
+          "semantic mesh writer with per-part material slots, mirrored pairing, and instanced fastener matrices",
+          "revolve, parallel-transport sweep and world-up sweep emitters plus thick panel shells with authored rim thickness",
+          "spoked wheel arms whose tangential width, axial depth and dish all vary along the radius",
+          "petal rotor alpha mask generated with its own drilling and carrier arms",
+          "four-quadrant superellipse bodywork sections whose exponents carry soft crowns over knife-edged lower creases",
+          "catenary-sampled chain with per-link plates around two sprockets",
+          "signed-volume orientation guard that flips winding and normals on any inside-out closed body",
+          "per-slot triangle evidence over 267 emitted parts totalling 303,708 triangles with 87 orientation fixups"
+        ],
+        "boundary": "reference-extraction",
+        "divergences": [
+          "renderer, camera, orbit controls and lighting live in the gallery adapter, which uses the shared inspection studio rig rather than the two-key plus hemisphere product rig, generated equirect environment and bloom",
+          "the studio floor plane and its material are gallery-owned scene dressing",
+          "the boot screen, presentation HUD, authored view presets, turntable, exposure slider, tessellation tiers and part list are omitted",
+          "the gallery drives the model's own topology, slot, normal, bodywork-removed and glass-removed diagnostic modes",
+          "the gallery uses the package-installed Three.js revision while retaining the supplied dimension, geometry and material contracts"
+        ]
       }
     ]
   }

@@ -6,7 +6,12 @@
       "routes": [
         {
           "skill": "threejs-camera-direction",
-          "signals": ["chase", "side", "camera", "handoff"]
+          "signals": [
+            "chase",
+            "side",
+            "camera",
+            "handoff"
+          ]
         }
       ]
     },
@@ -15,7 +20,12 @@
       "routes": [
         {
           "skill": "threejs-procedural-animation",
-          "signals": ["docking", "staging", "rotating-frame", "springs"]
+          "signals": [
+            "docking",
+            "staging",
+            "rotating-frame",
+            "springs"
+          ]
         }
       ]
     },
@@ -24,7 +34,11 @@
       "routes": [
         {
           "skill": "threejs-procedural-fields",
-          "signals": ["scalar/vector fields", "causal masks", "domain warping"]
+          "signals": [
+            "scalar/vector fields",
+            "causal masks",
+            "domain warping"
+          ]
         }
       ]
     },
@@ -33,7 +47,11 @@
       "routes": [
         {
           "skill": "threejs-procedural-materials",
-          "signals": ["authored frame pbr", "specular aa", "materials"]
+          "signals": [
+            "authored frame pbr",
+            "specular aa",
+            "materials"
+          ]
         }
       ]
     },
@@ -42,7 +60,11 @@
       "routes": [
         {
           "skill": "threejs-procedural-geometry",
-          "signals": ["sculpted rails", "semantic mesh writers", "material groups"]
+          "signals": [
+            "sculpted rails",
+            "semantic mesh writers",
+            "material groups"
+          ]
         }
       ]
     },
@@ -51,7 +73,12 @@
       "routes": [
         {
           "skill": "threejs-procedural-geometry",
-          "signals": ["complete hard-surface object assemblies", "tilted shell lofts", "UV-owned apertures", "fin lofts"]
+          "signals": [
+            "complete hard-surface object assemblies",
+            "tilted shell lofts",
+            "UV-owned apertures",
+            "fin lofts"
+          ]
         }
       ]
     },
@@ -60,7 +87,11 @@
       "routes": [
         {
           "skill": "threejs-procedural-vegetation",
-          "signals": ["trees", "foliage", "wind deformation"]
+          "signals": [
+            "trees",
+            "foliage",
+            "wind deformation"
+          ]
         }
       ]
     },
@@ -69,7 +100,11 @@
       "routes": [
         {
           "skill": "threejs-procedural-architecture",
-          "signals": ["buildings", "façade grammars", "ornaments"]
+          "signals": [
+            "buildings",
+            "façade grammars",
+            "ornaments"
+          ]
         }
       ]
     },
@@ -78,7 +113,11 @@
       "routes": [
         {
           "skill": "threejs-procedural-planets",
-          "signals": ["planets", "biome fields", "spherical detail"]
+          "signals": [
+            "planets",
+            "biome fields",
+            "spherical detail"
+          ]
         }
       ]
     },
@@ -87,7 +126,11 @@
       "routes": [
         {
           "skill": "threejs-atmosphere-aerial-perspective",
-          "signals": ["sky scattering", "aerial perspective", "planetary shells"]
+          "signals": [
+            "sky scattering",
+            "aerial perspective",
+            "planetary shells"
+          ]
         }
       ]
     },
@@ -96,7 +139,11 @@
       "routes": [
         {
           "skill": "threejs-volumetric-clouds",
-          "signals": ["weather-driven", "clouds", "cloud shadows"]
+          "signals": [
+            "weather-driven",
+            "clouds",
+            "cloud shadows"
+          ]
         }
       ]
     },
@@ -105,7 +152,11 @@
       "routes": [
         {
           "skill": "threejs-spectral-ocean",
-          "signals": ["fft oceans", "spectral cascades", "jacobian whitecaps"]
+          "signals": [
+            "fft oceans",
+            "spectral cascades",
+            "jacobian whitecaps"
+          ]
         }
       ]
     },
@@ -114,7 +165,11 @@
       "routes": [
         {
           "skill": "threejs-spectral-ocean",
-          "signals": ["submerged snell windows", "total internal reflection", "caustic god rays"]
+          "signals": [
+            "submerged snell windows",
+            "total internal reflection",
+            "caustic god rays"
+          ]
         }
       ]
     },
@@ -123,7 +178,11 @@
       "routes": [
         {
           "skill": "threejs-water-optics",
-          "signals": ["authored analytic waves", "heuristic refraction", "fallback absorption"]
+          "signals": [
+            "authored analytic waves",
+            "heuristic refraction",
+            "fallback absorption"
+          ]
         }
       ]
     },
@@ -132,7 +191,12 @@
       "routes": [
         {
           "skill": "threejs-precipitation-surfaces",
-          "signals": ["falling snow", "snow accumulation", "model snow caps", "shared weather envelopes"]
+          "signals": [
+            "falling snow",
+            "snow accumulation",
+            "model snow caps",
+            "shared weather envelopes"
+          ]
         }
       ]
     },
@@ -141,7 +205,11 @@
       "routes": [
         {
           "skill": "threejs-raymarched-space-effects",
-          "signals": ["curved-ray", "black holes", "accretion disks"]
+          "signals": [
+            "curved-ray",
+            "black holes",
+            "accretion disks"
+          ]
         }
       ]
     },
@@ -150,7 +218,11 @@
       "routes": [
         {
           "skill": "threejs-procedural-vfx",
-          "signals": ["plasma", "particles", "trails"]
+          "signals": [
+            "plasma",
+            "particles",
+            "trails"
+          ]
         }
       ]
     },
@@ -159,7 +231,11 @@
       "routes": [
         {
           "skill": "threejs-temporal-surfaces",
-          "signals": ["accumulated screen frost", "touch clearing", "refraction masks"]
+          "signals": [
+            "accumulated screen frost",
+            "touch clearing",
+            "refraction masks"
+          ]
         }
       ]
     },
@@ -168,7 +244,11 @@
       "routes": [
         {
           "skill": "threejs-temporal-surfaces",
-          "signals": ["wet-window rain", "droplet refraction", "view-aligned blur"]
+          "signals": [
+            "wet-window rain",
+            "droplet refraction",
+            "view-aligned blur"
+          ]
         }
       ]
     },
@@ -177,7 +257,11 @@
       "routes": [
         {
           "skill": "threejs-procedural-vegetation",
-          "signals": ["surface-following ivy", "painted vines", "petiole-hinge wind"]
+          "signals": [
+            "surface-following ivy",
+            "painted vines",
+            "petiole-hinge wind"
+          ]
         }
       ]
     },
@@ -186,7 +270,11 @@
       "routes": [
         {
           "skill": "threejs-procedural-materials",
-          "signals": ["hybrid texture-backed PBR soil/moss", "moisture", "dry-earth cracks"]
+          "signals": [
+            "hybrid texture-backed PBR soil/moss",
+            "moisture",
+            "dry-earth cracks"
+          ]
         }
       ]
     },
@@ -195,7 +283,10 @@
       "routes": [
         {
           "skill": "threejs-procedural-materials",
-          "signals": ["ground and model moss accumulation", "hybrid texture-backed PBR soil/moss"]
+          "signals": [
+            "ground and model moss accumulation",
+            "hybrid texture-backed PBR soil/moss"
+          ]
         }
       ]
     },
@@ -204,7 +295,11 @@
       "routes": [
         {
           "skill": "threejs-parallax-occlusion-mapping",
-          "signals": ["silhouette-aware POM", "curved relief shells", "relief self-shadowing"]
+          "signals": [
+            "silhouette-aware POM",
+            "curved relief shells",
+            "relief self-shadowing"
+          ]
         }
       ]
     },
@@ -213,7 +308,11 @@
       "routes": [
         {
           "skill": "threejs-shadow-systems",
-          "signals": ["large-world shadows", "clipmaps", "cached updates"]
+          "signals": [
+            "large-world shadows",
+            "clipmaps",
+            "cached updates"
+          ]
         }
       ]
     },
@@ -222,7 +321,11 @@
       "routes": [
         {
           "skill": "threejs-screen-space-ambient-occlusion",
-          "signals": ["gtao", "bent normals", "bilateral reconstruction"]
+          "signals": [
+            "gtao",
+            "bent normals",
+            "bilateral reconstruction"
+          ]
         }
       ]
     },
@@ -231,7 +334,10 @@
       "routes": [
         {
           "skill": "threejs-bloom",
-          "signals": ["hdr bloom", "selective emission"]
+          "signals": [
+            "hdr bloom",
+            "selective emission"
+          ]
         }
       ]
     },
@@ -240,7 +346,11 @@
       "routes": [
         {
           "skill": "threejs-exposure-color-grading",
-          "signals": ["eye adaptation", "tone mapping", "lut grading"]
+          "signals": [
+            "eye adaptation",
+            "tone mapping",
+            "lut grading"
+          ]
         }
       ]
     },
@@ -249,19 +359,29 @@
       "routes": [
         {
           "skill": "threejs-image-pipeline",
-          "signals": ["shared depth/normal/velocity ownership", "multi-pass ordering"]
+          "signals": [
+            "shared depth/normal/velocity ownership",
+            "multi-pass ordering"
+          ]
         },
         {
           "skill": "threejs-screen-space-ambient-occlusion",
-          "signals": ["gtao"]
+          "signals": [
+            "gtao"
+          ]
         },
         {
           "skill": "threejs-bloom",
-          "signals": ["bloom"]
+          "signals": [
+            "bloom"
+          ]
         },
         {
           "skill": "threejs-exposure-color-grading",
-          "signals": ["eye adaptation", "tone mapping"]
+          "signals": [
+            "eye adaptation",
+            "tone mapping"
+          ]
         }
       ]
     },
@@ -270,7 +390,63 @@
       "routes": [
         {
           "skill": "threejs-visual-validation",
-          "signals": ["fixed-view diagnostics", "seed sweeps", "budget evidence"]
+          "signals": [
+            "fixed-view diagnostics",
+            "seed sweeps",
+            "budget evidence"
+          ]
+        }
+      ]
+    },
+    {
+      "request": "Project a cyan hologram above a plinth: a Fresnel rim shell with drifting scanlines that dissolves one shape upward into the next.",
+      "routes": [
+        {
+          "skill": "threejs-procedural-vfx",
+          "signals": [
+            "holographic projections",
+            "fresnel rim shells",
+            "scanline banding"
+          ]
+        }
+      ]
+    },
+    {
+      "request": "Generate a complete open-wheel race car: one continuous body loft from parameter curves, superellipse sidepods, and real airfoil wings.",
+      "routes": [
+        {
+          "skill": "threejs-procedural-geometry",
+          "signals": [
+            "procedural vehicles",
+            "parameter-curve section tracks",
+            "spanwise airfoil lofts"
+          ]
+        }
+      ]
+    },
+    {
+      "request": "Build a supersport motorcycle from a steering-geometry contract with slot-tagged parts, spoked wheels, and a hanging chain.",
+      "routes": [
+        {
+          "skill": "threejs-procedural-geometry",
+          "signals": [
+            "procedural vehicles",
+            "material slots and groups",
+            "semantic mesh writers"
+          ]
+        }
+      ]
+    },
+    {
+      "request": "Show an above-water structure through Snell's window from below without a screen-space trace, and stop the cascades combing at the horizon.",
+      "routes": [
+        {
+          "skill": "threejs-spectral-ocean",
+          "signals": [
+            "forward-refracted structures",
+            "pixel-footprint spectral LOD",
+            "submerged snell windows"
+          ]
         }
       ]
     }
@@ -278,59 +454,98 @@
   "boundaries": [
     {
       "skill": "threejs-camera-direction",
-      "mustMention": ["$threejs-procedural-animation"]
+      "mustMention": [
+        "$threejs-procedural-animation"
+      ]
     },
     {
       "skill": "threejs-procedural-animation",
-      "mustMention": ["$threejs-camera-direction"]
+      "mustMention": [
+        "$threejs-camera-direction"
+      ]
     },
     {
       "skill": "threejs-procedural-materials",
-      "mustMention": ["$threejs-procedural-fields", "$threejs-procedural-planets", "$threejs-parallax-occlusion-mapping"]
+      "mustMention": [
+        "$threejs-procedural-fields",
+        "$threejs-procedural-planets",
+        "$threejs-parallax-occlusion-mapping"
+      ]
     },
     {
       "skill": "threejs-parallax-occlusion-mapping",
-      "mustMention": ["$threejs-procedural-materials", "$threejs-procedural-geometry"]
+      "mustMention": [
+        "$threejs-procedural-materials",
+        "$threejs-procedural-geometry"
+      ]
     },
     {
       "skill": "threejs-procedural-geometry",
-      "mustMention": ["$threejs-procedural-materials", "$threejs-procedural-architecture", "$threejs-procedural-vegetation"]
+      "mustMention": [
+        "$threejs-procedural-materials",
+        "$threejs-procedural-architecture",
+        "$threejs-procedural-vegetation"
+      ]
     },
     {
       "skill": "threejs-procedural-planets",
-      "mustMention": ["$threejs-procedural-fields", "$threejs-atmosphere-aerial-perspective"]
+      "mustMention": [
+        "$threejs-procedural-fields",
+        "$threejs-atmosphere-aerial-perspective"
+      ]
     },
     {
       "skill": "threejs-atmosphere-aerial-perspective",
-      "mustMention": ["$threejs-volumetric-clouds"]
+      "mustMention": [
+        "$threejs-volumetric-clouds"
+      ]
     },
     {
       "skill": "threejs-volumetric-clouds",
-      "mustMention": ["$threejs-atmosphere-aerial-perspective"]
+      "mustMention": [
+        "$threejs-atmosphere-aerial-perspective"
+      ]
     },
     {
       "skill": "threejs-spectral-ocean",
-      "mustMention": ["$threejs-water-optics"]
+      "mustMention": [
+        "$threejs-water-optics"
+      ]
     },
     {
       "skill": "threejs-water-optics",
-      "mustMention": ["$threejs-spectral-ocean", "$threejs-precipitation-surfaces"]
+      "mustMention": [
+        "$threejs-spectral-ocean",
+        "$threejs-precipitation-surfaces"
+      ]
     },
     {
       "skill": "threejs-procedural-vfx",
-      "mustMention": ["$threejs-temporal-surfaces", "$threejs-precipitation-surfaces"]
+      "mustMention": [
+        "$threejs-temporal-surfaces",
+        "$threejs-precipitation-surfaces"
+      ]
     },
     {
       "skill": "threejs-temporal-surfaces",
-      "mustMention": ["$threejs-procedural-vfx", "$threejs-precipitation-surfaces"]
+      "mustMention": [
+        "$threejs-procedural-vfx",
+        "$threejs-precipitation-surfaces"
+      ]
     },
     {
       "skill": "threejs-precipitation-surfaces",
-      "mustMention": ["$threejs-water-optics", "$threejs-procedural-vfx", "$threejs-temporal-surfaces"]
+      "mustMention": [
+        "$threejs-water-optics",
+        "$threejs-procedural-vfx",
+        "$threejs-temporal-surfaces"
+      ]
     },
     {
       "skill": "threejs-screen-space-ambient-occlusion",
-      "mustMention": ["$threejs-image-pipeline"]
+      "mustMention": [
+        "$threejs-image-pipeline"
+      ]
     },
     {
       "skill": "threejs-image-pipeline",

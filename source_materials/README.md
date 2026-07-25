@@ -48,12 +48,15 @@ input.
 
 The local-file review context is
 [scottstts/Threejs-Awesome-Graphics-Agent-Skills](https://github.com/scottstts/Threejs-Awesome-Graphics-Agent-Skills)
-at `2d0972a23995a0b302aceb0050fb0ceeeadff891`.
+at `2d0972a23995a0b302aceb0050fb0ceeeadff891` for the first two rows and
+`1e114ab548b1365b53cd1c0955ec6198e4cf64d3` for the two vehicle studies.
 
 | File | SHA-256 | Reviewed areas | Mechanisms distilled into |
 | --- | --- | --- | --- |
 | `source_materials/blackhole.html` | `da289ff15c8ea31db03efefdcb4b8dbbe8cd3a83095a329d3835e4b52ef926bb` | single-file WebGL black-hole renderer: RK2 Schwarzschild null-geodesic loop, exact equatorial disk crossing, Doppler/redshift disk shading, procedural deep field, HDR brightpass/blur/composite pipeline, camera/orbit/HUD separation | `$threejs-raymarched-space-effects` |
 | `source_materials/submarine.html` | `6f80f233fd24e38ece393aea67a11e271782335f455d1e320cc69d18babc5f49` | single-file WebGPU procedural submarine: tilted-collar hull planning, reusable grid/lathe/sweep/fin emitters, UV-owned apertures and ornament, complete cabin/stern/fin assembly, generated TSL material inputs, deterministic topology evidence | `$threejs-procedural-geometry` |
+| `source_materials/f1_race_car.html` | `4fe861a63c1e1dd34c10e951fbe16b661a9c5094b691d583211697492081dd6e` | single-file WebGPU/TSL procedural open-wheel car: monotone parameter tracks compiled into one continuous hull loft, recess-opening semantic sections, superellipse sidepods with a real inlet aperture, spanwise airfoil lofts, warped outline plates, two-plane livery projector, load-deflected tyre carcass, per-part triangle evidence | `$threejs-procedural-geometry` |
+| `source_materials/motorcycle.html` | `56c43b3083037a69c438a6c46e9441c5f48d2117aa80be57111af9a2ae8697d9` | single-file WebGPU/TSL procedural supersport motorcycle: steering-axis placement, slot-tagged mesh writer, revolve/transport/upright sweeps, panel shells, spoked wheels and petal rotor masks, bore-local engine volumes, superellipse bodywork, catenary chain, signed-volume orientation guard | `$threejs-procedural-geometry` |
 
 ### Local-project findings retained
 
@@ -80,10 +83,10 @@ author-supplied read-only neighboring worktree.
 | [takram-design-engineering/three-geospatial](https://github.com/takram-design-engineering/three-geospatial) | `b012ad06d858fc035d88aacfd73f092f93c994e4` | MIT | copied/adapted atmosphere and cloud contracts where accepted |
 | [jeantimex/geospatial](https://github.com/jeantimex/geospatial) | `d166316ad38f9a21f6d7a3293b808bc7f920283e` | MIT | copied/adapted atmosphere and cloud mechanisms plus dev-only LUT, weather, volume, turbulence, and blue-noise assets |
 | [perplexdotgg/mecs-tower-defense-example](https://codeberg.org/perplexdotgg/mecs-tower-defense-example) | `d7b4e8815fcee18d97e9a12c00f900294773ad1c` | MIT code; CC0 assets | copied/adapted ECS, VFX, and material mechanisms where accepted; no assets copied |
-| [YasirAwan4831/holographic-shader-visualizer-three.Js](https://github.com/YasirAwan4831/holographic-shader-visualizer-three.Js) | `34810a6e09d0d640d06a2e83c5abab749baf04d5` | MIT by project rule | reviewed negative evidence; no accepted distributed example |
+| [YasirAwan4831/holographic-shader-visualizer-three.Js](https://github.com/YasirAwan4831/holographic-shader-visualizer-three.Js) | `34810a6e09d0d640d06a2e83c5abab749baf04d5` | MIT by project rule | copied/adapted holographic projection-shell and shape-transition mechanisms for `$threejs-procedural-vfx` |
 | [vibe-stack/procedural-bank](https://github.com/vibe-stack/procedural-bank) | `0034e80a61f02b88dbe13a385bdab734a365b82d` | MIT | copied/adapted building, shadow, and material mechanisms plus attributed MIT stone textures |
 | [takuma-hmng8/frozen](https://github.com/takuma-hmng8/frozen) | `15a98a5104951a0bd734eb23ab21b7f79741ab09` | MIT by project rule | copied/adapted temporal-surface mechanisms where accepted |
-| [scottstts/Pearl-Sea-Park](https://github.com/scottstts/Pearl-Sea-Park) | `a40e2414e5c1de76300d105545733274dd5315ec` | MIT by project rule | copied/adapted WebGPU spectral ocean, Snell-window underside, underwater medium, caustics, god rays, particulate, sand-bed saucer, and grade mechanisms for `$threejs-spectral-ocean` |
+| [scottstts/Pearl-Sea-Park](https://github.com/scottstts/Pearl-Sea-Park) | `4fbf1f3df59a97c27ad80113711622cb914ab0c3` | MIT by project rule | copied/adapted the whole underwater system — WebGPU spectral ocean, exact Snell/TIR underside, forward-refracted interface layer, aquatic medium, caustics, god rays, particulate, foam, sand-bed saucer, and grade — for `$threejs-spectral-ocean` |
 | [owenyuwono/poseidon](https://github.com/owenyuwono/poseidon) | `caddf773c7e2b7c9b00ad232d21cca4f364d5272` | MIT by project rule | copied/adapted spectral-ocean mechanisms where accepted |
 | [gioeledallapozza/FFTOCEAN](https://github.com/gioeledallapozza/FFTOCEAN) | `0fe3a908a86118eab9930e17b0b29df7fcc05b65` | MIT by project rule | copied/adapted stylized ocean shader mechanisms plus foam and sand assets for `$threejs-spectral-ocean` |
 | [jeantimex/threejs-water](https://github.com/jeantimex/threejs-water) | `d5c06864fe22ad31f500af7f21a46aad1c7d3e27` | MIT | copied/adapted water simulation, pool caustics, pool/water/sphere shader mechanisms, and pool tile/cubemap assets for `$threejs-water-optics` |
@@ -216,29 +219,30 @@ The retained mechanism is data-oriented effect ownership and pooling. General EC
 
 ### `holographic-shader-visualizer-three.Js`
 
-Reviewed conceptually:
+Reviewed:
 
-- one shared min/max Y range across three shapes;
-- current/next mesh discard around a linear 1.5-second height sweep;
-- a narrow transition glitch plus a separate full-body glitch;
-- object-attached scanlines at frequency 20 and speed 0.2;
-- squared Fresnel opacity under additive blending with depth write disabled;
+- one shared min/max Y range across three shapes, with a 0.1 m margin at each
+  end and the set lifted 0.5 m;
+- current/next complementary discards around a linear 1.5-second height sweep
+  inside a 4-second dwell (cycle speed 0.25 shapes/s);
+- a narrow transition-band glitch (0.3 m) plus a height-phased body glitch
+  (2 m) gated by three incommensurate sines through a smoothstep;
+- object-space scanlines at frequency 20 and speed 0.2, cubed, plus a 1.25 rim
+  gain and a `smoothstep(0.8, 0)` falloff over squared Fresnel;
+- additive blending, front faces only, depth write disabled;
 - ACES exposure 1.2 and a DPR cap of 2.
 
-Rejected as a skill source:
+Accepted consumption:
 
-- the full-body glitch conflicts with the more controlled boundary behavior the
-  proposed skill claimed;
-- normals are transformed by `modelMatrix` rather than a normal matrix;
-- scanlines are not derivative-filtered;
-- there is no depth prepass or volume strategy for the double-sided additive
-  meshes;
-- the implementation is too narrow and rudimentary to support an
-  excellence-level transition skill.
+- `$threejs-procedural-vfx`
 
-The repository remains documented as reviewed negative evidence. The previous
-transition skill was removed rather than publishing guidance invented beyond
-this source.
+Two defects were corrected in the accepted example on explicit instruction
+(recorded as divergences in `example-traces.json`): the world normal came from a
+bare model-basis multiply rather than an inverse-transpose normal matrix, and
+the scanline band had no footprint filter. The example resolves incidence in
+view space from `normalMatrix` and dissolves the band into its own mean by
+`fwidth`. The earlier "double-sided additive" concern does not hold: the material
+is front-side only, and additive composition is order independent.
 
 ### `frozen`
 
@@ -265,32 +269,56 @@ Reviewed:
   deterministic Gaussian packing, packed height/horizontal evolution, and a
   workgroup inverse FFT with explicit barriers;
 - a camera-medium-controlled, double-sided ocean material whose underwater
-  path performs water-to-air refraction, exact dielectric Fresnel, total
-  internal reflection, and surface-anchored opaque-frame reprojection;
-- one shared fixed-sun HDR sky function for the visible dome and Snell window;
+  path performs water-to-air refraction, exact unpolarised dielectric Fresnel
+  with a derivative-filtered critical-angle mask, total internal reflection
+  against a physically bright upwelling underside, and an energy-conserving
+  transmitted-sun lobe widened by the measured per-pixel normal spread;
+- pixel-footprint LOD applied to cascade sampling, vertex displacement, the
+  normal flatten, capillary bands, and foam — never distance-keyed;
+- one shared fixed-sun HDR sky function for the visible dome and Snell window,
+  including the bounded marine-aerosol horizon layer;
 - aquatic per-channel extinction and directional in-scatter over scene depth,
   followed by pre-tonemap bloom, AgX, a generated 32³ grade, and vignette;
 - a 256² differential-area caustic grid drawn 3×3 into a 1024² wrapping tile,
-  used by received light and a 14-step full-resolution jittered god-ray march;
+  read by surfaces through a footprint fade to the field's conserved mean and by
+  a 14-step full-resolution jittered god-ray march through the exact sampler;
 - 18,000 camera-following tetrahedral particulates driven by a shared curl
   field;
-- procedural sand ripples, caustic reception, and the far lagoon saucer that
-  rises from 680–1150 m to close the seabed/ocean horizon gap;
+- four foam coverage populations (Jacobian whitecap, wake field, windrow raft
+  with its recovery tail, crest tear) feeding one thickness-graded shading path
+  whose bands fade to their own means;
+- a forward-projected opposite-medium structure layer whose water-side crossing
+  solve is bracketed by the critical angle rather than the camera-to-source span;
+- procedural sand ripples restored as a direct-light ratio, caustic reception
+  through `receivedShadowNode`, and the far lagoon saucer that rises from
+  680–1150 m to close the seabed/ocean horizon gap;
 - terrain-local procedural ripple normals transformed exactly once into view
-  space before assignment to the node-material normal hook (maintenance
-  revision `a1040a74874cf86e132bb97ae1997b0cc370fce1`);
+  space before assignment to the node-material normal hook;
 - a seabed-rooted arrival structure with underwater bracing and an above-water
   silhouette suitable for Snell-window alignment inspection.
+
+Rejected mechanisms, recorded because they must not return:
+
+- backward screen-space tracing for either above-water optical source (a
+  direction's vanishing point must be inside the frustum, which is a pure
+  function of camera pitch);
+- a second below-surface normal filtered by the squared Snell stretch (it drives
+  the outer window to a mathematically flat plane past ~10 m of depth);
+- reduced-resolution god-ray reconstruction without velocity and history;
+- a view-aligned near-surface scattering slab to mask the horizon gap.
 
 Accepted consumption:
 
 - `$threejs-spectral-ocean`
 
-The accepted example keeps the spectral field, exact underwater surface path,
-sky coupling, caustics, medium, god rays, particulates, sand material, and
-display treatment together. The gallery fixes the camera below the interface
-and owns a deliberately simplified tower plus the focused
-flat-centre/far-saucer seabed geometry.
+The accepted example keeps the spectral field, the exact underwater surface
+path, the interface layer, sky coupling, caustics, medium, god rays,
+particulates, foam, sand material, and display treatment together. The gallery
+fixes the camera below the interface and owns a deliberately simplified tower —
+registered with the interface layer as its scene-scale case — plus the focused
+flat-centre/far-saucer seabed geometry. The above-water optical tier (undersea
+radiance capture, planar mirror reflection, baked surface sun shadow) is not
+wired, because none of it can affect a permanently submerged view.
 
 ### `poseidon`
 
@@ -706,7 +734,7 @@ These sources are paraphrased. Official documentation remains the authority for 
 | `$threejs-procedural-animation` | Interstellar launch, staging, spin docking, and debris; Stellar frame-rate-independent response and quaternion control |
 | `$threejs-procedural-fields` | Stellar, MyCraft, `ez-tree`, `mecs-tower-defense-example` |
 | `$threejs-procedural-materials` | MyCraft, Stellar, `mecs-tower-defense-example`, `Very Hot Planet` CodePen, PBR references |
-| `$threejs-procedural-geometry` | ArtInLife, `ez-tree`, `procedural-bank` |
+| `$threejs-procedural-geometry` | local WebGPU submarine, race-car, and motorcycle HTML studies; ArtInLife, `ez-tree`, `procedural-bank` |
 | `$threejs-procedural-vegetation` | `ez-tree`, `stylized-scene` |
 | `$threejs-procedural-architecture` | `procedural-bank` |
 | `$threejs-procedural-planets` | Stellar |
@@ -715,7 +743,7 @@ These sources are paraphrased. Official documentation remains the authority for 
 | `$threejs-atmosphere-aerial-perspective` | `jeantimex/geospatial`, Stellar, `three-geospatial`, atmosphere references |
 | `$threejs-volumetric-clouds` | `jeantimex/geospatial`, `three-geospatial` |
 | `$threejs-raymarched-space-effects` | interstellarThreeJS; local Schwarzschild black-hole HTML |
-| `$threejs-procedural-vfx` | Stellar, `mecs-tower-defense-example` |
+| `$threejs-procedural-vfx` | Stellar, `mecs-tower-defense-example`, `holographic-shader-visualizer-three.Js` |
 | `$threejs-temporal-surfaces` | `frozen`, conceptual only |
 | `$threejs-shadow-systems` | MyCraft, `procedural-bank` |
 | `$threejs-screen-space-ambient-occlusion` | MyCraft, `procedural-bank`, `three-geospatial` |

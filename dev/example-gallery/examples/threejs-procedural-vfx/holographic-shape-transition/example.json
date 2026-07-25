@@ -1,0 +1,34 @@
+{
+  "title": "Holographic Shape Transition",
+  "description": "An additive holographic projection whose silhouette is carried entirely by a squared Fresnel rim with grazing falloff, banded by footprint-filtered object-space scanlines, jittered by a height-phased glitch gate, and handed shape to shape by one shared vertical sweep with complementary discards.",
+  "backend": "WebGL2 / GLSL additive shell",
+  "techniques": [
+    "squared Fresnel rim with grazing falloff",
+    "footprint-filtered object-space scanlines",
+    "height-phased incommensurate-sine glitch gate",
+    "shared normalised sweep range across a shape set",
+    "complementary discard handover under additive blending",
+    "index-gated shared shell material"
+  ],
+  "defaultViewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "defaultDpr": 1,
+  "debugModes": [
+    { "value": "final", "label": "Final" },
+    { "value": "scanlines", "label": "Scanline density" },
+    { "value": "fresnel", "label": "Fresnel rim" },
+    { "value": "transition", "label": "Sweep range" },
+    { "value": "glitch", "label": "Glitch displacement" }
+  ],
+  "controls": [
+    "orbit",
+    "pan",
+    "pause",
+    "timeScale",
+    "dpr",
+    "debugMode",
+    "capture"
+  ]
+}

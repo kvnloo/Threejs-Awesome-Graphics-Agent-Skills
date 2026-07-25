@@ -1,15 +1,14 @@
 import * as THREE from "three/webgpu";
 import {
-  applyCaustics,
+  bakeSkyEnvironment,
   CausticsPass,
-  createSeabedMaterial,
+  createSandMaterial,
   createSkyDome,
+  createSunLight,
   Rng,
   runFftSelfTest,
+  SKY_ENVIRONMENT_INTENSITY,
   SubmergedOcean,
-  SUN_LIGHT_INTENSITY,
-  sunColor,
-  sunDirection,
   UnderwaterMediumPipeline,
 } from "/skills/threejs-spectral-ocean/examples/submerged-snell-ocean/underwater-snell-ocean.ts";
 
@@ -20,6 +19,7 @@ const SAUCER_EXTENT = 2800;
 const SAUCER_SEGMENTS = 224;
 const SAUCER_RISE_START = 680;
 const SAUCER_RISE_END = 1150;
+const TOWER_Z = -34;
 
 function hash2(x, y, seed) {
   let value =
@@ -69,6 +69,11 @@ function smoothstepNumber(edge0, edge1, value) {
   return t * t * (3 - 2 * t);
 }
 
+/**
+ * The far rim: terrain fills the water column geometrically, which is what
+ * closes the seabed/ocean horizon gap. A view-aligned scattering slab cannot
+ * do it — see the note in the medium.
+ */
 function saucerHeight(x, z) {
   const blend = smoothstepNumber(
     SAUCER_RISE_START,
@@ -101,12 +106,12 @@ function createSaucerSeabedGeometry() {
   return geometry;
 }
 
-function createMaterial(color, roughness, metalness, caustics = null) {
+function createMaterial(color, roughness, metalness, medium = null) {
   const material = new THREE.MeshStandardNodeMaterial();
   material.color.set(color);
   material.roughness = roughness;
   material.metalness = metalness;
-  if (caustics) applyCaustics(material, caustics.textureNode, 1.2);
+  if (medium) medium.applyCaustics(material, 1.2);
   return material;
 }
 
@@ -130,15 +135,21 @@ function createStrut(material, start, end, radius, radialSegments = 12) {
   return mesh;
 }
 
-function createWaterlineTower(caustics) {
+/**
+ * A deliberately simplified structure that crosses the waterline: seabed-rooted
+ * piles with underwater bracing, a deck, and an above-water headframe. Its
+ * air-side geometry is what the Snell window has to transport.
+ */
+function createWaterlineTower(medium) {
   const group = new THREE.Group();
-  const underwaterBronze = createMaterial(0x376f70, 0.54, 0.72, caustics);
+  const underwaterBronze = createMaterial(0x376f70, 0.54, 0.72, medium);
   const bronze = createMaterial(0x7b5b2d, 0.36, 0.82);
   const iron = createMaterial(0x283640, 0.48, 0.72);
   const timber = createMaterial(0x6e4a2a, 0.78, 0.04);
   const canvas = createMaterial(0x86b0aa, 0.9, 0);
   canvas.side = THREE.DoubleSide;
   const materials = [underwaterBronze, bronze, iron, timber, canvas];
+  const airSide = [];
 
   const pileRadius = 5.5;
   const pileCount = 6;
@@ -167,6 +178,7 @@ function createWaterlineTower(caustics) {
     upperPile.castShadow = true;
     upperPile.receiveShadow = true;
     group.add(upperPile);
+    airSide.push(upperPile);
   }
 
   for (let index = 0; index < pileCount; index += 1) {
@@ -201,6 +213,7 @@ function createWaterlineTower(caustics) {
   deck.castShadow = true;
   deck.receiveShadow = true;
   group.add(deck);
+  airSide.push(deck);
 
   const deckTrim = new THREE.Mesh(
     new THREE.TorusGeometry(6.52, 0.1, 10, 72),
@@ -209,18 +222,19 @@ function createWaterlineTower(caustics) {
   deckTrim.rotation.x = Math.PI / 2;
   deckTrim.position.y = 2.82;
   group.add(deckTrim);
+  airSide.push(deckTrim);
 
   const legAngles = [Math.PI / 4, 3 * Math.PI / 4, 5 * Math.PI / 4, 7 * Math.PI / 4];
   for (const angle of legAngles) {
-    group.add(
-      createStrut(
-        iron,
-        new THREE.Vector3(Math.sin(angle) * 3.6, 2.85, Math.cos(angle) * 3.6),
-        new THREE.Vector3(Math.sin(angle) * 0.65, 13.2, Math.cos(angle) * 0.65),
-        0.15,
-        16,
-      ),
+    const leg = createStrut(
+      iron,
+      new THREE.Vector3(Math.sin(angle) * 3.6, 2.85, Math.cos(angle) * 3.6),
+      new THREE.Vector3(Math.sin(angle) * 0.65, 13.2, Math.cos(angle) * 0.65),
+      0.15,
+      16,
     );
+    group.add(leg);
+    airSide.push(leg);
   }
 
   const canopy = new THREE.Mesh(
@@ -230,6 +244,7 @@ function createWaterlineTower(caustics) {
   canopy.position.y = 6.05;
   canopy.castShadow = true;
   group.add(canopy);
+  airSide.push(canopy);
 
   const crown = new THREE.Mesh(
     new THREE.TorusGeometry(0.72, 0.1, 12, 40),
@@ -238,6 +253,7 @@ function createWaterlineTower(caustics) {
   crown.rotation.x = Math.PI / 2;
   crown.position.y = 13.35;
   group.add(crown);
+  airSide.push(crown);
 
   const beacon = new THREE.Mesh(
     new THREE.CylinderGeometry(0.38, 0.62, 2.6, 24),
@@ -246,8 +262,9 @@ function createWaterlineTower(caustics) {
   beacon.position.y = 14.65;
   beacon.castShadow = true;
   group.add(beacon);
+  airSide.push(beacon);
 
-  return { group, materials };
+  return { group, materials, airSide };
 }
 
 function clampCamera(camera, controls) {
@@ -279,10 +296,10 @@ export default {
     fov: 50,
     near: 0.1,
     far: 5000,
-    position: [0, -24.25, 10],
+    position: [0, -14, 0],
   },
   controls: {
-    target: [0, 13.1, 0],
+    target: [0, -2, -40],
     minDistance: 8,
     maxDistance: 180,
     minPolarAngle: 0.05,
@@ -306,27 +323,38 @@ export default {
 
     const sky = createSkyDome();
     scene.add(sky);
+    const environment = bakeSkyEnvironment(renderer, sky);
+    scene.environment = environment.texture;
+    scene.environmentIntensity = SKY_ENVIRONMENT_INTENSITY;
 
-    const sun = new THREE.DirectionalLight(sunColor, SUN_LIGHT_INTENSITY);
-    sun.position.copy(sunDirection).multiplyScalar(700);
-    sun.target.position.set(0, 0, 0);
-    sun.castShadow = true;
-    sun.shadow.mapSize.set(2048, 2048);
+    const sun = createSunLight(2048);
     sun.shadow.camera.left = -80;
     sun.shadow.camera.right = 80;
     sun.shadow.camera.top = 80;
     sun.shadow.camera.bottom = -80;
     sun.shadow.camera.near = 1;
     sun.shadow.camera.far = 900;
-    sun.shadow.bias = -0.0004;
-    sun.shadow.normalBias = 0.02;
     scene.add(sun, sun.target);
 
     const ocean = new SubmergedOcean(scene, new Rng(19051906), {
       segments: 384,
     });
     const caustics = new CausticsPass(ocean.simulation, 1024);
-    const seabedMaterial = createSeabedMaterial(caustics);
+    const medium = new UnderwaterMediumPipeline(
+      renderer,
+      scene,
+      camera,
+      caustics,
+      {
+        godraySteps: 14,
+        particulateCount: 18_000,
+        submerged: ocean.submerged,
+      },
+    );
+
+    const seabedMaterial = createSandMaterial((material, strength) =>
+      medium.applyCaustics(material, strength)
+    );
     const seabed = new THREE.Mesh(
       createSaucerSeabedGeometry(),
       seabedMaterial,
@@ -334,16 +362,22 @@ export default {
     seabed.receiveShadow = true;
     scene.add(seabed);
 
-    const tower = createWaterlineTower(caustics);
+    const tower = createWaterlineTower(medium);
+    tower.group.position.z = TOWER_Z;
     scene.add(tower.group);
-
-    const medium = new UnderwaterMediumPipeline(
-      renderer,
-      scene,
-      camera,
-      caustics,
-      { godraySteps: 14, particulateCount: 18_000 },
-    );
+    // The tower's air-side geometry is registered with the interface layer, so
+    // the Snell window shows its forward-refracted image instead of bare sky.
+    ocean.register({
+      name: "waterline tower",
+      root: tower.group,
+      meshes: tower.airSide,
+      maxEdgeLength: 1.2,
+      minimumLocalY: -0.1,
+      stableMeanSurface: true,
+      liveInterfaceMotion: true,
+      underwaterOnly: true,
+      maxCameraDistance: 130,
+    });
 
     clampCamera(camera, controls);
     return {
@@ -352,7 +386,13 @@ export default {
       },
       update({ elapsed, delta }) {
         clampCamera(camera, controls);
-        ocean.update(renderer, camera.position, elapsed, Math.max(delta, 1 / 120));
+        ocean.update(
+          renderer,
+          camera,
+          scene,
+          elapsed,
+          Math.max(delta, 1 / 120),
+        );
         caustics.update(renderer);
         medium.update(elapsed);
         sky.position.copy(camera.position);
@@ -361,10 +401,12 @@ export default {
         medium.render();
       },
       metrics() {
+        const snapshot = ocean.interfaceStructures.debugSnapshot();
         return {
           spectrum: "256² × 3",
           caustics: "1024²",
           raySteps: "14",
+          interfaceLayer: `${snapshot.active ? "on" : "off"} ${snapshot.draws}d/${snapshot.triangles}t`,
           fftTest: `pass ${Math.max(
             fftValidation.maxErrorConstant,
             fftValidation.maxErrorWave,
@@ -376,6 +418,8 @@ export default {
         caustics.dispose();
         ocean.dispose(scene);
         scene.remove(seabed, sky, tower.group, sun, sun.target);
+        scene.environment = null;
+        environment.dispose();
         seabed.geometry.dispose();
         seabedMaterial.dispose();
         sky.geometry.dispose();
