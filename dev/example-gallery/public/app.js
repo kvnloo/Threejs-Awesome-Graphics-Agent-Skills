@@ -30,13 +30,18 @@ const OVERVIEW_THUMBNAIL_WIDTH = 960;
 const OVERVIEW_THUMBNAIL_HEIGHT = 540;
 const OVERVIEW_THUMBNAIL_CONCURRENCY = 2;
 const OVERVIEW_THUMBNAIL_TIMEOUT_MS = 15000;
+const OVERVIEW_THUMBNAIL_PREFETCH = 300;
 
 const overviewThumbnailCache = new Map();
 const overviewThumbnailRequests = new Map();
 const overviewThumbnailFrames = new Map();
+const overviewThumbnailTargets = new WeakMap();
 const overviewThumbnailQueue = [];
 let activeOverviewThumbnailCount = 0;
 let overviewThumbnailHost = null;
+let overviewThumbnailSweepTimer = 0;
+let overviewThumbnailsSuspended = false;
+let refreshPending = false;
 
 const state = {
   examples: [],
@@ -54,12 +59,21 @@ function selectedExample() {
   return state.examples.find((example) => example.id === state.selectedId) ?? null;
 }
 
+// Lets the runtime document start fetching the heavy renderer build during HTML
+// parse instead of waiting for the adapter's import chain to reveal it.
+function applyBackendHint(url, example) {
+  if (/^webgpu/i.test(example.backend ?? "")) {
+    url.searchParams.set("galleryBackend", "webgpu");
+  }
+}
+
 function exampleUrl(example) {
   const url = new URL(example.entry, window.location.origin);
   url.searchParams.set("galleryDpr", state.dpr);
   url.searchParams.set("galleryTimeScale", state.timeScale);
   url.searchParams.set("galleryPaused", state.paused ? "1" : "0");
   url.searchParams.set("galleryDebugMode", state.debugMode);
+  applyBackendHint(url, example);
   return url.href;
 }
 
@@ -93,6 +107,8 @@ function applyViewport() {
     const [width, height] = state.viewport.split("x").map(Number);
     dimensions = { width, height };
   }
+
+  elements.stage.dataset.fit = dimensions ? "fixed" : "responsive";
 
   if (!dimensions) {
     elements.frame.style.width = "100%";
@@ -143,6 +159,7 @@ function overviewThumbnailUrl(example) {
   url.searchParams.set("galleryTimeScale", "1");
   url.searchParams.set("galleryDebugMode", "final");
   url.searchParams.set("galleryThumbnail", "1");
+  applyBackendHint(url, example);
   return url.href;
 }
 
@@ -202,11 +219,32 @@ function startOverviewThumbnailJob(job) {
 
 function runOverviewThumbnailQueue() {
   while (
+    !overviewThumbnailsSuspended &&
     activeOverviewThumbnailCount < OVERVIEW_THUMBNAIL_CONCURRENCY &&
     overviewThumbnailQueue.length > 0
   ) {
     startOverviewThumbnailJob(overviewThumbnailQueue.shift());
   }
+}
+
+/* An inspected example gets the GPU to itself: in-flight thumbnail renderers are
+   torn down and returned to the queue rather than settled, so no work is lost
+   and nothing competes with the scene being looked at. */
+function suspendOverviewThumbnails() {
+  overviewThumbnailsSuspended = true;
+  for (const [frame, job] of [...overviewThumbnailFrames]) {
+    clearTimeout(job.timeoutId);
+    overviewThumbnailFrames.delete(frame);
+    frame.remove();
+    activeOverviewThumbnailCount = Math.max(0, activeOverviewThumbnailCount - 1);
+    overviewThumbnailQueue.unshift(job);
+  }
+}
+
+function resumeOverviewThumbnails() {
+  if (!overviewThumbnailsSuspended) return;
+  overviewThumbnailsSuspended = false;
+  runOverviewThumbnailQueue();
 }
 
 function renderOverviewThumbnail(example) {
@@ -284,11 +322,64 @@ function applyOverviewThumbnailResult(shell, image, result) {
   shell.dataset.message = result.message;
 }
 
+/* Only cards the viewer can actually reach are worth a GPU render. Everything
+   else waits until it is scrolled near, which gets the visible row on screen
+   first and leaves the grid interactive. Measured by layout rather than an
+   IntersectionObserver so a throttled or background tab still schedules work. */
+function sweepOverviewThumbnails() {
+  if (state.mode !== "overview") return;
+
+  const view = elements.overview.getBoundingClientRect();
+  const top = view.top - OVERVIEW_THUMBNAIL_PREFETCH;
+  const bottom = view.bottom + OVERVIEW_THUMBNAIL_PREFETCH;
+
+  for (const card of elements.overview.children) {
+    const target = overviewThumbnailTargets.get(card);
+    if (!target || target.requested) continue;
+
+    const rect = card.getBoundingClientRect();
+    if (rect.bottom < top || rect.top > bottom) continue;
+
+    target.requested = true;
+    renderOverviewThumbnail(target.example).then((result) => {
+      applyOverviewThumbnailResult(target.shell, target.image, result);
+    });
+  }
+}
+
+function queueOverviewThumbnailSweep() {
+  if (overviewThumbnailSweepTimer) return;
+  overviewThumbnailSweepTimer = window.setTimeout(() => {
+    overviewThumbnailSweepTimer = 0;
+    sweepOverviewThumbnails();
+  }, 90);
+}
+
 function clearOverview() {
   elements.overview.replaceChildren();
 }
 
+function groupLabel(skill) {
+  return skill.replace(/^threejs-/, "").replace(/-/g, " ");
+}
+
+function syncListSelection({ reveal = false } = {}) {
+  let current = null;
+  for (const button of elements.list.querySelectorAll(".example-link")) {
+    const selected = button.dataset.exampleId === state.selectedId;
+    button.setAttribute("aria-current", String(selected));
+    if (selected) current = button;
+  }
+
+  for (const section of elements.list.querySelectorAll(".skill-group")) {
+    section.dataset.hasCurrent = String(section.contains(current));
+  }
+
+  if (reveal && current) current.scrollIntoView({ block: "nearest" });
+}
+
 function renderList() {
+  const scrollTop = elements.list.scrollTop;
   elements.list.replaceChildren();
   const groups = new Map();
   for (const example of state.filtered) {
@@ -301,7 +392,13 @@ function renderList() {
     const section = document.createElement("section");
     section.className = "skill-group";
     const heading = document.createElement("h3");
-    heading.textContent = skill;
+    const name = document.createElement("span");
+    name.className = "group-name";
+    name.textContent = groupLabel(skill);
+    const count = document.createElement("span");
+    count.className = "group-count";
+    count.textContent = String(examples.length);
+    heading.append(name, count);
     section.append(heading);
 
     for (const example of examples) {
@@ -321,6 +418,9 @@ function renderList() {
     }
     elements.list.append(section);
   }
+
+  elements.list.scrollTop = scrollTop;
+  syncListSelection();
 }
 
 function renderOverview() {
@@ -330,6 +430,7 @@ function renderOverview() {
     const article = document.createElement("article");
     article.className = "overview-card";
     article.tabIndex = 0;
+    article.dataset.active = String(example.id === state.selectedId);
     article.setAttribute("role", "button");
     article.setAttribute("aria-label", `Inspect ${example.title}`);
     const inspectExample = () => {
@@ -357,10 +458,6 @@ function renderOverview() {
     thumbnail.setAttribute("aria-hidden", "true");
     thumbnailShell.append(thumbnail);
 
-    renderOverviewThumbnail(example).then((result) => {
-      applyOverviewThumbnailResult(thumbnailShell, thumbnail, result);
-    });
-
     const footer = document.createElement("footer");
     const title = document.createElement("strong");
     title.textContent = example.title;
@@ -370,7 +467,22 @@ function renderOverview() {
     footer.append(title, inspect);
     article.append(thumbnailShell, footer);
     elements.overview.append(article);
+
+    const cached = overviewThumbnailCache.get(example.id);
+    if (cached) {
+      applyOverviewThumbnailResult(thumbnailShell, thumbnail, cached);
+      continue;
+    }
+
+    overviewThumbnailTargets.set(article, {
+      example,
+      shell: thumbnailShell,
+      image: thumbnail,
+      requested: false,
+    });
   }
+
+  sweepOverviewThumbnails();
 }
 
 function renderMode() {
@@ -378,10 +490,17 @@ function renderMode() {
   elements.empty.hidden = hasExamples;
   elements.single.hidden = !hasExamples || state.mode !== "single";
   elements.overview.hidden = !hasExamples || state.mode !== "overview";
-  elements.toggleView.textContent =
-    state.mode === "single" ? "Overview" : "Single view";
-  if (state.mode === "overview") renderOverview();
-  else clearOverview();
+  elements.toggleView.setAttribute(
+    "aria-current",
+    String(state.mode === "overview"),
+  );
+  if (state.mode === "overview") {
+    renderOverview();
+    resumeOverviewThumbnails();
+  } else {
+    clearOverview();
+    suspendOverviewThumbnails();
+  }
 }
 
 function showOverview() {
@@ -389,7 +508,7 @@ function showOverview() {
   const url = new URL(window.location.href);
   url.searchParams.delete("example");
   history.replaceState(null, "", url);
-  renderList();
+  syncListSelection({ reveal: true });
   renderMode();
 }
 
@@ -410,7 +529,7 @@ function selectExample(id, { reload = true } = {}) {
   elements.standalone.href = exampleUrl(example);
   elements.pause.textContent = state.paused ? "Resume" : "Pause";
   applyViewport();
-  renderList();
+  syncListSelection({ reveal: true });
   renderMode();
 
   if (reload) {
@@ -443,8 +562,13 @@ function applyFilter() {
   if (state.mode === "overview") renderOverview();
 }
 
+function setRuntimeSummary(label, status = "idle") {
+  elements.runtimeSummary.textContent = label;
+  elements.runtimeSummary.dataset.state = status;
+}
+
 async function loadExamples({ preserveSelection = true } = {}) {
-  elements.runtimeSummary.textContent = "discovering";
+  setRuntimeSummary("discovering", "loading");
   const response = await fetch("/api/examples", { cache: "no-store" });
   if (!response.ok) {
     throw new Error(`Discovery failed with ${response.status}`);
@@ -455,7 +579,7 @@ async function loadExamples({ preserveSelection = true } = {}) {
   elements.count.textContent = `${payload.count} ${
     payload.count === 1 ? "example" : "examples"
   }`;
-  elements.runtimeSummary.textContent = "runtime ready";
+  setRuntimeSummary("runtime ready", "ready");
 
   const requested = new URL(window.location.href).searchParams.get("example");
   const previous = preserveSelection && state.mode === "single"
@@ -481,15 +605,32 @@ function adjacentExample(offset) {
   selectExample(state.filtered[next].id);
 }
 
+elements.overview.addEventListener("scroll", queueOverviewThumbnailSweep, {
+  passive: true,
+});
+window.addEventListener("resize", queueOverviewThumbnailSweep);
+
 elements.search.addEventListener("input", applyFilter);
-elements.refresh.addEventListener("click", () => loadExamples());
-elements.toggleView.addEventListener("click", () => {
-  if (state.mode === "single") {
-    showOverview();
-    return;
+elements.refresh.addEventListener("click", async () => {
+  refreshPending = true;
+  elements.refresh.classList.add("is-refreshing");
+  try {
+    await loadExamples();
+  } catch (error) {
+    setRuntimeSummary("discovery failed", "error");
+    console.error(error);
+  } finally {
+    refreshPending = false;
   }
-  const nextId = state.selectedId ?? state.filtered[0]?.id ?? null;
-  if (nextId) selectExample(nextId);
+});
+
+// Stop on a whole turn so the icon always lands where it started.
+elements.refresh.addEventListener("animationiteration", () => {
+  if (!refreshPending) elements.refresh.classList.remove("is-refreshing");
+});
+elements.toggleView.addEventListener("click", () => {
+  if (state.mode === "overview") return;
+  showOverview();
 });
 elements.viewport.addEventListener("change", () => {
   state.viewport = elements.viewport.value;
@@ -550,6 +691,10 @@ window.addEventListener("message", (event) => {
     return;
   }
 
+  // Only the inspected frame drives the status strip. A thumbnail worker that
+  // is being torn down must not report against the example on screen.
+  if (event.source !== elements.frame.contentWindow) return;
+
   if (event.data.type === "ready") {
     setFrameStatus("ready", "ready");
   } else if (event.data.type === "runtime-error") {
@@ -600,7 +745,7 @@ window.addEventListener("keydown", (event) => {
 });
 
 loadExamples({ preserveSelection: false }).catch((error) => {
-  elements.runtimeSummary.textContent = "discovery failed";
+  setRuntimeSummary("discovery failed", "error");
   elements.empty.hidden = false;
   elements.empty.querySelector("h2").textContent = error.message;
 });

@@ -44,6 +44,29 @@
         }
       }
     </script>
+    <script>
+      /* The adapter's import chain only reveals the renderer build three
+         round trips in. Start those fetches now, in parallel with the host. */
+      (() => {
+        const params = new URLSearchParams(window.location.search);
+        const modulePath = params.get("module");
+        const preloads = ["/node_modules/three/build/three.module.js"];
+
+        if (params.get("galleryBackend") === "webgpu") {
+          preloads.push("/node_modules/three/build/three.webgpu.js");
+        }
+        if (modulePath?.startsWith("/dev/example-gallery/examples/")) {
+          preloads.push(modulePath);
+        }
+
+        for (const href of preloads) {
+          const link = document.createElement("link");
+          link.rel = "modulepreload";
+          link.href = href;
+          document.head.append(link);
+        }
+      })();
+    </script>
   </head>
   <body>
     <canvas></canvas>

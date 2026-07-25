@@ -79,12 +79,51 @@ Options:
   return options;
 }
 
-async function existingFile(filePath) {
+const transpileCache = new Map();
+
+async function fileStats(filePath) {
   try {
-    return (await stat(filePath)).isFile();
+    const metadata = await stat(filePath);
+    return metadata.isFile() ? metadata : null;
   } catch {
-    return false;
+    return null;
   }
+}
+
+async function existingFile(filePath) {
+  return (await fileStats(filePath)) !== null;
+}
+
+function entityTag(metadata, variant) {
+  const size = metadata.size.toString(16);
+  const modified = Math.round(metadata.mtimeMs).toString(16);
+  return `W/"${size}-${modified}${variant}"`;
+}
+
+/* Development caching: every response is revalidated, so an edited scene, skill,
+   or asset is served the moment it changes. Unchanged bytes answer 304, which
+   spares each example frame a repeat download of the renderer build — the
+   overview alone opens one frame per example. */
+function revalidationHeaders(metadata, variant = "") {
+  return {
+    "cache-control": "no-cache",
+    etag: entityTag(metadata, variant),
+    "last-modified": metadata.mtime.toUTCString(),
+  };
+}
+
+function notModified(request, headers) {
+  const ifNoneMatch = request.headers["if-none-match"];
+  if (typeof ifNoneMatch !== "string") return false;
+  return ifNoneMatch
+    .split(",")
+    .some((candidate) => candidate.trim() === headers.etag);
+}
+
+function sendNotModified(response, headers) {
+  response.writeHead(304, headers);
+  response.end();
+  return true;
 }
 
 function safePath(root, pathname) {
@@ -95,15 +134,19 @@ function safePath(root, pathname) {
 }
 
 async function sendFile(request, response, filePath) {
-  if (!(await existingFile(filePath))) return false;
-  const metadata = await stat(filePath);
+  const metadata = await fileStats(filePath);
+  if (!metadata) return false;
+
+  const headers = revalidationHeaders(metadata);
+  if (notModified(request, headers)) return sendNotModified(response, headers);
+
   response.writeHead(200, {
     "content-type":
       contentTypes.get(path.extname(filePath).toLowerCase()) ??
       "application/octet-stream",
     "content-length": metadata.size,
-    "cache-control": "no-store",
     "x-content-type-options": "nosniff",
+    ...headers,
   });
   if (request.method === "HEAD") {
     response.end();
@@ -127,19 +170,29 @@ async function resolveServableFile(root, pathname) {
 }
 
 async function sendRawModule(request, response, filePath) {
+  const metadata = await fileStats(filePath);
+  if (!metadata) return false;
+
+  const headers = revalidationHeaders(metadata, "-raw");
+  if (notModified(request, headers)) return sendNotModified(response, headers);
+
   const source = await readFile(filePath, "utf8");
   const payload = `export default ${JSON.stringify(source)};\n`;
   response.writeHead(200, {
     "content-type": "text/javascript; charset=utf-8",
     "content-length": Buffer.byteLength(payload),
-    "cache-control": "no-store",
     "x-content-type-options": "nosniff",
+    ...headers,
   });
   response.end(request.method === "HEAD" ? undefined : payload);
   return true;
 }
 
-async function sendTypeScriptModule(request, response, filePath) {
+// Memoized against size and mtime: an edit re-transpiles, a reload does not.
+async function transpileTypeScript(filePath, tag) {
+  const cached = transpileCache.get(filePath);
+  if (cached?.tag === tag) return cached.code;
+
   const source = await readFile(filePath, "utf8");
   const result = await transform(source, {
     loader: "ts",
@@ -153,13 +206,25 @@ async function sendTypeScriptModule(request, response, filePath) {
       },
     },
   });
+  transpileCache.set(filePath, { tag, code: result.code });
+  return result.code;
+}
+
+async function sendTypeScriptModule(request, response, filePath) {
+  const metadata = await fileStats(filePath);
+  if (!metadata) return false;
+
+  const headers = revalidationHeaders(metadata, "-ts");
+  if (notModified(request, headers)) return sendNotModified(response, headers);
+
+  const code = await transpileTypeScript(filePath, headers.etag);
   response.writeHead(200, {
     "content-type": "text/javascript; charset=utf-8",
-    "content-length": Buffer.byteLength(result.code),
-    "cache-control": "no-store",
+    "content-length": Buffer.byteLength(code),
     "x-content-type-options": "nosniff",
+    ...headers,
   });
-  response.end(request.method === "HEAD" ? undefined : result.code);
+  response.end(request.method === "HEAD" ? undefined : code);
   return true;
 }
 
