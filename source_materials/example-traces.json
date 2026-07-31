@@ -662,6 +662,35 @@
         ]
       }
     ],
+    "threejs-procedural-vfx/raymarched-aurora-curtains": [
+      {
+        "source": "author-local-aurora",
+        "files": [
+          "aurora-snow-desert.html",
+          "aurora-original-shader.js"
+        ],
+        "mechanisms": [
+          "75-step perspective raymarch through a 75-world-unit emissive slab bounded to X plus or minus 250 and Z plus or minus 500 world units",
+          "three-octave inverted value-noise field warped by height, world Z, two line-noise bands, time, and a 19.6 seed",
+          "uniform step-length-weighted integration with a 0.25-step positive start jitter and no distance or direction attenuation",
+          "height-ramped emerald-to-cyan emission with a 0.05 radiance multiplier",
+          "40-step uniform 32-by-16 equirectangular upper-hemisphere radiance material with four samples per texel"
+        ],
+        "boundary": "reference-extraction",
+        "divergences": [
+          "the reusable example contains only the aurora slab, density field, perspective material, equirectangular material, uniform contract, and calibrated preset",
+          "polar-night backdrop and stars, HDR render targets, composite and grade, irradiance use, snow terrain, spindrift, renderer lifecycle, camera, and controls live only in the gallery adapter",
+          "gallery-owned backdrop and star code composes with the reusable aurora field inside the same linear HDR sky and probe passes, retaining pass precision and the linear radiance sum",
+          "on author instruction, the 12000-world-unit horizontal half-extents are replaced by the standalone curtain footprint of X plus or minus 250 and Z plus or minus 500, removing the long horizontal accumulation path",
+          "the standalone uniform marcher and 0.25-step start jitter replace the snow-desert geometric schedule, distance extinction, and direction gate because the restored finite footprint already removes the unwanted limb path",
+          "the standalone screen-space lower fade is omitted from the reusable field and probe; the finite volume owns aurora coverage while scene geometry owns occlusion",
+          "the gallery uses a scene-relative aurora gain of 1.15, a moderately darker polar-night backdrop, and an intermediate upward camera pitch to recover curtain contrast without reverting the complete snow-desert presentation to the standalone sky",
+          "the authored pointer-look rig is represented by an orbitable, pannable gallery camera with an above-terrain clamp",
+          "the presentation HUD, FPS display, boot veil, GUI, and preset controls are omitted",
+          "aurora-only, no-aurora, and radiance-probe diagnostics wrap the same passes without changing their final formulas"
+        ]
+      }
+    ],
     "threejs-procedural-vfx/reentry-plasma": [
       {
         "source": "stellar",
@@ -727,7 +756,7 @@
           "the GLB stage, camera, lights, teapot, collider animation, scene pass, depth handoff, and bloom composition live in the gallery adapter",
           "density, temperature, velocity, collider, and no-bloom diagnostics wrap the final branch without altering its formulas",
           "collider angular speeds use a fixed seeded generator instead of nondeterministic Math.random values",
-          "gallery thumbnail mode advances 36 animation frames before its single still render so the time-dependent volume is populated",
+          "gallery thumbnail mode advances 120 animation frames before its single still render so the time-dependent volume reaches an established flame state",
           "the package Three.js dependency is upgraded from 0.184.0 to the implementation's 0.185.1 target"
         ]
       }

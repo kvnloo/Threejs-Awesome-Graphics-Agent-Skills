@@ -240,6 +240,20 @@
       ]
     },
     {
+      "request": "Render finite-footprint raymarched aurora curtains with uniform volume integration and an equirectangular radiance probe.",
+      "routes": [
+        {
+          "skill": "threejs-procedural-vfx",
+          "signals": [
+            "raymarched aurora curtains",
+            "finite-footprint emissive slabs",
+            "uniform volume integration",
+            "equirectangular radiance probes"
+          ]
+        }
+      ]
+    },
+    {
       "request": "Build screen-space frost that accumulates and clears through touch history, blur, and refraction.",
       "routes": [
         {
@@ -510,7 +524,8 @@
     {
       "skill": "threejs-atmosphere-aerial-perspective",
       "mustMention": [
-        "$threejs-volumetric-clouds"
+        "$threejs-volumetric-clouds",
+        "$threejs-procedural-vfx"
       ]
     },
     {
@@ -538,7 +553,8 @@
       "mustMention": [
         "$threejs-temporal-surfaces",
         "$threejs-precipitation-surfaces",
-        "$threejs-volumetric-clouds"
+        "$threejs-volumetric-clouds",
+        "$threejs-atmosphere-aerial-perspective"
       ]
     },
     {

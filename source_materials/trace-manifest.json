@@ -1,6 +1,15 @@
 {
   "schemaVersion": 1,
   "sources": {
+    "author-local-aurora": {
+      "repository": "https://github.com/scottstts/Threejs-Awesome-Graphics-Agent-Skills",
+      "revision": "c43ac9e2532373a947fb5548c705fe40814632bc",
+      "license": "MIT by project rule",
+      "files": {
+        "aurora-snow-desert.html": "3e021544cbe272db54f120eb0339455dea0fce6034d56ec887b56b0515c1ff07",
+        "aurora-original-shader.js": "6ea35226f37f08adf0bffe6f10df9e2ecab3e216b8b18aead215a4a7a8a896a3"
+      }
+    },
     "author-local-submarine": {
       "repository": "https://github.com/scottstts/Threejs-Awesome-Graphics-Agent-Skills",
       "revision": "2d0972a23995a0b302aceb0050fb0ceeeadff891",

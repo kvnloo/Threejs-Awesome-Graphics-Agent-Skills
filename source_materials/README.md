@@ -49,7 +49,10 @@ input.
 The local-file review context is
 [scottstts/Threejs-Awesome-Graphics-Agent-Skills](https://github.com/scottstts/Threejs-Awesome-Graphics-Agent-Skills)
 at `2d0972a23995a0b302aceb0050fb0ceeeadff891` for the first two rows and
-`1e114ab548b1365b53cd1c0955ec6198e4cf64d3` for the two vehicle studies.
+`1e114ab548b1365b53cd1c0955ec6198e4cf64d3` for the two vehicle studies. The
+aurora intake was reviewed against project state
+`c43ac9e2532373a947fb5548c705fe40814632bc` plus the author-provided standalone
+shader, and both files are pinned by hash.
 
 | File | SHA-256 | Reviewed areas | Mechanisms distilled into |
 | --- | --- | --- | --- |
@@ -57,6 +60,8 @@ at `2d0972a23995a0b302aceb0050fb0ceeeadff891` for the first two rows and
 | `source_materials/submarine.html` | `6f80f233fd24e38ece393aea67a11e271782335f455d1e320cc69d18babc5f49` | single-file WebGPU procedural submarine: tilted-collar hull planning, reusable grid/lathe/sweep/fin emitters, UV-owned apertures and ornament, complete cabin/stern/fin assembly, generated TSL material inputs, deterministic topology evidence | `$threejs-procedural-geometry` |
 | `source_materials/f1_race_car.html` | `4fe861a63c1e1dd34c10e951fbe16b661a9c5094b691d583211697492081dd6e` | single-file WebGPU/TSL procedural open-wheel car: monotone parameter tracks compiled into one continuous hull loft, recess-opening semantic sections, superellipse sidepods with a real inlet aperture, spanwise airfoil lofts, warped outline plates, two-plane livery projector, load-deflected tyre carcass, per-part triangle evidence | `$threejs-procedural-geometry` |
 | `source_materials/motorcycle.html` | `56c43b3083037a69c438a6c46e9441c5f48d2117aa80be57111af9a2ae8697d9` | single-file WebGPU/TSL procedural supersport motorcycle: steering-axis placement, slot-tagged mesh writer, revolve/transport/upright sweeps, panel shells, spoked wheels and petal rotor masks, bore-local engine volumes, superellipse bodywork, catenary chain, signed-volume orientation guard | `$threejs-procedural-geometry` |
+| `source_materials/aurora-snow-desert.html` | `3e021544cbe272db54f120eb0339455dea0fce6034d56ec887b56b0515c1ff07` | single-file WebGL polar-night scene: horizon-reaching aurora slab, warped curtain density, geometric ray steps, per-step jitter, limb extinction, shared perspective/equirectangular radiance, polar-night backdrop and stars, live terrain irradiance, clipmap snow desert, and spindrift | `$threejs-procedural-vfx`; only the aurora implementation is distributed, while all other scene systems remain in the dev gallery shim |
+| `source_materials/aurora-original-shader.js` | `6ea35226f37f08adf0bffe6f10df9e2ecab3e216b8b18aead215a4a7a8a896a3` | author-provided standalone WebGL aurora: finite X ±250 / Z ±500 footprint, 75-step uniform raymarch, exact warped curtain density, screen-space lower fade, sky, stars, tone mapping, and dithering | `$threejs-procedural-vfx`; the finite aurora footprint is consumed, while sky, stars, grading, runtime, and GUI remain outside the skill |
 
 ### Local-project findings retained
 
@@ -71,6 +76,37 @@ at `2d0972a23995a0b302aceb0050fb0ceeeadff891` for the first two rows and
 - A camera handoff needs one interpolation owner; stacked transition and follow smoothing creates a visible half-halt.
 - Authored motion should separate analytic travel phases, spring convergence, exact terminal poses, and secondary motion.
 - Rotating-frame docking is stable when axial/radial error, alignment, and spin are solved independently.
+
+### `aurora-snow-desert.html` and `aurora-original-shader.js`
+
+Reviewed:
+
+- a `75`-step emissive slab raymarch with `1.055` geometric step growth;
+- the three-octave warped curtain-density field and height-ramped colour;
+- per-step jitter, distance extinction, and the source's narrow horizon gate;
+- the matching `40`-step, `32 × 16`, four-sample equirectangular radiance pass;
+- the polar-night star/backdrop pass, linear HDR target, common grade, live
+  terrain radiance use, clipmap snow terrain, spindrift, camera, and controls.
+- the standalone shader's finite X `±250` / Z `±500` footprint, uniform
+  `75`-step march, screen-space lower fade, sky, stars, grade, and GUI.
+
+Accepted consumption:
+
+- `$threejs-procedural-vfx`
+
+The distributed example owns only the aurora field, its perspective and
+equirectangular materials, shared uniforms, and calibrated preset. On author
+instruction, it restores the standalone curtain footprint of X `±250` and Z
+`±500` instead of the snow-desert scene's `12000`-unit horizontal half-extents,
+removing the long horizontal accumulation path. It also uses the standalone
+uniform marcher and `0.25`-step start jitter without distance extinction or a
+direction gate, because the finite footprint already owns the lower boundary.
+The standalone screen-space fade is not applied to the reusable field or probe.
+The dev gallery uses a modest scene-relative gain, moderately darker polar-night
+colors, and an intermediate upward view to recover contrast while preserving
+the snow terrain presentation. Backdrop, stars, render targets, grading,
+terrain lighting, terrain, snow particles, camera, and runtime lifecycle remain
+in the dev gallery shim.
 
 ## Supplied external repositories
 
@@ -775,7 +811,7 @@ These sources are paraphrased. Official documentation remains the authority for 
 | `$threejs-atmosphere-aerial-perspective` | `jeantimex/geospatial`, Stellar, `three-geospatial`, atmosphere references |
 | `$threejs-volumetric-clouds` | `jeantimex/geospatial`, `three-geospatial` |
 | `$threejs-raymarched-space-effects` | interstellarThreeJS; local Schwarzschild black-hole HTML |
-| `$threejs-procedural-vfx` | Stellar, `mecs-tower-defense-example`, `holographic-shader-visualizer-three.Js`, `threejs-easyfire` |
+| `$threejs-procedural-vfx` | `aurora-snow-desert.html`, `aurora-original-shader.js`, Stellar, `mecs-tower-defense-example`, `holographic-shader-visualizer-three.Js`, `threejs-easyfire` |
 | `$threejs-temporal-surfaces` | `frozen`, conceptual only |
 | `$threejs-shadow-systems` | MyCraft, `procedural-bank` |
 | `$threejs-screen-space-ambient-occlusion` | MyCraft, `procedural-bank`, `three-geospatial` |

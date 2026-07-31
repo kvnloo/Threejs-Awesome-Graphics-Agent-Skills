@@ -110,9 +110,10 @@
       "evidence": [
         "threejs-procedural-vfx/reentry-plasma",
         "threejs-procedural-vfx/holographic-shape-transition",
-        "threejs-procedural-vfx/volumetric-fluid-fire"
+        "threejs-procedural-vfx/volumetric-fluid-fire",
+        "threejs-procedural-vfx/raymarched-aurora-curtains"
       ],
-      "rationale": "Layered shells, wakes, sparks, pooling, additive rim-shell projections, and coupled volumetric velocity, dye, pressure, collision, and HDR contribution fields require runnable evidence."
+      "rationale": "Layered shells, finite-footprint emissive slabs, uniform ray integration, wakes, sparks, pooling, additive rim-shell projections, and coupled volumetric velocity, dye, pressure, collision, and HDR contribution fields require runnable evidence."
     },
     "threejs-raymarched-space-effects": {
       "classification": "example-required",

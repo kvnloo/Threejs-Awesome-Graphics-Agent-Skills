@@ -1,0 +1,33 @@
+{
+  "title": "Raymarched Aurora Curtains",
+  "description": "A finite-footprint emissive slab whose warped volumetric curtain field is integrated with uniform, gently start-jittered ray steps, shown over a procedural polar-night snow desert.",
+  "backend": "WebGL2 / GLSL volumetric raymarch",
+  "techniques": [
+    "finite-footprint emissive aurora slab",
+    "three-octave warped volumetric curtain field",
+    "uniform step-length-weighted ray integration",
+    "gentle start jitter",
+    "supersampled equirectangular radiance probe"
+  ],
+  "defaultViewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "defaultDpr": 1,
+  "debugModes": [
+    { "value": "final", "label": "Final" },
+    { "value": "aurora-only", "label": "Aurora only" },
+    { "value": "no-aurora", "label": "No aurora" },
+    { "value": "radiance-probe", "label": "Radiance probe" }
+  ],
+  "controls": [
+    "orbit",
+    "pan",
+    "zoom",
+    "pause",
+    "timeScale",
+    "dpr",
+    "debugMode",
+    "capture"
+  ]
+}

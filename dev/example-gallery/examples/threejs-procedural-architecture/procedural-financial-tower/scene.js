@@ -11,7 +11,7 @@ export default {
     fov: 46,
     near: 0.1,
     far: 520,
-    position: [70, 48, 128],
+    position: [60, 48, 65],
   },
   controls: {
     target: [0, 29, 0],

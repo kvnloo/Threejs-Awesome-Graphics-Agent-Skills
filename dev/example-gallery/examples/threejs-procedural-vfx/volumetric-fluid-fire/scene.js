@@ -14,6 +14,7 @@ import {
 } from "/skills/threejs-procedural-vfx/examples/volumetric-fluid-fire/volumetric-fluid-fire.js";
 
 const VOLUME_LAYER = 10;
+const THUMBNAIL_WARMUP_FRAMES = 120;
 
 function createSeededRandom(seed) {
   let state = seed >>> 0;
@@ -204,7 +205,7 @@ export default {
 
     if (new URLSearchParams(globalThis.location.search).get("galleryThumbnail") === "1") {
       let warmElapsed = 0;
-      for (let frame = 0; frame < 36; frame += 1) {
+      for (let frame = 0; frame < THUMBNAIL_WARMUP_FRAMES; frame += 1) {
         await new Promise((resolve) => requestAnimationFrame(resolve));
         warmElapsed += 1 / 60;
         advanceScene(1 / 60, warmElapsed);
