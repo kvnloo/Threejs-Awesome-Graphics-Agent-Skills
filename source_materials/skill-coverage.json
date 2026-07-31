@@ -109,9 +109,10 @@
       "classification": "example-required",
       "evidence": [
         "threejs-procedural-vfx/reentry-plasma",
-        "threejs-procedural-vfx/holographic-shape-transition"
+        "threejs-procedural-vfx/holographic-shape-transition",
+        "threejs-procedural-vfx/volumetric-fluid-fire"
       ],
-      "rationale": "Layered shells, wakes, sparks, pooling, additive rim-shell projections with footprint-filtered banding, and HDR contribution hierarchy require runnable evidence."
+      "rationale": "Layered shells, wakes, sparks, pooling, additive rim-shell projections, and coupled volumetric velocity, dye, pressure, collision, and HDR contribution fields require runnable evidence."
     },
     "threejs-raymarched-space-effects": {
       "classification": "example-required",

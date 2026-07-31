@@ -151,5 +151,17 @@ source examples. Its package build output is not copied into skill examples.
 - Includes the copied TSL POM march and adapted curved-shell, height-map,
   normal, self-shadow, and shadow-depth material assembly.
 
+## bandinopla/threejs-easyfire
+
+- Source: https://github.com/bandinopla/threejs-easyfire
+- Copyright: 2026 Pablo Bandinopla
+- License: MIT
+- Used in: `skills/threejs-procedural-vfx/examples/volumetric-fluid-fire/`
+- Includes adapted WebGPU volumetric fire, coupled fluid compute passes,
+  mesh-surface emitters, signed-distance collisions, temperature-tier volume
+  scattering, and render-pipeline integration.
+- Dev-only copied asset:
+  - `dev/example-gallery/examples/threejs-procedural-vfx/volumetric-fluid-fire/assets/demo-scene.glb`
+
 Additional bundled asset folders may include local `THIRD_PARTY_LICENSES.md`
 files with asset-specific notices.

@@ -651,6 +651,36 @@
         "packages/clouds/src/shaders/varianceClipping.glsl": "b7ef065e7e7b9e8069ea3f6a3597f4e25e3ca4809b0ad2aa1bdae10abcbeaba6"
       }
     },
+    "threejs-easyfire": {
+      "repository": "https://github.com/bandinopla/threejs-easyfire",
+      "revision": "994806e27d14b9226c36789ad71ae4b3583dd7db",
+      "license": "MIT",
+      "localDirectory": "threejs-easyfire",
+      "files": {
+        "src/EasyFire.ts": "ffdfcd58456c18024022c9a60890602a6c42e65c451df13bc2db80c0c9800785",
+        "src/EasyFireShaderContext.ts": "7782c7dfbe8329db32df6c001789af40527e834af859c7027a4f66f78e07b1fc",
+        "src/EmitterManager.ts": "2aeb70ada5b11cd79f7fd5508eaf7adcd8543d2434b7fb6a848ec3761d09ddb1",
+        "src/pass/advectDyePass.ts": "3354161680fb92898cbd8247061d0dc898d0d54969cc4d7c49c1e0ecede03e60",
+        "src/pass/advectVelocityPass.ts": "a88bef68a0cc2db2a43795d620450cad9d4021ad25f8b571bd34ee8b55ef014a",
+        "src/pass/curlNoisePass.ts": "ca71e0c37fc87b39ab2f39e14c1f14d5c1bbd5c431886bbc61e83336d5dc965e",
+        "src/pass/divergencePass.ts": "877abce5d20d24ee556bc31faa798926c6a3e06de9a50cd6fd484d73629d6985",
+        "src/pass/emitObjectPass.ts": "27efb01b9b755e9bd535526f0d5ca7fda485ba6a35a4face833f3062259ad707",
+        "src/pass/jacobiPass.ts": "f561dcdba0923d423290896d5167530b6233437bdff95d801764603246703447",
+        "src/pass/projectPass.ts": "1a04ecca0491344e139490b2d1d516be8a6db0e99859a20aa82d1e644b75a122",
+        "src/pass/vorticityPass.ts": "5725eae811c44ad21d37ad0f26cc6741075cd2220c48bea57cade002d9cdfc07",
+        "src/sdf/CollisionHandler.ts": "3d4dafca2d8bba433bbda3eaeaa36c6ef60e621603d9e20b35aa8aa6e08c5a18",
+        "src/sdf/sdfSampler.ts": "6030350c4023c76cf5fff2b0da664a61053b508a0e4cedf183dc92f9f8d51637",
+        "src/sdf/shape/SDFBox.ts": "e0288ec9f46588b022bfeccb5481cb5f0d37e75660b2427f4979903ad0ac1ffc",
+        "src/sdf/shape/SDFEllipsoid.ts": "f719e517ca204983ed69bb70c2e0b51d03bb1212307e033193925bc7658bc2f4",
+        "src/sdf/shape/SDFShape.ts": "016545c3adb6fc673c6fa0202eb1e85722ca7439bb8e69009699fe4556d4b73c",
+        "src/util/createStorage3D.ts": "87415daf725c3ebebea71c1d6cd9a398514e9cbfddd74ed2130ade5e4de67bcf",
+        "demo/demo.ts": "deea9771010a20ab2cb6c141fe0dbe0ca1480cdf68716c695a9e1fafe641303d",
+        "demo/main.ts": "99458e1244e8c7b6b9074ae42e8481bf1a691d52bb9979b4fe69aab7b1c82fe1"
+      },
+      "assets": {
+        "demo/public/demo-scene.glb": "804707f26a12de28500e259282532b927ffc70540fc3b21b37bd91c3caa2e6ed"
+      }
+    },
     "threejs-silhouette-pom": {
       "repository": "https://github.com/SkyeShark/threejs-silhouette-pom",
       "revision": "5b5b48749aab3237e6788a93d84f324995cfeab0",

@@ -96,6 +96,7 @@ author-supplied read-only neighboring worktree.
 | [momentchan/r3f-procedural-grass](https://github.com/momentchan/r3f-procedural-grass) | `e441d2bd4eacaa0c913a8b64dfeb69bd0314a7b5`; `packages/r3f-gist` submodule `16bc424b75077a910965c98ea8ce0c5b564b54b1` | MIT; submodule has no observed license and is treated as MIT by project rule | copied/adapted realistic GPU-computed grass implementation for `$threejs-procedural-vegetation` |
 | [achrefelouafi/SnowSystemThreeJS](https://github.com/achrefelouafi/SnowSystemThreeJS) | `c7a3bfbd10c93f8d7b032c322c99b38326edeb80` | MIT | copied/adapted snowfall, snow accumulation, model snow capping, and frozen-lake mechanisms into `$threejs-precipitation-surfaces` |
 | [Faraz-Portfolio/demo-2023-rain-puddle](https://github.com/Faraz-Portfolio/demo-2023-rain-puddle) | `257066b63d08b227df8f982377e60f91752ddc81` | GPL-3.0 | copied/adapted wet asphalt puddle, rain, and splash mechanisms into GPL-covered precipitation example material |
+| [bandinopla/threejs-easyfire](https://github.com/bandinopla/threejs-easyfire) | `994806e27d14b9226c36789ad71ae4b3583dd7db` | MIT | copied/adapted the WebGPU volumetric fire, fluid compute, mesh-emitter, SDF collision, temperature-scattering, and dev-stage mechanisms for `$threejs-procedural-vfx` |
 
 ### `ez-tree`
 
@@ -705,6 +706,37 @@ The core parallax module is copied byte-for-byte. The gallery retains the full
 bulkhead composition: procedural wall, deck, columns, and two overhead pipes.
 The inspector, GUI, and optional bloom remain dev-runtime concerns.
 
+### `threejs-easyfire`
+
+- Repository: https://github.com/bandinopla/threejs-easyfire
+- Revision: `994806e27d14b9226c36789ad71ae4b3583dd7db`
+- License: MIT
+
+Reviewed:
+
+- separate world, render, and physics volume dimensions;
+- eleven 3D textures for velocity, dye, divergence, pressure, vorticity,
+  procedural curl, signed distance, and surface velocity;
+- fixed WebGPU compute ordering, ping-pong ownership, semi-Lagrangian
+  advection, vorticity confinement, and Jacobi pressure projection;
+- preallocated mesh-vertex emitters with transform/property/velocity storage
+  buffers;
+- box and ellipsoid SDF collider baking plus moving-wall response;
+- temperature-tier HDR raymarching, self-absorption, depth handoff, and bloom;
+- demo camera, stage geometry, teapot, moving colliders, lights, and exact
+  perceptual settings.
+
+Accepted consumption:
+
+- `$threejs-procedural-vfx`
+
+The reusable example retains the complete authored simulation and shading
+system under product-neutral names. Inspector/browser persistence controls are
+excluded. The copied GLB remains dev-only because it defines the inspection
+stage and emitter presentation rather than the reusable fire effect. Gallery
+diagnostics expose density, temperature, velocity, colliders, and the non-bloom
+baseline without changing the final branch.
+
 ## Focused technical references
 
 These references support mathematical or rendering claims that are not specific to one inspected project:
@@ -743,7 +775,7 @@ These sources are paraphrased. Official documentation remains the authority for 
 | `$threejs-atmosphere-aerial-perspective` | `jeantimex/geospatial`, Stellar, `three-geospatial`, atmosphere references |
 | `$threejs-volumetric-clouds` | `jeantimex/geospatial`, `three-geospatial` |
 | `$threejs-raymarched-space-effects` | interstellarThreeJS; local Schwarzschild black-hole HTML |
-| `$threejs-procedural-vfx` | Stellar, `mecs-tower-defense-example`, `holographic-shader-visualizer-three.Js` |
+| `$threejs-procedural-vfx` | Stellar, `mecs-tower-defense-example`, `holographic-shader-visualizer-three.Js`, `threejs-easyfire` |
 | `$threejs-temporal-surfaces` | `frozen`, conceptual only |
 | `$threejs-shadow-systems` | MyCraft, `procedural-bank` |
 | `$threejs-screen-space-ambient-occlusion` | MyCraft, `procedural-bank`, `three-geospatial` |

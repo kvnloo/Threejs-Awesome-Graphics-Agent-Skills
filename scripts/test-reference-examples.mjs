@@ -139,6 +139,77 @@ const sourceTraceManifest = JSON.parse(
   ),
 );
 
+const volumetricFireImplementation = await readFile(
+  new URL(
+    "../skills/threejs-procedural-vfx/examples/volumetric-fluid-fire/source/VolumetricFluidFire.ts",
+    import.meta.url,
+  ),
+  "utf8",
+);
+const volumetricFireContext = await readFile(
+  new URL(
+    "../skills/threejs-procedural-vfx/examples/volumetric-fluid-fire/source/FluidFireShaderContext.ts",
+    import.meta.url,
+  ),
+  "utf8",
+);
+const volumetricFirePreset = await readFile(
+  new URL(
+    "../skills/threejs-procedural-vfx/examples/volumetric-fluid-fire/volumetric-fluid-fire.js",
+    import.meta.url,
+  ),
+  "utf8",
+);
+
+for (const textureName of [
+  "curlNoise",
+  "velA",
+  "velB",
+  "dyeA",
+  "dyeB",
+  "divergence",
+  "pressA",
+  "pressB",
+  "vorticity",
+  "sdf",
+  "sdfVelocity",
+]) {
+  assert.match(
+    volumetricFireContext,
+    new RegExp(`makeDataTexture\\(\\s*"${textureName}"`),
+    `volumetric fire is missing ${textureName} texture ownership`,
+  );
+}
+
+assert.match(
+  volumetricFireImplementation,
+  /computeShaders\.vorticityPass[\s\S]*computeShaders\.advectPassCompute[\s\S]*computeShaders\.divPassCompute[\s\S]*computeShaders\.jacobiPassABCompute[\s\S]*computeShaders\.projectCompute[\s\S]*computeShaders\.advectDyeCompute[\s\S]*computeShaders\.objectsPassCompute[\s\S]*texture\.dye\.swap\(\)/,
+  "volumetric fire compute order changed",
+);
+assert.match(
+  volumetricFireImplementation,
+  /fireColor\.mul\(radiance\)\.mul\(crispDensity\)\.mul\(fireAbsorption\)/,
+  "volumetric fire final emission formula changed",
+);
+for (const presetContract of [
+  "vorticityConfinementStrength: 7.01",
+  "temperature: 8.5",
+  "fireDensity: 0.644",
+  "turbulenceFrecuency: 6.81",
+  "collisionMargin: 0.034",
+  "densityDissipation: 1.02",
+  "cooling: 0.4831",
+  "buoyancy: 2.3729",
+  "curlNoiseMultiplier: 5.82",
+  "colorRadianceMultiplier: 14.78",
+  "temperatureAtMaxColor: 10",
+]) {
+  assert.ok(
+    volumetricFirePreset.includes(presetContract),
+    `volumetric fire preset changed: ${presetContract}`,
+  );
+}
+
 async function assertMatchesSourceHash({
   source,
   collection,

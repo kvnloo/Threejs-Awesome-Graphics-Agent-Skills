@@ -1,6 +1,6 @@
 ---
 name: threejs-procedural-vfx
-description: Author production real-time VFX in Three.js. Use for ship-conforming reentry plasma, generated capsule wakes, instanced analytic sparks, timed dissolving debris, dense-swap effect pools, additive holographic projections, Fresnel rim shells, scanline banding, glitch displacement, swept shape-to-shape handovers, and explicit scene-relative HDR emission hierarchy.
+description: Author production real-time VFX in Three.js. Use for WebGPU voxel fire and smoke, coupled volumetric fluid fields, mesh-surface emitters, signed-distance fire collisions, ship-conforming reentry plasma, generated capsule wakes, instanced analytic sparks, timed dissolving debris, dense-swap effect pools, additive holographic projections, Fresnel rim shells, scanline banding, glitch displacement, swept shape-to-shape handovers, and explicit scene-relative HDR emission hierarchy.
 ---
 
 # Procedural VFX
@@ -11,7 +11,7 @@ Build effects from an event envelope, motion field, geometry representation, and
 
 ```text
 subject/event state
-  → effect-specific geometry or instance attributes
+  → effect-specific geometry, voxel fields, or instance attributes
   → flow-facing masks or analytic age
   → material response
   → pool/lifetime ownership
@@ -22,6 +22,11 @@ Read [references/procedural-vfx-system.md](references/procedural-vfx-system.md)
 for ship-conforming reentry shells, capsule wakes, dense instanced
 spark/debris pools, holographic projection shells, HDR hierarchy, and
 implementation limits.
+
+Read [references/volumetric-fluid-fire.md](references/volumetric-fluid-fire.md)
+for three-dimensional texture ownership, fixed fluid-compute scheduling,
+mesh-surface injection, pressure projection, moving SDF boundaries,
+temperature-mapped HDR raymarching, exact presets, and failure diagnostics.
 
 Read the [reentry plasma implementation](examples/reentry-plasma/reentry-plasma.js)
 for closed layered wake shells, flow-axis deformation, advected filament
@@ -36,9 +41,19 @@ displacement, and index-gated participation. Read its
 for the shared sweep range across a shape set, the linear progress ramp inside a
 longer dwell, and the complementary-discard handover.
 
+Read the
+[volumetric fluid fire implementation](examples/volumetric-fluid-fire/volumetric-fluid-fire.js)
+for the complete WebGPU/TSL velocity, dye, pressure, vorticity, emitter,
+collision, raymarch, and diagnostic system plus its calibrated fire preset.
+
 ## Rules
 
 - Every layer must have a role in silhouette, motion, illumination, or residue.
+- Give velocity, dye, pressure, vorticity, and collisions explicit texture
+  ownership and one fixed compute schedule.
+- Convert velocity to volume UVW with the world-size vector; never advect a
+  non-cubic volume as though its axes had equal scale.
+- Keep the pressure ping-pong endpoint consistent with the projection read.
 - Use normalized lifetime curves instead of scattered time constants.
 - Derive secondary motion from the same flow or event direction.
 - Keep bloom as a response to HDR emission, not as the effect's only shape.
@@ -56,5 +71,7 @@ longer dwell, and the complementary-discard handover.
 Use `$threejs-temporal-surfaces` only for the screen-space
 frost/touch-history pipeline. Use `$threejs-precipitation-surfaces` for
 falling rain or snow, splash flipbooks, and weather events that alter ground
-materials. Keep subject-space plasma, generated wakes, sparks, pooled debris,
-and additive projection shells in this skill.
+materials. Use `$threejs-volumetric-clouds` for atmospheric weather layers and
+planet-scale cloud volumes. Keep bounded interactive fire and smoke, subject-space
+plasma, generated wakes, sparks, pooled debris, and additive projection shells
+in this skill.

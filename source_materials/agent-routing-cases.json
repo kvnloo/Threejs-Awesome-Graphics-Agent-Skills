@@ -227,6 +227,19 @@
       ]
     },
     {
+      "request": "Build interactive WebGPU voxel fire whose mesh emitters feed a volumetric fluid field around moving signed-distance colliders.",
+      "routes": [
+        {
+          "skill": "threejs-procedural-vfx",
+          "signals": [
+            "voxel fire and smoke",
+            "volumetric fluid fields",
+            "sdf fire collisions"
+          ]
+        }
+      ]
+    },
+    {
       "request": "Build screen-space frost that accumulates and clears through touch history, blur, and refraction.",
       "routes": [
         {
@@ -503,7 +516,8 @@
     {
       "skill": "threejs-volumetric-clouds",
       "mustMention": [
-        "$threejs-atmosphere-aerial-perspective"
+        "$threejs-atmosphere-aerial-perspective",
+        "$threejs-procedural-vfx"
       ]
     },
     {
@@ -523,7 +537,8 @@
       "skill": "threejs-procedural-vfx",
       "mustMention": [
         "$threejs-temporal-surfaces",
-        "$threejs-precipitation-surfaces"
+        "$threejs-precipitation-surfaces",
+        "$threejs-volumetric-clouds"
       ]
     },
     {

@@ -1,0 +1,35 @@
+{
+  "title": "Volumetric Fluid Fire",
+  "description": "A WebGPU voxel fire volume whose mesh-surface emitters inject density and temperature into coupled velocity and dye fields, with curl turbulence, vorticity confinement, pressure projection, temperature-mapped HDR raymarching, and moving signed-distance colliders.",
+  "backend": "WebGPU / TSL compute and volume raymarching",
+  "techniques": [
+    "three-dimensional velocity and dye advection",
+    "Jacobi pressure projection and vorticity confinement",
+    "mesh-surface storage-buffer emitters",
+    "baked signed-distance collision volume",
+    "temperature-tier HDR volume scattering",
+    "depth-aware additive bloom composition"
+  ],
+  "defaultViewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "defaultDpr": 1,
+  "debugModes": [
+    { "value": "final", "label": "Final" },
+    { "value": "no-bloom", "label": "No bloom" },
+    { "value": "density", "label": "Density" },
+    { "value": "temperature", "label": "Temperature" },
+    { "value": "velocity", "label": "Velocity" },
+    { "value": "colliders", "label": "Colliders" }
+  ],
+  "controls": [
+    "orbit",
+    "pan",
+    "pause",
+    "timeScale",
+    "dpr",
+    "debugMode",
+    "capture"
+  ]
+}

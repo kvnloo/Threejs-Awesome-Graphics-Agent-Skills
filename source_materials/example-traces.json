@@ -682,6 +682,56 @@
         ]
       }
     ],
+    "threejs-procedural-vfx/volumetric-fluid-fire": [
+      {
+        "source": "threejs-easyfire",
+        "files": [
+          "src/EasyFire.ts",
+          "src/EasyFireShaderContext.ts",
+          "src/EmitterManager.ts",
+          "src/pass/advectDyePass.ts",
+          "src/pass/advectVelocityPass.ts",
+          "src/pass/curlNoisePass.ts",
+          "src/pass/divergencePass.ts",
+          "src/pass/emitObjectPass.ts",
+          "src/pass/jacobiPass.ts",
+          "src/pass/projectPass.ts",
+          "src/pass/vorticityPass.ts",
+          "src/sdf/CollisionHandler.ts",
+          "src/sdf/sdfSampler.ts",
+          "src/sdf/shape/SDFBox.ts",
+          "src/sdf/shape/SDFEllipsoid.ts",
+          "src/sdf/shape/SDFShape.ts",
+          "src/util/createStorage3D.ts",
+          "demo/demo.ts",
+          "demo/main.ts"
+        ],
+        "mechanisms": [
+          "eleven-texture WebGPU volume with separate physics and render grids for velocity, dye, pressure, divergence, vorticity, curl noise, signed distance, and surface velocity",
+          "fixed compute schedule for curl generation, collider baking, velocity and dye advection, vorticity confinement, Jacobi pressure projection, and mesh-vertex injection",
+          "preallocated mesh-surface emitter buffers carrying proxy transforms, emission multipliers, tint factors, and object velocity",
+          "baked box and ellipsoid signed-distance fields with moving-surface velocity, ejection, friction, and penetration prevention",
+          "temperature-tier HDR volume scattering with animated simplex detail, self-absorption, scene-depth termination, additive composition, and thresholded bloom",
+          "calibrated 100-by-78-by-49 render grid, 80-by-63-by-40 physics grid, 22-step raymarch, and exact fire-motion/material preset"
+        ],
+        "assets": [
+          {
+            "sourcePath": "demo/public/demo-scene.glb",
+            "localPath": "dev/example-gallery/examples/threejs-procedural-vfx/volumetric-fluid-fire/assets/demo-scene.glb"
+          }
+        ],
+        "boundary": "reference-extraction",
+        "divergences": [
+          "the reusable TypeScript modules use product-neutral class names and browser-resolvable package imports while retaining the compute formulas, texture contracts, pass order, and public controls",
+          "the reference-specific inspector, browser storage, clipboard, download, and repository-link controls are omitted from the distributed effect",
+          "the GLB stage, camera, lights, teapot, collider animation, scene pass, depth handoff, and bloom composition live in the gallery adapter",
+          "density, temperature, velocity, collider, and no-bloom diagnostics wrap the final branch without altering its formulas",
+          "collider angular speeds use a fixed seeded generator instead of nondeterministic Math.random values",
+          "gallery thumbnail mode advances 36 animation frames before its single still render so the time-dependent volume is populated",
+          "the package Three.js dependency is upgraded from 0.184.0 to the implementation's 0.185.1 target"
+        ]
+      }
+    ],
     "threejs-raymarched-space-effects/curved-ray-accretion-volume": [
       {
         "source": "interstellar-three",
