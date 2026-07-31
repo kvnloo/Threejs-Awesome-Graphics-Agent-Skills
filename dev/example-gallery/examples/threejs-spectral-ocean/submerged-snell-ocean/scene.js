@@ -296,10 +296,10 @@ export default {
     fov: 50,
     near: 0.1,
     far: 5000,
-    position: [0, -14, 0],
+    position: [19, -23.17, -22],
   },
   controls: {
-    target: [0, -2, -40],
+    target: [7.2, 1.54, -35.73],
     minDistance: 8,
     maxDistance: 180,
     minPolarAngle: 0.05,

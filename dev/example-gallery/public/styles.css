@@ -632,6 +632,8 @@ kbd {
 .overview-card {
   display: grid;
   grid-template-rows: auto auto;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 320px;
   border: 0;
   color: inherit;
   background: transparent;
@@ -722,24 +724,6 @@ kbd {
 
 .overview-thumbnail-shell[data-state="ready"] .overview-thumbnail {
   opacity: 1;
-}
-
-.overview-thumbnail-host {
-  position: fixed;
-  top: -10000px;
-  left: -10000px;
-  width: 960px;
-  height: 540px;
-  overflow: hidden;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.overview-thumbnail-worker {
-  display: block;
-  width: 960px;
-  height: 540px;
-  border: 0;
 }
 
 .overview-card footer {

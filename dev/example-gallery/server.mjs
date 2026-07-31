@@ -9,6 +9,7 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { transform } from "esbuild";
 import { discoverExamples } from "./discovery.mjs";
+import { createThumbnailRenderer } from "./thumbnail-renderer.mjs";
 
 const galleryRoot = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(galleryRoot, "../..");
@@ -239,7 +240,9 @@ async function sendProjectModule(request, response, root, pathname, raw) {
 }
 
 export function createExampleGalleryServer({ includeFixtures = false } = {}) {
-  return createServer(async (request, response) => {
+  const thumbnailRenderer = createThumbnailRenderer();
+  let knownExamples = new Map();
+  const server = createServer(async (request, response) => {
     try {
       if (!["GET", "HEAD"].includes(request.method ?? "")) {
         response.writeHead(405, { allow: "GET, HEAD" }).end("Method not allowed");
@@ -250,6 +253,7 @@ export function createExampleGalleryServer({ includeFixtures = false } = {}) {
       const rawModule = url.search === "?raw" || url.searchParams.has("raw");
       if (url.pathname === "/api/examples") {
         const examples = await discoverExamples(projectRoot, { includeFixtures });
+        knownExamples = new Map(examples.map((example) => [example.id, example]));
         const payload = JSON.stringify(
           {
             generatedAt: new Date().toISOString(),
@@ -265,6 +269,64 @@ export function createExampleGalleryServer({ includeFixtures = false } = {}) {
           "content-length": Buffer.byteLength(payload),
         });
         response.end(request.method === "HEAD" ? undefined : payload);
+        return;
+      }
+
+      if (url.pathname === "/api/thumbnail") {
+        if (knownExamples.size === 0) {
+          const examples = await discoverExamples(projectRoot, {
+            includeFixtures,
+          });
+          knownExamples = new Map(
+            examples.map((example) => [example.id, example]),
+          );
+        }
+
+        const example = knownExamples.get(url.searchParams.get("example"));
+        if (!example) {
+          response.writeHead(404, {
+            "content-type": "text/plain; charset=utf-8",
+            "cache-control": "no-store",
+          });
+          response.end("Unknown thumbnail request");
+          return;
+        }
+
+        const address = request.socket.localAddress ?? "127.0.0.1";
+        const hostname = address.startsWith("::ffff:")
+          ? address.slice("::ffff:".length)
+          : address;
+        const originHost = hostname.includes(":") ? `[${hostname}]` : hostname;
+        const origin = `http://${originHost}:${request.socket.localPort}`;
+        const controller = new AbortController();
+        const abort = () => controller.abort();
+        request.once("aborted", abort);
+        response.once("close", () => {
+          if (!response.writableEnded) abort();
+        });
+
+        try {
+          const png = await thumbnailRenderer.render(example, origin, {
+            signal: controller.signal,
+          });
+          if (controller.signal.aborted) return;
+
+          response.writeHead(200, {
+            "content-type": "image/png",
+            "content-length": png.length,
+            "cache-control": "no-store",
+          });
+          response.end(request.method === "HEAD" ? undefined : png);
+        } catch (error) {
+          if (controller.signal.aborted) return;
+          response.writeHead(500, {
+            "content-type": "text/plain; charset=utf-8",
+            "cache-control": "no-store",
+          });
+          response.end(`Thumbnail render failed: ${error.message}`);
+        } finally {
+          request.off("aborted", abort);
+        }
         return;
       }
 
@@ -316,6 +378,8 @@ export function createExampleGalleryServer({ includeFixtures = false } = {}) {
       response.end(`Example gallery error: ${error.message}`);
     }
   });
+  server.once("close", () => void thumbnailRenderer.close());
+  return server;
 }
 
 function openBrowser(url) {

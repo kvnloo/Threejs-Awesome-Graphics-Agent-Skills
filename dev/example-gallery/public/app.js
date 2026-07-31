@@ -25,21 +25,14 @@ const elements = {
 };
 
 const DEFAULT_GALLERY_DPR = 1.5;
-const OVERVIEW_THUMBNAIL_DPR = DEFAULT_GALLERY_DPR;
-const OVERVIEW_THUMBNAIL_WIDTH = 960;
-const OVERVIEW_THUMBNAIL_HEIGHT = 540;
-const OVERVIEW_THUMBNAIL_CONCURRENCY = 2;
-const OVERVIEW_THUMBNAIL_TIMEOUT_MS = 15000;
-const OVERVIEW_THUMBNAIL_PREFETCH = 300;
+const OVERVIEW_THUMBNAIL_CONCURRENCY = 16;
+const OVERVIEW_THUMBNAIL_TIMEOUT_MS = 60000;
 
 const overviewThumbnailCache = new Map();
 const overviewThumbnailRequests = new Map();
-const overviewThumbnailFrames = new Map();
-const overviewThumbnailTargets = new WeakMap();
+const overviewThumbnailJobs = new Set();
 const overviewThumbnailQueue = [];
 let activeOverviewThumbnailCount = 0;
-let overviewThumbnailHost = null;
-let overviewThumbnailSweepTimer = 0;
 let overviewThumbnailsSuspended = false;
 let refreshPending = false;
 
@@ -143,23 +136,9 @@ function updateDebugModes(example) {
   elements.debugMode.value = state.debugMode;
 }
 
-function ensureOverviewThumbnailHost() {
-  if (overviewThumbnailHost) return overviewThumbnailHost;
-  overviewThumbnailHost = document.createElement("div");
-  overviewThumbnailHost.className = "overview-thumbnail-host";
-  overviewThumbnailHost.setAttribute("aria-hidden", "true");
-  document.body.append(overviewThumbnailHost);
-  return overviewThumbnailHost;
-}
-
 function overviewThumbnailUrl(example) {
-  const url = new URL(example.entry, window.location.origin);
-  url.searchParams.set("galleryPaused", "1");
-  url.searchParams.set("galleryDpr", String(OVERVIEW_THUMBNAIL_DPR));
-  url.searchParams.set("galleryTimeScale", "1");
-  url.searchParams.set("galleryDebugMode", "final");
-  url.searchParams.set("galleryThumbnail", "1");
-  applyBackendHint(url, example);
+  const url = new URL("/api/thumbnail", window.location.origin);
+  url.searchParams.set("example", example.id);
   return url.href;
 }
 
@@ -175,46 +154,60 @@ function revokeOverviewThumbnailCache() {
   overviewThumbnailCache.clear();
 }
 
-function settleOverviewThumbnailJob(job, result) {
-  if (job.settled) return;
+function settleOverviewThumbnailJob(job, attempt, result) {
+  if (job.settled || job.attempt !== attempt) return;
   job.settled = true;
+  job.attempt = null;
   clearTimeout(job.timeoutId);
-  overviewThumbnailFrames.delete(job.frame);
-  job.frame.remove();
+  overviewThumbnailJobs.delete(job);
+  job.controller = null;
   activeOverviewThumbnailCount = Math.max(0, activeOverviewThumbnailCount - 1);
 
-  overviewThumbnailRequests.delete(job.example.id);
   job.resolve(setOverviewThumbnailCache(job.example, result));
   runOverviewThumbnailQueue();
 }
 
-function failOverviewThumbnailJob(job, message) {
-  settleOverviewThumbnailJob(job, {
+function failOverviewThumbnailJob(job, attempt, message) {
+  settleOverviewThumbnailJob(job, attempt, {
     status: "error",
     message: message || "Thumbnail render failed.",
   });
 }
 
 function startOverviewThumbnailJob(job) {
+  const attempt = Symbol(job.example.id);
+  const controller = new AbortController();
+  job.attempt = attempt;
+  job.controller = controller;
   activeOverviewThumbnailCount += 1;
-
-  const frame = document.createElement("iframe");
-  frame.className = "overview-thumbnail-worker";
-  frame.title = `${job.example.title} thumbnail renderer`;
-  frame.tabIndex = -1;
-  frame.loading = "eager";
-  frame.width = OVERVIEW_THUMBNAIL_WIDTH;
-  frame.height = OVERVIEW_THUMBNAIL_HEIGHT;
-  frame.src = overviewThumbnailUrl(job.example);
-
-  job.frame = frame;
+  overviewThumbnailJobs.add(job);
   job.timeoutId = window.setTimeout(
-    () => failOverviewThumbnailJob(job, "Thumbnail render timed out."),
+    () => {
+      controller.abort();
+      failOverviewThumbnailJob(job, attempt, "Thumbnail render timed out.");
+    },
     OVERVIEW_THUMBNAIL_TIMEOUT_MS,
   );
 
-  overviewThumbnailFrames.set(frame, job);
-  ensureOverviewThumbnailHost().append(frame);
+  void (async () => {
+    try {
+      const response = await fetch(overviewThumbnailUrl(job.example), {
+        signal: controller.signal,
+      });
+      if (!response.ok) {
+        throw new Error((await response.text()) || `HTTP ${response.status}`);
+      }
+      const blob = await response.blob();
+      if (job.attempt !== attempt) return;
+      settleOverviewThumbnailJob(job, attempt, {
+        status: "ready",
+        src: URL.createObjectURL(blob),
+      });
+    } catch (error) {
+      if (job.attempt !== attempt) return;
+      failOverviewThumbnailJob(job, attempt, error.message);
+    }
+  })();
 }
 
 function runOverviewThumbnailQueue() {
@@ -227,15 +220,17 @@ function runOverviewThumbnailQueue() {
   }
 }
 
-/* An inspected example gets the GPU to itself: in-flight thumbnail renderers are
-   torn down and returned to the queue rather than settled, so no work is lost
+/* An inspected example gets the GPU to itself: the isolated capture request is
+   cancelled and returned to the queue rather than settled, so no work is lost
    and nothing competes with the scene being looked at. */
 function suspendOverviewThumbnails() {
   overviewThumbnailsSuspended = true;
-  for (const [frame, job] of [...overviewThumbnailFrames]) {
+  for (const job of [...overviewThumbnailJobs]) {
     clearTimeout(job.timeoutId);
-    overviewThumbnailFrames.delete(frame);
-    frame.remove();
+    overviewThumbnailJobs.delete(job);
+    job.attempt = null;
+    job.controller?.abort();
+    job.controller = null;
     activeOverviewThumbnailCount = Math.max(0, activeOverviewThumbnailCount - 1);
     overviewThumbnailQueue.unshift(job);
   }
@@ -248,64 +243,24 @@ function resumeOverviewThumbnails() {
 }
 
 function renderOverviewThumbnail(example) {
-  const cached = overviewThumbnailCache.get(example.id);
+  const key = example.id;
+  const cached = overviewThumbnailCache.get(key);
   if (cached) return Promise.resolve(cached);
 
-  const active = overviewThumbnailRequests.get(example.id);
+  const active = overviewThumbnailRequests.get(key);
   if (active) return active;
 
   const request = new Promise((resolve) => {
     overviewThumbnailQueue.push({ example, resolve, settled: false });
     runOverviewThumbnailQueue();
   });
-  overviewThumbnailRequests.set(example.id, request);
-  return request;
-}
-
-function findOverviewThumbnailJob(source) {
-  for (const [frame, job] of overviewThumbnailFrames) {
-    if (frame.contentWindow === source) return job;
-  }
-  return null;
-}
-
-function handleOverviewThumbnailMessage(job, data) {
-  if (data.type === "ready") {
-    job.frame.contentWindow?.postMessage(
-      {
-        source: "threejs-example-gallery",
-        type: "capture",
-        filename: `${job.example.slug}-overview-thumbnail.png`,
-      },
-      window.location.origin,
-    );
-    return true;
-  }
-
-  if (data.type === "runtime-error") {
-    failOverviewThumbnailJob(job, data.message);
-    return true;
-  }
-
-  if (data.type === "capture") {
-    try {
-      if (!data.blob) throw new Error("Thumbnail capture returned no image.");
-      settleOverviewThumbnailJob(job, {
-        status: "ready",
-        src: URL.createObjectURL(data.blob),
-      });
-    } catch (error) {
-      failOverviewThumbnailJob(job, error.message);
+  overviewThumbnailRequests.set(key, request);
+  request.finally(() => {
+    if (overviewThumbnailRequests.get(key) === request) {
+      overviewThumbnailRequests.delete(key);
     }
-    return true;
-  }
-
-  if (data.type === "capture-error") {
-    failOverviewThumbnailJob(job, data.message);
-    return true;
-  }
-
-  return ["state", "metrics", "status"].includes(data.type);
+  });
+  return request;
 }
 
 function applyOverviewThumbnailResult(shell, image, result) {
@@ -320,39 +275,6 @@ function applyOverviewThumbnailResult(shell, image, result) {
 
   shell.dataset.state = "error";
   shell.dataset.message = result.message;
-}
-
-/* Only cards the viewer can actually reach are worth a GPU render. Everything
-   else waits until it is scrolled near, which gets the visible row on screen
-   first and leaves the grid interactive. Measured by layout rather than an
-   IntersectionObserver so a throttled or background tab still schedules work. */
-function sweepOverviewThumbnails() {
-  if (state.mode !== "overview") return;
-
-  const view = elements.overview.getBoundingClientRect();
-  const top = view.top - OVERVIEW_THUMBNAIL_PREFETCH;
-  const bottom = view.bottom + OVERVIEW_THUMBNAIL_PREFETCH;
-
-  for (const card of elements.overview.children) {
-    const target = overviewThumbnailTargets.get(card);
-    if (!target || target.requested) continue;
-
-    const rect = card.getBoundingClientRect();
-    if (rect.bottom < top || rect.top > bottom) continue;
-
-    target.requested = true;
-    renderOverviewThumbnail(target.example).then((result) => {
-      applyOverviewThumbnailResult(target.shell, target.image, result);
-    });
-  }
-}
-
-function queueOverviewThumbnailSweep() {
-  if (overviewThumbnailSweepTimer) return;
-  overviewThumbnailSweepTimer = window.setTimeout(() => {
-    overviewThumbnailSweepTimer = 0;
-    sweepOverviewThumbnails();
-  }, 90);
 }
 
 function clearOverview() {
@@ -474,15 +396,10 @@ function renderOverview() {
       continue;
     }
 
-    overviewThumbnailTargets.set(article, {
-      example,
-      shell: thumbnailShell,
-      image: thumbnail,
-      requested: false,
+    renderOverviewThumbnail(example).then((result) => {
+      applyOverviewThumbnailResult(thumbnailShell, thumbnail, result);
     });
   }
-
-  sweepOverviewThumbnails();
 }
 
 function renderMode() {
@@ -605,11 +522,6 @@ function adjacentExample(offset) {
   selectExample(state.filtered[next].id);
 }
 
-elements.overview.addEventListener("scroll", queueOverviewThumbnailSweep, {
-  passive: true,
-});
-window.addEventListener("resize", queueOverviewThumbnailSweep);
-
 elements.search.addEventListener("input", applyFilter);
 elements.refresh.addEventListener("click", async () => {
   refreshPending = true;
@@ -686,13 +598,7 @@ window.addEventListener("message", (event) => {
   if (event.origin !== window.location.origin) return;
   if (event.data?.source !== "threejs-example") return;
 
-  const thumbnailJob = findOverviewThumbnailJob(event.source);
-  if (thumbnailJob && handleOverviewThumbnailMessage(thumbnailJob, event.data)) {
-    return;
-  }
-
-  // Only the inspected frame drives the status strip. A thumbnail worker that
-  // is being torn down must not report against the example on screen.
+  // Only the inspected frame drives the status strip.
   if (event.source !== elements.frame.contentWindow) return;
 
   if (event.data.type === "ready") {

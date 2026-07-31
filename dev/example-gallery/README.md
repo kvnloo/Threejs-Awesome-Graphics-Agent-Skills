@@ -28,6 +28,11 @@ The development adapter owns its scene, runtime integration, metadata, and
 supporting static assets. No central manifest is edited when an adapter is
 added.
 
+Overview thumbnails are captured in a bounded parallel batch in an isolated
+headless browser, so scene startup and shader compilation do not block the
+gallery page. Each thumbnail remains a 960 × 540 render at DPR 1.5 (a 1440 ×
+810 PNG), and the page keeps completed images for the current gallery session.
+
 ## Example metadata
 
 ```json

@@ -3,6 +3,7 @@ import { exampleRuntime } from "./example-runtime.js";
 
 const params = new URLSearchParams(window.location.search);
 const modulePath = params.get("module");
+const thumbnailMode = params.get("galleryThumbnail") === "1";
 
 if (!modulePath?.startsWith("/dev/example-gallery/examples/")) {
   throw new Error("Inspection runtime requires a dev example module.");
@@ -207,8 +208,16 @@ async function frame(now) {
   }
 }
 
-renderer.setAnimationLoop(frame);
-exampleRuntime.ready();
+if (thumbnailMode) {
+  // A gallery thumbnail is a still image. Rendering exactly once avoids doing
+  // the same expensive post-processing and shader work every animation frame
+  // while the parent waits for PNG encoding.
+  await frame(performance.now());
+  exampleRuntime.ready();
+} else {
+  renderer.setAnimationLoop(frame);
+  exampleRuntime.ready();
+}
 
 window.addEventListener("pagehide", () => {
   renderer.setAnimationLoop(null);
