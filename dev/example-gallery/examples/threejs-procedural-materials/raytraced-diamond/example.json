@@ -1,0 +1,43 @@
+{
+  "title": "Raytraced Diamond",
+  "description": "A faceted gem whose material refracts the camera ray into the mesh, follows it against a GPU BVH through bounded total-internal-reflection bounces, and escapes into the environment cube map with per-channel IOR dispersion.",
+  "backend": "WebGL2 / GLSL BVH-raytraced material",
+  "techniques": [
+    "GPU BVH first-hit traversal inside the gem volume",
+    "bounded internal bounce loop with total internal reflection",
+    "per-channel IOR chromatic dispersion",
+    "mip-correct environment sampling from the ideal screen ray",
+    "gamma plus SMAA presentation chain"
+  ],
+  "defaultViewport": "responsive",
+  "defaultDpr": 1,
+  "debugModes": [
+    {
+      "value": "final",
+      "label": "Final"
+    },
+    {
+      "value": "single-ior",
+      "label": "No dispersion"
+    },
+    {
+      "value": "one-bounce",
+      "label": "One bounce"
+    },
+    {
+      "value": "flat-mips",
+      "label": "Raw-ray mips"
+    },
+    {
+      "value": "bvh",
+      "label": "BVH bounds"
+    }
+  ],
+  "controls": [
+    "orbit",
+    "pan",
+    "dpr",
+    "debugMode",
+    "capture"
+  ]
+}

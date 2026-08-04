@@ -1,6 +1,6 @@
 ---
 name: threejs-procedural-materials
-description: Author production procedural materials in Three.js. Use for hybrid texture-backed PBR soil and moss with procedural displacement and masks, upward-facing model moss accumulation, atlas filtering, specular AA, planet-space fields, terrain wetness, lava and emissive surfaces, per-instance dissolve, authored PBR identities, derivative normals, and custom direct-light shadow modulation.
+description: Author production procedural materials in Three.js. Use for hybrid texture-backed PBR soil and moss with procedural displacement and masks, upward-facing model moss accumulation, atlas filtering, specular AA, planet-space fields, terrain wetness, lava and emissive surfaces, raytraced diamond and gem refraction with internal reflection and dispersion, per-instance dissolve, authored PBR identities, derivative normals, and custom direct-light shadow modulation.
 ---
 
 # Procedural Materials
@@ -42,6 +42,13 @@ Read the
 [lava flow surface material](examples/lava-flow-surface/lava-surface.js)
 for raymarched procedural height fields whose normals, rock/lava identity,
 emission, glow, embers, fog, and grain are coupled to one material cause stack.
+
+Read the
+[raytraced diamond material](examples/raytraced-diamond/diamond-material.js)
+for a gem whose mesh is its own optical volume: camera-ray entry refraction, a
+GPU BVH first-hit loop with bounded total-internal-reflection bounces,
+per-channel IOR dispersion, mip-correct environment exit sampling, and live
+camera-matrix uniforms.
 
 ## Required controls
 

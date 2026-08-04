@@ -391,6 +391,26 @@
         "src/assets/textures/gallery-floor.webp": "d334222a578e566f4d16b39a360144bb930fa88196e2ed476879eec4cf11ed33"
       }
     },
+    "n8python-diamonds": {
+      "repository": "https://github.com/N8python/diamonds",
+      "revision": "69b30cc5586195461f47e0b25ccf14578b292cc0",
+      "license": "MIT",
+      "localDirectory": "diamonds",
+      "files": {
+        "main.js": "383397f333305ea2f12b70e3286968a84dfa8f9ac043d4d1dcaa527a69e602bf",
+        "EffectShader.js": "2f5d84bab9bd5158069d827949e255b46def592bc9e18775115c8e77c0aaaead",
+        "AssetManager.js": "fd179b91649d59b76c5e22dbfa57109aa44530b44d965ce9ee2b8559126d39b3"
+      },
+      "assets": {
+        "diamond.glb": "e3681d0983e2b27fe7638bfb8cc7f0a87a25a69dea108c684296940e76cd2261",
+        "skybox/Box_Right.bmp": "5d7228025664b1247645d7700fe51dbc5b9d882d7b9d6e494583b6aa7d8d5a5d",
+        "skybox/Box_Left.bmp": "a18acd9b160bfb699f814e86709c1591b783bddfd4773772cd6efd23526b4c11",
+        "skybox/Box_Top.bmp": "792f929a3e315d27e5e741bb7994b77efa20946c7aff2386a34dabd33b0f2387",
+        "skybox/Box_Bottom.bmp": "251bf9ff631fd1475e7e667e18aa9d778b527104129a4b49888e23ea40ed22ab",
+        "skybox/Box_Front.bmp": "3456faccb38fdaa3d063f94dcb87b1fafa9c78bbcc955f0eb0445b2b70b545d6",
+        "skybox/Box_Back.bmp": "0cc9d6d97d39b0735636456b87a3e2c9671c1d8207cae0daf210293a15b99902"
+      }
+    },
     "ocean-threejs": {
       "repository": "https://github.com/achrefelouafi/OceanThreejs",
       "revision": "da18e9254a83a6e990c0077b5d752026f3d5c480",

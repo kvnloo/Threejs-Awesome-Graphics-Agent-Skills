@@ -133,6 +133,7 @@ author-supplied read-only neighboring worktree.
 | [achrefelouafi/SnowSystemThreeJS](https://github.com/achrefelouafi/SnowSystemThreeJS) | `c7a3bfbd10c93f8d7b032c322c99b38326edeb80` | MIT | copied/adapted snowfall, snow accumulation, model snow capping, and frozen-lake mechanisms into `$threejs-precipitation-surfaces` |
 | [Faraz-Portfolio/demo-2023-rain-puddle](https://github.com/Faraz-Portfolio/demo-2023-rain-puddle) | `257066b63d08b227df8f982377e60f91752ddc81` | GPL-3.0 | copied/adapted wet asphalt puddle, rain, and splash mechanisms into GPL-covered precipitation example material |
 | [bandinopla/threejs-easyfire](https://github.com/bandinopla/threejs-easyfire) | `994806e27d14b9226c36789ad71ae4b3583dd7db` | MIT | copied/adapted the WebGPU volumetric fire, fluid compute, mesh-emitter, SDF collision, temperature-scattering, and dev-stage mechanisms for `$threejs-procedural-vfx` |
+| [N8python/diamonds](https://github.com/N8python/diamonds) | `69b30cc5586195461f47e0b25ccf14578b292cc0` | MIT | copied/adapted the BVH-raytraced diamond refraction material and its faceted gem model for `$threejs-procedural-materials`; the gallery stages it in an authored dark studio |
 
 ### `ez-tree`
 
@@ -773,6 +774,62 @@ stage and emitter presentation rather than the reusable fire effect. Gallery
 diagnostics expose density, temperature, velocity, colliders, and the non-bloom
 baseline without changing the final branch.
 
+### `diamonds`
+
+- Repository: https://github.com/N8python/diamonds
+- Revision: `69b30cc5586195461f47e0b25ccf14578b292cc0`
+- License: MIT
+
+Reviewed:
+
+- a ShaderMaterial gem whose fragment path refracts the camera ray into the
+  mesh, walks a GPU BVH of the same geometry with `bvhIntersectFirstHit`, and
+  reflects for up to `bounces` (default `3`) iterations while total internal
+  reflection holds, refracting out as soon as escape is possible;
+- entry/exit epsilons of `0.001` and a post-reflection origin push of `0.01`
+  in model space, with the loop run in model space and the exit direction
+  returned to world space;
+- per-channel dispersion resolving red/green/blue exit rays at
+  `ior * (1 ± aberrationStrength)` (defaults `2.4` and `0.01`), clamped to a
+  minimum IOR of `1.0`;
+- mip-correct environment sampling: `textureGrad` driven by screen derivatives
+  of an ideal per-pixel camera ray reconstructed from `gl_FragCoord`, the
+  inverse projection matrix, and the camera world matrix, with a raw-ray
+  fallback behind a `correctMips` toggle;
+- an SAH `MeshBVH` built from a non-indexed copy of the rendered geometry and
+  exposed through `MeshBVHUniformStruct`, plus an invisible BVH visualizer;
+- live uniform references to `camera.projectionMatrixInverse` and
+  `camera.matrixWorld`;
+- a six-face BMP skybox rendered as the scene background and sampled by the
+  gem, VSM-shadowed ground and two-directional-light rig, and a scene-target
+  passthrough into gamma correction and SMAA;
+- GUI-tunable bounces (1–10), IOR (1–5), mip correction, dispersion toggle,
+  and aberration strength (0–1);
+- commented-out experiments (procedural gem clusters, extra dressing meshes, a
+  cube-camera environment target) that are not part of the rendered result.
+
+Accepted consumption:
+
+- `$threejs-procedural-materials`
+
+The accepted example keeps the exact material: entry refraction, the bounded
+BVH bounce loop, dispersion, mip-correct exit sampling, SAH BVH construction,
+uniform-struct upload, and the default optical constants. The faceted gem GLB
+is a skill asset because the cut geometry defines the optical result. On
+author instruction the gallery does not reproduce the reviewed daylight scene:
+it stages the static gem in an authored dark studio — black background, a
+semi-reflective floor (a slightly transparent glossy dark disc over a planar
+mirror, so the gem itself reflects in it), and no scene lights. An author-deposited
+studio HDRI, `colorful_studio.exr` (SHA-256
+`30414b5dffe5d64c785773c7515cebc849f29db5584d290538c4ef7417fc1035`, owned by
+the dev gallery), feeds the gem's refraction and reflection through a one-time
+conversion to a 512 mipmapped half-float cube target and lights the floor as
+the scene environment; it is never drawn as the background. The gallery
+preset raises `aberrationStrength` to `0.05`. The skybox faces, light
+rig, ground, and self-rotation are reviewed but not consumed. The gallery's
+diagnostic modes only flip the material's own uniforms (dispersion off, one
+bounce, raw mips) and the BVH helper visibility.
+
 ## Focused technical references
 
 These references support mathematical or rendering claims that are not specific to one inspected project:
@@ -801,7 +858,7 @@ These sources are paraphrased. Official documentation remains the authority for 
 | `$threejs-camera-direction` | Stellar camera rig/runtime systems; Interstellar scene cameras, pointer look, floating-origin shots, and scene lifecycle |
 | `$threejs-procedural-animation` | Interstellar launch, staging, spin docking, and debris; Stellar frame-rate-independent response and quaternion control |
 | `$threejs-procedural-fields` | Stellar, MyCraft, `ez-tree`, `mecs-tower-defense-example` |
-| `$threejs-procedural-materials` | MyCraft, Stellar, `mecs-tower-defense-example`, `Very Hot Planet` CodePen, PBR references |
+| `$threejs-procedural-materials` | MyCraft, Stellar, `mecs-tower-defense-example`, `Very Hot Planet` CodePen, `GrassSystemThreeJS`, `diamonds`, PBR references |
 | `$threejs-procedural-geometry` | local WebGPU submarine, race-car, and motorcycle HTML studies; ArtInLife, `ez-tree`, `procedural-bank` |
 | `$threejs-procedural-vegetation` | `ez-tree`, `stylized-scene` |
 | `$threejs-procedural-architecture` | `procedural-bank` |

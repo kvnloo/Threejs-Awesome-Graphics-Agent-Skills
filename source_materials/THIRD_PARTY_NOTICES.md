@@ -75,7 +75,8 @@ in `source_materials/trace-manifest.json`.
 - License: GPL-3.0
 - Used in: `skills/threejs-precipitation-surfaces/examples/wet-puddle-rain/`
 - Includes adapted puddle material, rain streak, and splash mechanisms.
-- Full GPL-3.0 text is included in `source_materials/GPL-3.0.txt`.
+- Full GPL-3.0 text is included in `source_materials/GPL-3.0.txt` and in
+  `skills/threejs-precipitation-surfaces/assets/wet-puddle-rain/GPL-3.0.txt`.
 - Bundled GPL assets:
   - `skills/threejs-precipitation-surfaces/assets/wet-puddle-rain/Splash.png`
   - `skills/threejs-precipitation-surfaces/assets/wet-puddle-rain/road/`
@@ -162,6 +163,18 @@ source examples. Its package build output is not copied into skill examples.
   scattering, and render-pipeline integration.
 - Dev-only copied asset:
   - `dev/example-gallery/examples/threejs-procedural-vfx/volumetric-fluid-fire/assets/demo-scene.glb`
+
+## N8python/diamonds
+
+- Source: https://github.com/N8python/diamonds
+- Copyright: 2022 N8python
+- License: MIT
+- Used in: `skills/threejs-procedural-materials/examples/raytraced-diamond/`
+- Includes the adapted BVH-raytraced gem refraction material: entry
+  refraction, bounded total-internal-reflection bounces, per-channel
+  dispersion, and mip-correct environment sampling.
+- Bundled asset:
+  - `skills/threejs-procedural-materials/assets/raytraced-diamond/diamond.glb`
 
 Additional bundled asset folders may include local `THIRD_PARTY_LICENSES.md`
 files with asset-specific notices.

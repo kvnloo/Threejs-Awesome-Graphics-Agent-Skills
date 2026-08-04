@@ -1493,6 +1493,39 @@
           "the gallery uses the package-installed Three.js revision while retaining the supplied dimension, geometry and material contracts"
         ]
       }
+    ],
+    "threejs-procedural-materials/raytraced-diamond": [
+      {
+        "source": "n8python-diamonds",
+        "files": [
+          "main.js",
+          "EffectShader.js"
+        ],
+        "mechanisms": [
+          "camera-ray entry refraction into the gem volume followed by GPU BVH first-hit traversal of the same mesh",
+          "bounded internal bounce loop that keeps reflecting under total internal reflection and refracts out as soon as escape is possible",
+          "per-channel index-of-refraction spread resolving three exit rays for chromatic dispersion",
+          "mip-correct environment cube sampling using gradients of the reconstructed ideal per-pixel camera ray",
+          "SAH BVH built from a non-indexed copy of the rendered geometry, attached as boundsTree, and uploaded as a shader uniform struct",
+          "scene rendered into an explicit target and passed through a scene-buffer uniform into a gamma-correction plus SMAA presentation chain"
+        ],
+        "assets": [
+          {
+            "sourcePath": "diamond.glb",
+            "localPath": "skills/threejs-procedural-materials/assets/raytraced-diamond/diamond.glb"
+          }
+        ],
+        "boundary": "reference-extraction",
+        "divergences": [
+          "the API surface is translated to the package-installed three and three-mesh-bvh releases: the removed lazyGeneration BVH option is dropped and the BVH debug visualizer uses the current helper class",
+          "an unused duplicate misspelled chromatic-aberration uniform declaration and a commented-out face-normal side flip are omitted",
+          "the commented-out procedural gem-cluster variant and the commented-out box, sphere, and torus-knot dressing are not extracted",
+          "on author instruction the gallery stages the gem in an authored dark studio instead of the reviewed daylight scene: black background, a semi-reflective floor built as a slightly transparent glossy dark disc over a planar mirror so the gem itself reflects in it, no scene lights, and no self-rotation; the reviewed skybox faces, light rig, ground plane, and rotation are not used",
+          "an author-deposited studio HDRI (a dev-gallery asset) replaces the reviewed skybox as the material's environment input: it is converted once to a 512 mipmapped half-float cube target for the gem and drives the floor's image-based lighting, but is never drawn as the background; the gallery preset raises aberrationStrength to 0.05 for pronounced fire",
+          "model traversal and geometry prep, staging, presentation passes, and stats live in the dev gallery adapter; the gallery's scene target is half-float instead of the reviewed 8-bit default so the dark staging does not band once the post-applied gamma expands near-black gradients",
+          "the GUI sliders are replaced by gallery diagnostic modes that flip the material's own bounces, dispersion, and mip-correction uniforms and toggle the BVH helper"
+        ]
+      }
     ]
   }
 }

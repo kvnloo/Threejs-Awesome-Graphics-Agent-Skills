@@ -84,7 +84,8 @@
         "threejs-procedural-planets/procedural-planet-surface",
         "threejs-water-optics/analytic-wave-optics",
         "threejs-procedural-materials/lava-flow-surface",
-        "threejs-procedural-materials/hybrid-soil-moss-surface"
+        "threejs-procedural-materials/hybrid-soil-moss-surface",
+        "threejs-procedural-materials/raytraced-diamond"
       ],
       "rationale": "Material identity must be demonstrated under real geometry and lighting, including coupled texture-backed PBR and procedural channels."
     },

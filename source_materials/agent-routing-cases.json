@@ -318,6 +318,18 @@
       ]
     },
     {
+      "request": "Render a believable diamond whose facets bounce light internally and split it into rainbow fire as it refracts the environment.",
+      "routes": [
+        {
+          "skill": "threejs-procedural-materials",
+          "signals": [
+            "raytraced diamond",
+            "gem refraction"
+          ]
+        }
+      ]
+    },
+    {
       "request": "Fake deep flange geometry with TSL parallax occlusion mapping that clips curved silhouettes and self-shadows.",
       "routes": [
         {

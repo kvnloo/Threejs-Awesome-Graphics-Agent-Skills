@@ -210,6 +210,36 @@ for (const presetContract of [
   );
 }
 
+const diamondMaterial = await readFile(
+  new URL(
+    "../skills/threejs-procedural-materials/examples/raytraced-diamond/diamond-material.js",
+    import.meta.url,
+  ),
+  "utf8",
+);
+
+for (const [pattern, label] of [
+  [/new MeshBVH\(geometry\.toNonIndexed\(\), \{ strategy: SAH \}\)/, "SAH BVH over a non-indexed copy"],
+  [/rayDirection = refract\(rayDirection, normal, 1\.0 \/ ior\);/, "entry refraction"],
+  [/rayOrigin = vWorldPosition \+ rayDirection \* 0\.001;/, "entry epsilon"],
+  [/for\(float i = 0\.0; i < bounces; i\+\+\) \{/, "bounded bounce loop"],
+  [/bvhIntersectFirstHit\( bvh, rayOrigin, rayDirection, faceIndices, faceNormal, barycoord, side, dist \);/, "BVH first-hit call"],
+  [/vec3 hitPos = rayOrigin \+ rayDirection \* max\(dist - 0\.001, 0\.0\);/, "hit epsilon"],
+  [/rayDirection = reflect\(rayDirection, faceNormal\);\s*rayOrigin = hitPos \+ rayDirection \* 0\.01;/, "internal reflection step"],
+  [/max\(ior \* \(1\.0 - aberrationStrength\), 1\.0\)/, "red-channel IOR"],
+  [/max\(ior \* \(1\.0 \+ aberrationStrength\), 1\.0\)/, "blue-channel IOR"],
+  [/textureGrad\(envMap, rayDirectionR, dFdx\(correctMips \? directionCamPerfect: rayDirection\), dFdy\(correctMips \? directionCamPerfect: rayDirection\)\)\.r/, "mip-correct exit sampling"],
+  [/ior = 2\.4,/, "default diamond IOR"],
+  [/bounces = 3,/, "default bounce budget"],
+  [/aberrationStrength = 0\.01,/, "default aberration strength"],
+]) {
+  assert.match(
+    diamondMaterial,
+    pattern,
+    `raytraced diamond material changed: ${label}`,
+  );
+}
+
 async function assertMatchesSourceHash({
   source,
   collection,
@@ -287,6 +317,13 @@ await Promise.all([
     sourcePath: "public/old_rusty_car_2.glb",
     copiedPath: "dev/example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/old_rusty_car_2.glb",
     label: "shared rusty car model",
+  }),
+  assertMatchesSourceHash({
+    source: "n8python-diamonds",
+    collection: "assets",
+    sourcePath: "diamond.glb",
+    copiedPath: "skills/threejs-procedural-materials/assets/raytraced-diamond/diamond.glb",
+    label: "faceted diamond model",
   }),
 ]);
 console.log("Reference example parity checks passed.");
