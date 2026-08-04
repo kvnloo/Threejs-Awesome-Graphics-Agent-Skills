@@ -20,6 +20,7 @@ import {
   absorptionCoefficients,
   cauchyCoefficients,
 } from "../skills/threejs-procedural-materials/examples/spectral-dispersive-glass/glass-optics.js";
+import { wormholeRadius } from "../skills/threejs-raymarched-space-effects/examples/traversable-wormhole-transit/wormhole-effect.js";
 
 function assertVector(actual, expected, label, epsilon = 1e-5) {
   assert.equal(actual.length, expected.length, `${label}: dimension mismatch`);
@@ -178,9 +179,41 @@ function testSpectralDispersiveGlassOpticsParity() {
   );
 }
 
+function testTraversableWormholeShapeParity() {
+  // r(l) is flat across the cylindrical neck, then opens through the lensing
+  // shoulder. These samples pin rho, the throat half-length, and M together:
+  // W/rho = 0.05 with W = 1.42953 M gives M = 0.03497653074786818, and
+  // 2a/rho = 0.01 gives a = 0.005.
+  assertVector(
+    [
+      wormholeRadius(0),
+      wormholeRadius(0.005),
+      wormholeRadius(-0.005),
+      wormholeRadius(0.05),
+      wormholeRadius(1),
+      wormholeRadius(6),
+      wormholeRadius(-6),
+      wormholeRadius(260),
+    ],
+    [
+      1,
+      1,
+      1,
+      1.010682375085514,
+      1.858696794199227,
+      6.7958983696308275,
+      6.7958983696308275,
+      260.6640465504506,
+    ],
+    "wormhole shape function",
+    1e-12,
+  );
+}
+
 testPorcelainBrassSubmarineHullParity();
 testEzTreeAshParity();
 testSpectralDispersiveGlassOpticsParity();
+testTraversableWormholeShapeParity();
 
 const sourceTraceManifest = JSON.parse(
   await readFile(
@@ -398,6 +431,118 @@ for (const [pattern, label] of [
     glassOptics,
     pattern,
     `spectral dispersive glass optics changed: ${label}`,
+  );
+}
+
+const wormholeEffect = await readFile(
+  new URL(
+    "../skills/threejs-raymarched-space-effects/examples/traversable-wormhole-transit/wormhole-effect.js",
+    import.meta.url,
+  ),
+  "utf8",
+);
+const wormholeSky = await readFile(
+  new URL(
+    "../skills/threejs-raymarched-space-effects/examples/traversable-wormhole-transit/celestial-spheres.js",
+    import.meta.url,
+  ),
+  "utf8",
+);
+
+for (const [pattern, label] of [
+  [/const W2M = 1\.42953;/, "lensing width to lensing parameter"],
+  [/const W_OVER_RHO = 0\.05;/, "lensing width"],
+  [/const A_OVER_RHO = 0\.005;/, "throat half-length"],
+  [/const MAX_STEPS = 1024;/, "iteration cap"],
+  [/const STEP_K = 0\.15;/, "adaptive step coefficient"],
+  [/const ESCAPE_RADIUS = 260\.0;/, "escape radius"],
+  [/const RENDER_SCALE = 0\.65;/, "render scale"],
+  [/const ACCUMULATION_LIMIT = 512;/, "accumulation limit"],
+  [
+    /return vec3\( y\.z,\s*b\*ir\*ir,\s*b\*b\*drOfL\(y\.x\)\*ir\*ir\*ir \);/,
+    "reduced geodesic derivative",
+  ],
+  [
+    /h = min\(\(uThroatA - al\)\/max\(abs\(y\.z\), 1e-4\) \+ uStepK\*uMlens, 40\.0\*\(uThroatA \+ uRho\)\);/,
+    "linear-exact step inside the neck",
+  ],
+  [
+    /h = uStepK\*min\(r, uMlens \+ 0\.9\*\(al - uThroatA\)\);/,
+    "curvature-scaled step outside the neck",
+  ],
+  [
+    /if \(r > uREsc && drOfL\(y\.x\)\*y\.z > 0\.0\) \{ capped = false; break; \}/,
+    "escape test requires a receding ray",
+  ],
+  [
+    /vec3  D  = drOfL\(y\.x\)\*y\.z\*uf \+ \(b\/rf\)\*tf;/,
+    "asymptotic exit direction",
+  ],
+  [
+    /float foot = clamp\(0\.5\*\(length\(dFdx\(D\)\) \+ length\(dFdy\(D\)\)\), 0\.0, 0\.06\);/,
+    "ray-bundle footprint",
+  ],
+  [/if \(capped\) foot = 0\.06;/, "capped rays fall back to mean radiance"],
+  [
+    /observer\.B\.crossVectors\(observer\.U, observer\.A\);/,
+    "frame re-orthogonalisation keeps A x B = U",
+  ],
+  [
+    /Math\.min\(Math\.max\(0\.1, r \* 0\.35\), 14\.0\)/,
+    "sphere-radius-scaled travel speed",
+  ],
+  [
+    /const jx = accumCount === 0 \? 0 : still \? halton2\(accumCount \+ 1\) - 0\.5 : Math\.random\(\) - 0\.5;/,
+    "pixel-centred first accumulation sample",
+  ],
+  [
+    /\(j \+ k \+ l \+ m\)\*0\.125\s*\+ \(4\.0\*e \+ 2\.0\*\(b \+ d \+ f \+ h\) \+ \(a \+ c \+ g \+ i\)\)\*0\.03125;/,
+    "13-tap downsample weights",
+  ],
+]) {
+  assert.match(
+    wormholeEffect,
+    pattern,
+    `traversable wormhole transit changed: ${label}`,
+  );
+}
+
+for (const [pattern, label] of [
+  [/const float U_MIN = 0\.0016;/, "luminosity power-law clamp"],
+  [/const float S0    = 0\.00030;/, "intrinsic angular radius of a star"],
+  [
+    /float k  = \(S0\*S0\)\/\(s\*s\);/,
+    "flux-conserving point-spread peak",
+  ],
+  [
+    /float flux  = lum\*pow\(u, -0\.6666667\)\*mix\(1\.0, 2\.3, giant\);/,
+    "number-count luminosity law with giants",
+  ],
+  [
+    /return mix\(sum, meanRad, smoothstep\(0\.30, 1\.25, foot\*cells\)\);/,
+    "analytic mean-radiance fallback",
+  ],
+  [
+    /vec3  ext  = exp\(-tau\*vec3\(1\.00, 1\.24, 1\.52\)\);/,
+    "wavelength-dependent dust extinction",
+  ],
+  [
+    /cRefl\*\(1\.10\*refl \+ 0\.25\*hii\)\)\*sqrt\(ext\);/,
+    "nebulae sit inside half the dust column",
+  ],
+  [
+    /\*\(\(sunR\*sunR\)\/\(sunR\*sunR \+ 2\.5066283\*sunR\*sunS \+ 2\.0\*sunS\*sunS\)\)/,
+    "sun peak normalised by its own profile integral",
+  ],
+  [
+    /return c\*\(1\.0 - s\.a\) \+ s\.rgb;/,
+    "premultiplied planet composite",
+  ],
+]) {
+  assert.match(
+    wormholeSky,
+    pattern,
+    `traversable wormhole celestial spheres changed: ${label}`,
   );
 }
 

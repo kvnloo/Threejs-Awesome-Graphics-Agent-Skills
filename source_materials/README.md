@@ -55,7 +55,8 @@ aurora intake was reviewed against project state
 shader, and both files are pinned by hash. The glass-sculpture intake was
 reviewed against project state
 `05e02fe402ce2e48d3bc1fc6807b92cbd24f727f`; its script and its two accompanying
-assets are pinned by hash.
+assets are pinned by hash. The wormhole intake was reviewed against project
+state `d8822f93bca32567c4913a419827121bef23f761` and is pinned by hash.
 
 | File | SHA-256 | Reviewed areas | Mechanisms distilled into |
 | --- | --- | --- | --- |
@@ -65,6 +66,7 @@ assets are pinned by hash.
 | `source_materials/motorcycle.html` | `56c43b3083037a69c438a6c46e9441c5f48d2117aa80be57111af9a2ae8697d9` | single-file WebGPU/TSL procedural supersport motorcycle: steering-axis placement, slot-tagged mesh writer, revolve/transport/upright sweeps, panel shells, spoked wheels and petal rotor masks, bore-local engine volumes, superellipse bodywork, catenary chain, signed-volume orientation guard | `$threejs-procedural-geometry` |
 | `source_materials/aurora-snow-desert.html` | `3e021544cbe272db54f120eb0339455dea0fce6034d56ec887b56b0515c1ff07` | single-file WebGL polar-night scene: horizon-reaching aurora slab, warped curtain density, geometric ray steps, per-step jitter, limb extinction, shared perspective/equirectangular radiance, polar-night backdrop and stars, live terrain irradiance, clipmap snow desert, and spindrift | `$threejs-procedural-vfx`; only the aurora implementation is distributed, while all other scene systems remain in the dev gallery shim |
 | `source_materials/aurora-original-shader.js` | `6ea35226f37f08adf0bffe6f10df9e2ecab3e216b8b18aead215a4a7a8a896a3` | author-provided standalone WebGL aurora: finite X ±250 / Z ±500 footprint, 75-step uniform raymarch, exact warped curtain density, screen-space lower fade, sky, stars, tone mapping, and dithering | `$threejs-procedural-vfx`; the finite aurora footprint is consumed, while sky, stars, grading, runtime, and GUI remain outside the skill |
+| `source_materials/interstellar_wormhole.html` | `b892321b3f2faca884d82b5151e89c1c48cac7691c5e0f86fce8415d216be88f` | single-file WebGL geodesic wormhole renderer: ultrastatic cylindrical-throat metric with lensing shoulders, exact orbital-plane reduction with conserved angular momentum, adaptive RK4 null-geodesic integration, observer sphere frame parallel-transported through the throat, footprint-filtered galactic skies for both exterior regions, cube-face flux-conserving star layers, analytic ringed planet, display-aware bright-source point spread, progressive Halton accumulation, 13-tap bloom pyramid and ACES composite, WASD/pointer camera | `$threejs-raymarched-space-effects`; the integrator, observer, celestial spheres, accumulation and bloom are all distributed, while canvas sizing, the animation loop, and input binding remain in the dev gallery shim |
 | `source_materials/glass_sculpture/index.html` | `756f2753611352239f260f156cfe47e19ab1b73922328cf1635590dca1a939c2` | single-file WebGPU/TSL physically based glass: inverted-depth double-sided back-face data pass, image-space interior exit search, exact unpolarized Fresnel with total internal reflection, Beer-Lambert path absorption, Cauchy per-wavelength index from an (n_d, Abbe) pair, CIE 1931 spectral recombination, shared equirectangular probe, and thickness/normal/Fresnel debug views | `$threejs-procedural-materials`; only the glass system is distributed, while model normalization, camera, controls, GUI, and presentation remain in the dev gallery shim |
 
 ### Local-project findings retained
@@ -176,6 +178,63 @@ because the material is geometry- and probe-agnostic. `sculpture.glb` is a
 scanned model distributed under CC-BY-4.0, which the published package does not
 take on; `bar.exr` is a CC0 studio HDRI. Both are pinned by hash and validated
 in place.
+
+### `interstellar_wormhole.html`
+
+Reviewed:
+
+- an ultrastatic, spherically symmetric throat metric with a cylindrical neck of
+  half-length `a` and lensing shoulders of width `W = 1.42953 M`, fixed at
+  `rho = 1`, `W/rho = 0.05`, `2a/rho = 0.01`, with `l` running signed through
+  the neck so one coordinate covers both exterior regions;
+- the exact reduction of every null geodesic to `y = (l, psi, p_l)` with the
+  conserved `b = r^2 dpsi/dt`, and adaptive RK4 with a step read from the local
+  curvature scale — linear-exact inside the neck, `0.15 min(r, M + 0.9(|l|-a))`
+  outside — capped at `1024` iterations and terminated at `r > 260` while
+  receding;
+- the observer as a sphere point plus a transported tangent frame with
+  `A × B = U`, `r(l)`-scaled travel speed, yaw/pitch written in `(e_l, A, B)`
+  components, and accumulation reset on any observer change;
+- a ray-bundle footprint from `dFdx/dFdy` of the escaped direction, clamped to
+  `0.06` and forced to maximum for iteration-capped rays;
+- one galaxy model instanced per exterior region: filamentary ridged dust column
+  with `(1.00, 1.24, 1.52)` extinction, band and bulge glow, region-gated HII
+  and reflection nebulae behind `sqrt(ext)`, and three cube-face star layers at
+  `30/104/300` cells with flux-conserving Gaussian point spreads, the
+  `N(<m) ~ 10^(0.6 m)` luminosity law, and an analytic mean-radiance fallback;
+- an analytically ray-traced ringed planet with banded `C/B/A` optical depth,
+  ringlets, the Encke gap, mutual shadowing, and a depth-correct premultiplied
+  composite;
+- a display-aware sun point spread normalised by its own profile integral;
+- progressive accumulation to `512` samples with a pixel-centred first sample
+  and Halton `(2, 3)` offsets while converging;
+- a five-level 13-tap bloom pyramid with a `0.85/0.55` soft-knee prefilter,
+  additive tent upsampling, and an ACES composite with vignette `0.34`, sRGB
+  transfer, and post-transfer grain `0.030`;
+- canvas sizing at pixel ratio `1` with a `0.65` render scale, the animation
+  loop, WASD/pointer/wheel input, and an offline error overlay.
+
+Accepted consumption:
+
+- `$threejs-raymarched-space-effects`
+
+The distributed example owns the metric, the integrator, the observer and its
+transport, both celestial spheres, the accumulation, the bloom pyramid, and the
+composite. The sky is split into its own GLSL chunk plus a uniform and
+galactic-frame factory so it is reusable without the integrator. Five diagnostic
+views were added — exit direction, exterior region, RK4 step count, ray-bundle
+footprint, and iteration-capped mask — gated behind an integer uniform at the
+end of `main()`, with a float step counter as the only addition inside the
+integration loop; a diagnostic keeps rendering into the reduced-resolution
+target and reaches the screen through a plain copy pass, so it is framed exactly
+like the image it explains and is never accumulated, bloomed, or tone mapped.
+On author instruction the example carries no control
+surface, so every parameter is a named constant at its calibrated value and the
+diagnostic selector is the only settable one. Canvas sizing, device pixel ratio,
+the animation loop, the delta conversion, the error overlay, and the raw
+pointer/key/wheel binding remain in the dev gallery shim, which drives the
+example's own `look`, `zoom`, and `move` entry points because the scene is flown
+rather than orbited.
 
 ## Supplied external repositories
 

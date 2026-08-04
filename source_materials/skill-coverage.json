@@ -121,9 +121,10 @@
       "classification": "example-required",
       "evidence": [
         "threejs-raymarched-space-effects/curved-ray-accretion-volume",
-        "threejs-raymarched-space-effects/schwarzschild-geodesic-black-hole"
+        "threejs-raymarched-space-effects/schwarzschild-geodesic-black-hole",
+        "threejs-raymarched-space-effects/traversable-wormhole-transit"
       ],
-      "rationale": "Numerical curved-ray integration, geodesic termination, disk crossings, and volumetric disk accumulation require inspectable implementation."
+      "rationale": "Numerical curved-ray integration, adaptive geodesic step policy, observer transport through a throat, geodesic termination, disk crossings, volumetric disk accumulation, and footprint-filtered background sampling all require inspectable implementation."
     },
     "threejs-screen-space-ambient-occlusion": {
       "classification": "reference-sufficient",

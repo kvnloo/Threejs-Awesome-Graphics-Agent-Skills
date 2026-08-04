@@ -1572,6 +1572,41 @@
           "the sculpture model and the environment map are dev-gallery assets: the material accepts any placed mesh hierarchy and any equirectangular probe, and the model carries a CC-BY-4.0 attribution requirement that the published package does not take on"
         ]
       }
+    ],
+    "threejs-raymarched-space-effects/traversable-wormhole-transit": [
+      {
+        "source": "author-local-wormhole",
+        "files": [
+          "interstellar_wormhole.html"
+        ],
+        "mechanisms": [
+          "ultrastatic spherically symmetric throat metric with a cylindrical neck of half-length a and lensing shoulders of width W = 1.42953 M, evaluated as r(l) = rho + M (x atan x - 0.5 ln(1 + x^2)) with x = 2(|l| - a)/(pi M), fixed at rho = 1, W/rho = 0.05, 2a/rho = 0.01",
+          "exact orbital-plane reduction of every null geodesic to y = (l, psi, p_l) with the conserved quantity b = r^2 dpsi/dt, which removes the polar coordinate singularity",
+          "adaptive RK4 with a step taken from the local curvature scale: linear-exact inside the neck, k min(r, M + 0.9(|l| - a)) outside, k = 0.15, capped at 1024 iterations",
+          "termination on r > 260 with (dr/dl) p_l > 0, on |l| > 1e7, or on the iteration cap, with the sign of l at termination selecting the exterior region",
+          "asymptotic exit direction rebuilt from the radial component (dr/dl) p_l and the tangential component b/r in the frame carried around by the swept angle psi",
+          "observer carried as a sphere point plus a tangent frame A x B = U, parallel-transported along great circles, with r(l)-scaled travel speed and a yaw/pitch basis written in (e_l, A, B) components",
+          "ray-bundle footprint from dFdx/dFdy of the escaped direction, clamped to 0.06 and forced to the maximum for iteration-capped rays so filtering returns mean radiance instead of speckle",
+          "cube-face star lattice with a flux-conserving Gaussian point spread, a 3x-width 4.5% PSF wing, the N(<m) ~ 10^(0.6 m) luminosity law, flux-correlated temperature with 3% giants, and an analytic mean-radiance fallback past one cell per pixel",
+          "galactic sky with a filamentary ridged dust column, wavelength-dependent extinction (1.00, 1.24, 1.52), unresolved band and bulge glow, region-gated HII and reflection nebulae behind sqrt(extinction), and three resolved star layers at 30/104/300 cells",
+          "analytically ray-traced ringed planet with banded C/B/A optical depth, ringlet and gap modulation, mutual planet and ring shadowing, and a depth-correct premultiplied composite against the sky",
+          "display-aware sun point spread: flat core of radius 0.0050, Gaussian limb at 1.2 footprints, peak normalised by the profile integral so total flux stays 420 pi R^2 under sub-pixel motion",
+          "progressive accumulation to 512 samples with a pixel-centred first sample, Halton(2,3) offsets while converging, and a full-weight replace that never blends stale history",
+          "13-tap downsample pyramid over five levels with a soft-knee prefilter at threshold 0.85 and knee 0.55, additive tent upsampling, and an ACES composite with vignette, sRGB transfer, and post-transfer grain"
+        ],
+        "boundary": "reference-extraction",
+        "divergences": [
+          "the example carries no control surface: every parameter is a named constant at its calibrated value (rho 1.0, W/rho 0.05, a/rho 0.005 so 2a/rho = 0.01, 1024 steps, step coefficient 0.15, escape radius 260, field of view 50 degrees, speed 1.0, render scale 0.65, exposure 1.15, bloom 0.62, threshold 0.85, knee 0.55, grain 0.030, vignette 0.34); the diagnostic view selector is the only settable parameter, because the dev gallery debug modes drive it",
+          "M and the throat half-length are pure functions of the fixed shape constants, so they resolve on the CPU instead of being recomputed per call",
+          "five diagnostic views were added that the reviewed script does not have — exit direction, exterior region, RK4 step count, ray-bundle footprint, and iteration-capped mask — gated at the end of main() behind an integer uniform, with a float step counter as the only addition inside the integration loop; the physics path is otherwise unchanged",
+          "a diagnostic view still renders the trace pass into the reduced-resolution target and is presented through a plain copy pass, so it is framed exactly like the image it explains and never reaches accumulation, bloom, or the tone-mapped composite",
+          "the celestial spheres are split into a dependency-light GLSL chunk plus a uniform and galactic-frame factory, so the sky is reusable without the integrator; the single-file script layout is not carried over",
+          "the observer state, its transport, and the accumulation reset it triggers belong to the effect, because the trace shader is driven by (l, U, A, B, yaw, pitch) and not by a Three.js camera; only raw pointer, key, and wheel binding lives in the dev gallery adapter",
+          "renderer.autoClear is saved and restored around the pass chain instead of being set once at startup, because the additive bloom upsample requires it to be false",
+          "the frame counter that decorrelates grain advances only on composited frames",
+          "canvas sizing, the device pixel ratio, the animation loop, the millisecond-to-second delta conversion, and the offline error overlay live in the dev gallery shim"
+        ]
+      }
     ]
   }
 }

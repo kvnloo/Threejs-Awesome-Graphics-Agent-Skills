@@ -1,0 +1,52 @@
+{
+  "title": "Traversable Wormhole Transit",
+  "description": "A full-screen WebGL wormhole renderer with adaptive RK4 null-geodesic integration in the reduced orbital plane, an observer frame parallel-transported through the throat, two procedural celestial spheres with dust extinction and flux-conserving star fields, progressive Halton accumulation, and a 13-tap bloom pyramid. Drag to look, W/A/S/D to fly, shift to sprint, wheel to zoom.",
+  "backend": "WebGL / GLSL geodesic renderer",
+  "techniques": [
+    "adaptive RK4 integration of the reduced three-variable null-geodesic system",
+    "exact orbital-plane reduction with conserved angular momentum",
+    "observer sphere frame parallel-transported through the throat",
+    "footprint-filtered galactic sky with dust extinction, HII emission, and three resolved star layers",
+    "flux-conserving Gaussian star point-spread with analytic mean-radiance fallback",
+    "progressive Halton accumulation with pixel-centred first sample",
+    "13-tap bloom pyramid, ACES composite, vignette, and grain"
+  ],
+  "defaultViewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "defaultDpr": 1,
+  "debugModes": [
+    {
+      "value": "final",
+      "label": "Final"
+    },
+    {
+      "value": "exit-direction",
+      "label": "Exit direction"
+    },
+    {
+      "value": "universe-side",
+      "label": "Universe side"
+    },
+    {
+      "value": "step-count",
+      "label": "RK4 step count"
+    },
+    {
+      "value": "ray-footprint",
+      "label": "Ray-bundle footprint"
+    },
+    {
+      "value": "iteration-capped",
+      "label": "Iteration-capped rays"
+    }
+  ],
+  "controls": [
+    "pause",
+    "timeScale",
+    "dpr",
+    "debugMode",
+    "capture"
+  ]
+}

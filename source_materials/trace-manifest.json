@@ -40,6 +40,14 @@
         "motorcycle.html": "56c43b3083037a69c438a6c46e9441c5f48d2117aa80be57111af9a2ae8697d9"
       }
     },
+    "author-local-wormhole": {
+      "repository": "https://github.com/scottstts/Threejs-Awesome-Graphics-Agent-Skills",
+      "revision": "d8822f93bca32567c4913a419827121bef23f761",
+      "license": "MIT by project rule",
+      "files": {
+        "interstellar_wormhole.html": "b892321b3f2faca884d82b5151e89c1c48cac7691c5e0f86fce8415d216be88f"
+      }
+    },
     "demo-2023-rain-puddle": {
       "repository": "https://github.com/Faraz-Portfolio/demo-2023-rain-puddle",
       "revision": "257066b63d08b227df8f982377e60f91752ddc81",

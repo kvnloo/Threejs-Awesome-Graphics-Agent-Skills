@@ -52,7 +52,7 @@ Every graphics system is expected to expose:
 | `threejs-precipitation-surfaces` | Falling snow and rain coupled to accumulation, snow caps, wet puddles, ripple normals, splashes, and shared weather envelopes. |
 | `threejs-atmosphere-aerial-perspective` | Shared Rayleigh/Mie atmosphere, sky, shell/post handoff, depth-based scattering. |
 | `threejs-volumetric-clouds` | Weather-shaped density, bounded raymarching, cloud lighting, history, cloud shadows. |
-| `threejs-raymarched-space-effects` | Curved-ray integration, black holes, accretion disks, wormholes, bounded quality. |
+| `threejs-raymarched-space-effects` | Curved-ray and null-geodesic integration, black holes, accretion disks, traversable wormhole throats with transported observer frames, footprint-filtered lensed celestial spheres and star fields, bounded quality. |
 | `threejs-procedural-vfx` | Finite-footprint raymarched aurora curtains, uniform emissive-volume integration, WebGPU voxel fire and smoke, coupled fluid fields, mesh emitters, SDF collisions, reentry shells/wakes, sparks, dissolving debris, dense pools, HDR hierarchy. |
 | `threejs-temporal-surfaces` | Persistent touch history, frost composite, wet-window droplets, background refraction, and blur. |
 | `threejs-shadow-systems` | Stable cascades and cached clipmap shadows with update budgets and invalidation. |

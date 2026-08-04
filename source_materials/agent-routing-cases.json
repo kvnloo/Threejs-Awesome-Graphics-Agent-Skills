@@ -214,6 +214,31 @@
       ]
     },
     {
+      "request": "Fly a camera through a wormhole throat into another universe with an integrated metric and a lensed sky.",
+      "routes": [
+        {
+          "skill": "threejs-raymarched-space-effects",
+          "signals": [
+            "throat transits",
+            "curved-ray",
+            "lensed celestial spheres"
+          ]
+        }
+      ]
+    },
+    {
+      "request": "Build a procedural galactic sky of resolved star layers and dust that a lensed ray direction samples after integration.",
+      "routes": [
+        {
+          "skill": "threejs-raymarched-space-effects",
+          "signals": [
+            "lensed celestial spheres and star fields",
+            "curved-ray"
+          ]
+        }
+      ]
+    },
+    {
       "request": "Author a reentry plasma shell, generated wake, analytic sparks, dissolving debris, and HDR bloom contribution.",
       "routes": [
         {
@@ -610,6 +635,21 @@
         "$threejs-screen-space-ambient-occlusion",
         "$threejs-bloom",
         "$threejs-exposure-color-grading"
+      ]
+    },
+    {
+      "skill": "threejs-raymarched-space-effects",
+      "mustMention": [
+        "$threejs-procedural-vfx",
+        "$threejs-bloom",
+        "$threejs-exposure-color-grading"
+      ]
+    },
+    {
+      "skill": "threejs-bloom",
+      "mustMention": [
+        "$threejs-exposure-color-grading",
+        "$threejs-raymarched-space-effects"
       ]
     }
   ]
