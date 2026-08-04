@@ -12,6 +12,14 @@ import {
   gridGeometry,
   ringPoints,
 } from "../skills/threejs-procedural-geometry/examples/porcelain-brass-submarine/source/mesh-kit.js";
+import {
+  CAUCHY_K,
+  LAMBDA_D,
+  LAMBDA_MAX,
+  LAMBDA_MIN,
+  absorptionCoefficients,
+  cauchyCoefficients,
+} from "../skills/threejs-procedural-materials/examples/spectral-dispersive-glass/glass-optics.js";
 
 function assertVector(actual, expected, label, epsilon = 1e-5) {
   assert.equal(actual.length, expected.length, `${label}: dimension mismatch`);
@@ -129,8 +137,50 @@ function testEzTreeAshParity() {
   );
 }
 
+function testSpectralDispersiveGlassOpticsParity() {
+  assert.equal(
+    CAUCHY_K,
+    1 / (486.13 * 486.13) - 1 / (656.27 * 656.27),
+    "glass Cauchy calibration constant",
+  );
+  assertVector(
+    [LAMBDA_D, LAMBDA_MIN, LAMBDA_MAX],
+    [589.29, 415, 695],
+    "glass sampled band",
+  );
+
+  // The catalogue inversion has to be self-consistent: the index at the d-line
+  // must come back as the quoted n_d, and the spread across the sampled band
+  // is what the Abbe number buys.
+  const { a, b } = cauchyCoefficients(1.5, 32);
+  assertVector(
+    [a, b],
+    [1.4764382680919155, 8182.110735680701],
+    "glass Cauchy coefficients",
+    1e-9,
+  );
+  const index = (lambda) => a + b / (lambda * lambda);
+  assertVector(
+    [index(LAMBDA_D), index(LAMBDA_MIN), index(LAMBDA_MAX)],
+    [1.5, 1.5239465319077419, 1.4933775791745316],
+    "glass index across the sampled band",
+    1e-9,
+  );
+
+  // The tint is decoded exactly once. A doubled sRGB decode — the easy mistake,
+  // since a Color built from an sRGB literal is already linear — would inflate
+  // every coefficient by roughly 2.3x.
+  assertVector(
+    absorptionCoefficients("#d0edda", 0.5),
+    [0.921668754944433, 0.332408526348505, 0.710204100521603],
+    "glass absorption spectrum",
+    1e-9,
+  );
+}
+
 testPorcelainBrassSubmarineHullParity();
 testEzTreeAshParity();
+testSpectralDispersiveGlassOpticsParity();
 
 const sourceTraceManifest = JSON.parse(
   await readFile(
@@ -240,6 +290,117 @@ for (const [pattern, label] of [
   );
 }
 
+const glassMaterial = await readFile(
+  new URL(
+    "../skills/threejs-procedural-materials/examples/spectral-dispersive-glass/spectral-glass-material.js",
+    import.meta.url,
+  ),
+  "utf8",
+);
+const glassOptics = await readFile(
+  new URL(
+    "../skills/threejs-procedural-materials/examples/spectral-dispersive-glass/glass-optics.js",
+    import.meta.url,
+  ),
+  "utf8",
+);
+
+for (const [pattern, label] of [
+  [/const IOR = 1\.5;/, "index at the d-line"],
+  [/const ABBE = 32;/, "Abbe number"],
+  [/const SPECTRAL_SAMPLES = 8;/, "spectral sample count"],
+  [/const PATH_SEGMENTS = 4;/, "interior segment budget"],
+  [/const EXIT_REFINEMENTS = 3;/, "exit-search refinement count"],
+  [/const MIN_WALL = 0\.08;/, "minimum wall thickness"],
+  [/const FROST_LOD = 0;/, "environment mip bias"],
+  [/const TINT = "#d0edda";/, "transmission tint"],
+  [/const TINT_DEPTH = 0\.5;/, "tint depth"],
+  [/const FALLBACK_THICKNESS_RATIO = 0\.015;/, "silhouette fallback thickness"],
+  [/const MAX_SEGMENT_RATIO = 3\.0;/, "maximum interior segment"],
+  [/const THROUGHPUT_CUTOFF = 0\.004;/, "throughput break"],
+  [/backFaceMaterial\.side = THREE\.DoubleSide;/, "unculled data pass"],
+  [/backFaceMaterial\.depthNode = depth\.oneMinus\(\);/, "inverted data-pass depth"],
+  [
+    /outputNode = vec4\(\s*geometricWorldNormal,\s*positionWorld\.sub\(cameraPosition\)\.length\(\),\s*\);/,
+    "data-pass normal and distance payload",
+  ],
+  [
+    /normalize\(modelNormalMatrix\.mul\(normalLocal\)\)/,
+    "never-flipped geometric world normal",
+  ],
+  [
+    /texture\(renderTarget\.texture, uv, 0\)/,
+    "explicit LOD 0 data fetch",
+  ],
+  [
+    /tSeg\.assign\(dot\(Pb\.sub\(orig\), dir\)\.clamp\(MIN_WALL, maxSegment\)\);/,
+    "exit-search segment update",
+  ],
+  [
+    /const F2 = fresnelDielectric\(cos2, n, float\(1\.0\)\);/,
+    "exit Fresnel against vacuum",
+  ],
+  [
+    /thr\.mulAssign\(F2\);\s*dir\.assign\(reflect\(dir, NbN\)\);/,
+    "Fresnel-weighted internal reflection",
+  ],
+  [
+    /exp\(sigma\.mul\(sLen\.negate\(\)\)\)\s*\.mul\(thr\)/,
+    "residual energy after the final segment",
+  ],
+  [
+    /Csum\.div\(Wsum\.max\(vec3\(1e-4\)\)\)/,
+    "running spectral weight normalisation",
+  ],
+  [
+    /return this\.sampleEnvironment\(normalize\(normalWorldGeometry\), float\(0\.0\)\);/,
+    "background direction from the translation-invariant geometric normal",
+  ],
+]) {
+  assert.match(
+    glassMaterial,
+    pattern,
+    `spectral dispersive glass material changed: ${label}`,
+  );
+}
+
+for (const [pattern, label] of [
+  [
+    /select\(\s*sinT2\.greaterThanEqual\(1\.0\),\s*float\(1\.0\),/,
+    "total internal reflection from the Fresnel expression",
+  ],
+  [
+    /rs\.mul\(rs\)\.add\(rp\.mul\(rp\)\)\.mul\(0\.5\)\.clamp\(0\.0, 1\.0\)/,
+    "unpolarised Fresnel average",
+  ],
+  [
+    /gaussianLobe\(lam, float\(599\.8\), 37\.9, 31\.0\)\.mul\(1\.056\)/,
+    "CIE X lobe",
+  ],
+  [
+    /gaussianLobe\(lam, float\(568\.8\), 46\.9, 40\.5\)\.mul\(0\.821\)/,
+    "CIE Y lobe",
+  ],
+  [
+    /gaussianLobe\(lam, float\(437\.0\), 11\.8, 36\.0\)\.mul\(1\.217\)/,
+    "CIE Z lobe",
+  ],
+  [
+    /vec2\(ndc\.x\.mul\(0\.5\)\.add\(0\.5\), ndc\.y\.mul\(-0\.5\)\.add\(0\.5\)\)/,
+    "V-inverted buffer projection",
+  ],
+  [
+    /setStyle\(tint, LinearSRGBColorSpace\)\s*\.convertSRGBToLinear\(\)/,
+    "exactly one sRGB decode on the transmission tint",
+  ],
+]) {
+  assert.match(
+    glassOptics,
+    pattern,
+    `spectral dispersive glass optics changed: ${label}`,
+  );
+}
+
 async function assertMatchesSourceHash({
   source,
   collection,
@@ -324,6 +485,20 @@ await Promise.all([
     sourcePath: "diamond.glb",
     copiedPath: "skills/threejs-procedural-materials/assets/raytraced-diamond/diamond.glb",
     label: "faceted diamond model",
+  }),
+  assertMatchesSourceHash({
+    source: "author-local-glass-sculpture",
+    collection: "assets",
+    sourcePath: "sculpture.glb",
+    copiedPath: "dev/example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/sculpture.glb",
+    label: "glass sculpture subject",
+  }),
+  assertMatchesSourceHash({
+    source: "author-local-glass-sculpture",
+    collection: "assets",
+    sourcePath: "bar.exr",
+    copiedPath: "dev/example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/bar.exr",
+    label: "glass sculpture environment probe",
   }),
 ]);
 console.log("Reference example parity checks passed.");

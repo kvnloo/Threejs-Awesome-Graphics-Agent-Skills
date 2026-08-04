@@ -176,5 +176,23 @@ source examples. Its package build output is not copied into skill examples.
 - Bundled asset:
   - `skills/threejs-procedural-materials/assets/raytraced-diamond/diamond.glb`
 
+## Sculpture (Thunk3D scanner)
+
+- Source: https://sketchfab.com/3d-models/sculpture-4088a30082f343b6ad48b91fc3b7a40a
+- Title: "Sculpture"
+- Author: Thunk3D scanner
+- License: CC-BY-4.0 (https://creativecommons.org/licenses/by/4.0/)
+- Changes: recentered on the origin and uniformly scaled to a fixed height.
+- Not distributed in the published package. Dev-only inspection asset:
+  - `dev/example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/sculpture.glb`
+
+## Poly Haven HDRI
+
+- Source: https://polyhaven.com/a/cowboy_town_saloon
+- License: CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)
+- Changes: renamed only.
+- Not distributed in the published package. Dev-only inspection asset:
+  - `dev/example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/bar.exr`
+
 Additional bundled asset folders may include local `THIRD_PARTY_LICENSES.md`
 files with asset-specific notices.

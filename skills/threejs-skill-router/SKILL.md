@@ -14,7 +14,7 @@ Treat the model's Three.js knowledge and official documentation as prerequisites
 | shot composition, chase/side/orbit rigs, camera handoffs, projection ownership, pointer look, floating origins | `$threejs-camera-direction` |
 | launch and docking timelines, procedural transform phases, springs, staging, rotating-frame alignment, debris motion | `$threejs-procedural-animation` |
 | reusable scalar/vector fields, domain warping, causal masks, procedural normals | `$threejs-procedural-fields` |
-| atlas-filtered blocks, planetary surfaces, hybrid texture-backed PBR soil/moss with procedural displacement and masks, ground and model moss accumulation, terrain wetness, lava/emissive surfaces, raytraced diamond/gem refraction, authored frame PBR, specular AA | `$threejs-procedural-materials` |
+| atlas-filtered blocks, planetary surfaces, hybrid texture-backed PBR soil/moss with procedural displacement and masks, ground and model moss accumulation, terrain wetness, lava/emissive surfaces, raytraced diamond/gem refraction, dispersive glass transmission with internal reflection and volume absorption, authored frame PBR, specular AA | `$threejs-procedural-materials` |
 | height-field ray marching, silhouette-aware POM, curved relief shells, relief self-shadowing | `$threejs-parallax-occlusion-mapping` |
 | complete hard-surface object assemblies, procedural vehicles, parameter-curve section tracks, tilted shell lofts, UV-owned apertures, spanwise airfoil lofts, sculpted rails/frames, branch rings, fin lofts, semantic mesh writers, material slots and groups | `$threejs-procedural-geometry` |
 | trees, surface-following ivy, painted vines, stylized grass, GPU-computed grass, roots, foliage, rooted wind deformation | `$threejs-procedural-vegetation` |

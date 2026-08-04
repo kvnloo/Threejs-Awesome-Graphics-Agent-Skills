@@ -1526,6 +1526,52 @@
           "the GUI sliders are replaced by gallery diagnostic modes that flip the material's own bounces, dispersion, and mip-correction uniforms and toggle the BVH helper"
         ]
       }
+    ],
+    "threejs-procedural-materials/spectral-dispersive-glass": [
+      {
+        "source": "author-local-glass-sculpture",
+        "files": [
+          "index.html"
+        ],
+        "mechanisms": [
+          "double-sided back-face data pass writing geometric world normal in xyz and camera distance in w, with inverted fragment depth so the default less-than test keeps the farthest surface of the union hull",
+          "half-float nearest-filtered RGBA data target sized to the drawing buffer, fetched at explicit LOD 0 so sampling stays legal inside non-uniform loops",
+          "image-space exit search that reprojects the current interior point into the data buffer, rebuilds the stored surface position along the camera ray, and refines the segment length three times per segment",
+          "exact unpolarized Fresnel at every interface, returning 1 past the critical angle so total internal reflection needs no separate test",
+          "bounded internal segment loop with Fresnel-weighted throughput, an early break below 0.004, and a residual term that releases the remaining throughput after the final segment",
+          "Beer-Lambert absorption over the accumulated internal path length, with extinction inverted from a target transmission colour at a chosen depth",
+          "per-wavelength Cauchy index solved on the CPU from a catalogue n_d and Abbe pair, traced once per stratified sample across 415-695 nm",
+          "CIE 1931 piecewise-Gaussian colour matching into XYZ then linear sRGB, normalized by the running weight sum so a dispersion-free spectrum reconstructs the environment exactly",
+          "rotatable equirectangular environment probe read at an explicit mip level and shared between the visible background, the external reflection, and every exit ray",
+          "world-point-to-buffer projection with inverted V for the WebGPU render-target orientation",
+          "thickness, back-face normal, and entry-Fresnel diagnostic outputs"
+        ],
+        "assets": [
+          {
+            "sourcePath": "sculpture.glb",
+            "localPath": "dev/example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/sculpture.glb"
+          },
+          {
+            "sourcePath": "bar.exr",
+            "localPath": "dev/example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/bar.exr"
+          }
+        ],
+        "boundary": "reference-extraction",
+        "divergences": [
+          "on author instruction the example carries no control surface: the GUI-driven uniforms for index, Abbe number, spectral samples, segment budget, frost, tint, tint depth, minimum wall, and environment rotation become named constants at their reviewed default values (1.5, 32, 8, 4, 0, #d0edda, 0.5, 0.08, 0), and the absorption spectrum resolves once on the CPU; only the diagnostic view selector remains a uniform",
+          "with the spectral sample count fixed at 8 the dispersion-off branch that the sample slider could reach is unreachable, so the constant-wavelength path and its unit weight are not carried over",
+          "the Cauchy A and B coefficients are constant for a fixed index and Abbe pair, so they resolve on the CPU instead of being recomputed per fragment; only A + B/lambda squared stays in the shader",
+          "one defect was corrected on explicit instruction, in the example and in the local script alike: the absorption spectrum decoded its sRGB tint literal twice, because a Color built from an sRGB literal already resolves into the linear working space and the added convertSRGBToLinear squared the transfer, inflating extinction about 2.3x; both now parse the literal as LinearSRGBColorSpace and decode exactly once, which also removes the dependence on the color-management flag, and the default tint moves from #e9f7ee to #d0edda so the calibrated appearance is preserved at sigma approximately (0.922, 0.332, 0.710) per unit",
+          "the glass system is packaged as a class that owns its data target, back-face material, mirrored data scene, glass material, and the two-pass entry point, with the optical primitives split into a dependency-light module; the single-file script layout is not carried over",
+          "the data-pass copy is followed rather than snapshotted: the reviewed script clones the subject once at startup, which stays correct only because that subject never moves, so the example re-registers the copy's root world transform plus each descendant's local matrix, visibility, and morph weights before every pass and exposes a rebuild entry point for structural change; geometry and skeletons are already shared by reference, and the whole step is a no-op for a static subject",
+          "the render-target binding is saved and restored around the data pass instead of being reset to the default target",
+          "the background direction is taken from the geometric world normal instead of positionWorld minus cameraPosition: the reviewed revision recentred the renderer's background sphere on the camera in onBeforeRender, which the package-installed revision no longer does, leaving the sphere at the world origin and compressing the whole view into an asin(1/|cameraPosition|) cone; the normal is translation invariant and reproduces the reviewed image under either placement",
+          "model normalization, environment texture configuration, camera, orbit controls, tone mapping and exposure live in the dev gallery adapter; on author instruction the reviewed camera auto-rotation is dropped and the subject is inspected from a stationary orbit",
+          "the gallery renders at a device pixel ratio of 2, matching the reviewed pixel-ratio cap of min(devicePixelRatio, 2) at its default resolution multiplier of 1",
+          "the loading overlay, spinner, error surfacing, unhandled-rejection reporting, backend and frame-rate badge, resolution multiplier, tone-mapping selector, and the whole lil-gui panel are omitted",
+          "the sculpture model and the environment map are dev-gallery assets: the material accepts any placed mesh hierarchy and any equirectangular probe, and the model carries a CC-BY-4.0 attribution requirement that the published package does not take on"
+        ]
+      }
     ]
   }
 }

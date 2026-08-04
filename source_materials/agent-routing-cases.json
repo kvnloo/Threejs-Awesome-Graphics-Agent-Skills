@@ -330,6 +330,18 @@
       ]
     },
     {
+      "request": "Make a scanned glass sculpture transmit its surroundings with real chromatic dispersion, internal reflection past the critical angle, and a tint that deepens with thickness.",
+      "routes": [
+        {
+          "skill": "threejs-procedural-materials",
+          "signals": [
+            "dispersive glass transmission",
+            "volume absorption"
+          ]
+        }
+      ]
+    },
+    {
       "request": "Fake deep flange geometry with TSL parallax occlusion mapping that clips curved silhouettes and self-shadows.",
       "routes": [
         {
@@ -508,7 +520,8 @@
       "mustMention": [
         "$threejs-procedural-fields",
         "$threejs-procedural-planets",
-        "$threejs-parallax-occlusion-mapping"
+        "$threejs-parallax-occlusion-mapping",
+        "$threejs-temporal-surfaces"
       ]
     },
     {
@@ -573,7 +586,8 @@
       "skill": "threejs-temporal-surfaces",
       "mustMention": [
         "$threejs-procedural-vfx",
-        "$threejs-precipitation-surfaces"
+        "$threejs-precipitation-surfaces",
+        "$threejs-procedural-materials"
       ]
     },
     {

@@ -52,7 +52,10 @@ at `2d0972a23995a0b302aceb0050fb0ceeeadff891` for the first two rows and
 `1e114ab548b1365b53cd1c0955ec6198e4cf64d3` for the two vehicle studies. The
 aurora intake was reviewed against project state
 `c43ac9e2532373a947fb5548c705fe40814632bc` plus the author-provided standalone
-shader, and both files are pinned by hash.
+shader, and both files are pinned by hash. The glass-sculpture intake was
+reviewed against project state
+`05e02fe402ce2e48d3bc1fc6807b92cbd24f727f`; its script and its two accompanying
+assets are pinned by hash.
 
 | File | SHA-256 | Reviewed areas | Mechanisms distilled into |
 | --- | --- | --- | --- |
@@ -62,6 +65,7 @@ shader, and both files are pinned by hash.
 | `source_materials/motorcycle.html` | `56c43b3083037a69c438a6c46e9441c5f48d2117aa80be57111af9a2ae8697d9` | single-file WebGPU/TSL procedural supersport motorcycle: steering-axis placement, slot-tagged mesh writer, revolve/transport/upright sweeps, panel shells, spoked wheels and petal rotor masks, bore-local engine volumes, superellipse bodywork, catenary chain, signed-volume orientation guard | `$threejs-procedural-geometry` |
 | `source_materials/aurora-snow-desert.html` | `3e021544cbe272db54f120eb0339455dea0fce6034d56ec887b56b0515c1ff07` | single-file WebGL polar-night scene: horizon-reaching aurora slab, warped curtain density, geometric ray steps, per-step jitter, limb extinction, shared perspective/equirectangular radiance, polar-night backdrop and stars, live terrain irradiance, clipmap snow desert, and spindrift | `$threejs-procedural-vfx`; only the aurora implementation is distributed, while all other scene systems remain in the dev gallery shim |
 | `source_materials/aurora-original-shader.js` | `6ea35226f37f08adf0bffe6f10df9e2ecab3e216b8b18aead215a4a7a8a896a3` | author-provided standalone WebGL aurora: finite X ±250 / Z ±500 footprint, 75-step uniform raymarch, exact warped curtain density, screen-space lower fade, sky, stars, tone mapping, and dithering | `$threejs-procedural-vfx`; the finite aurora footprint is consumed, while sky, stars, grading, runtime, and GUI remain outside the skill |
+| `source_materials/glass_sculpture/index.html` | `756f2753611352239f260f156cfe47e19ab1b73922328cf1635590dca1a939c2` | single-file WebGPU/TSL physically based glass: inverted-depth double-sided back-face data pass, image-space interior exit search, exact unpolarized Fresnel with total internal reflection, Beer-Lambert path absorption, Cauchy per-wavelength index from an (n_d, Abbe) pair, CIE 1931 spectral recombination, shared equirectangular probe, and thickness/normal/Fresnel debug views | `$threejs-procedural-materials`; only the glass system is distributed, while model normalization, camera, controls, GUI, and presentation remain in the dev gallery shim |
 
 ### Local-project findings retained
 
@@ -107,6 +111,71 @@ colors, and an intermediate upward view to recover contrast while preserving
 the snow terrain presentation. Backdrop, stars, render targets, grading,
 terrain lighting, terrain, snow particles, camera, and runtime lifecycle remain
 in the dev gallery shim.
+
+### `glass_sculpture/index.html`
+
+Reviewed:
+
+- a two-pass image-space glass system: a double-sided back-face pass writing
+  the geometric world normal in `xyz` and camera distance in `w` into a
+  half-float nearest-filtered RGBA target, with `depth.oneMinus()` so the
+  default less-than test keeps the farthest surface of the union hull;
+- a per-fragment interior path that refracts the view ray in, seeds the segment
+  from the view-ray thickness floored at a `0.08`-unit minimum wall, and
+  refines the exit three times per segment by reprojecting the estimate into
+  the buffer and rebuilding the stored surface point along the camera ray;
+- exact unpolarized Fresnel `F = ½(r_s² + r_p²)` at every interface, returning
+  `1` past the critical angle so total internal reflection needs no separate
+  test, with a `4`-segment budget, a `0.004` throughput break, and a residual
+  term releasing the remaining throughput after the final segment;
+- Beer-Lambert absorption over the accumulated internal path length, with
+  extinction inverted from a `#d0edda` transmission colour at `0.5` units;
+- a Cauchy index from `n_d = 1.5` and `V_d = 32` evaluated at `8` stratified
+  wavelength samples across `415–695 nm`, recombined through CIE 1931
+  piecewise-Gaussian colour matching into linear sRGB and normalized by the
+  running weight sum;
+- one rotatable equirectangular probe read at an explicit mip level and shared
+  by the visible background, the external reflection, and every exit ray;
+- a `0.015 × diagonal` fallback thickness at the silhouette, a `3 × diagonal`
+  segment clamp, a V-inverted world-to-buffer projection for the WebGPU render
+  target orientation, and thickness, back-face normal, and entry-Fresnel debug
+  views;
+- model normalization to `1.6` units, camera and orbit framing, AgX at exposure
+  `1.3`, auto-rotation, the loading overlay, the backend and frame-rate badge,
+  the resolution multiplier, and the lil-gui parameter panel.
+
+Accepted consumption:
+
+- `$threejs-procedural-materials`
+
+The distributed example owns the whole glass system — data pass, exit search,
+interface response, absorption, spectral path, environment probe, and
+diagnostics — under a class that takes any placed mesh hierarchy and any
+equirectangular probe. On author instruction it carries no control surface: the
+GUI-driven uniforms become named constants at their reviewed default values,
+and only the diagnostic view selector stays live. Model normalization,
+environment texture configuration, camera, controls, tone mapping, and exposure
+remain in the dev gallery shim, which renders at a device pixel ratio of `2` to
+match the reviewed pixel-ratio cap. Camera auto-rotation is dropped on author
+instruction.
+
+One defect was corrected in the accepted example on explicit instruction, and
+the same correction was applied to the local script (which is why its hash
+above is not the one first observed). The absorption spectrum decoded its sRGB
+tint literal twice — `new Color(hex)` already resolves into the linear working
+space, so the added `convertSRGBToLinear()` squared the transfer and inflated
+extinction by about `2.3×`, silently, because doubling only deepens the tint
+and tuning by eye absorbs it. Both now parse the literal as
+`LinearSRGBColorSpace` and decode exactly once, which also makes σ independent
+of the color-management flag, and the default tint moves from `#e9f7ee` to
+`#d0edda` so the calibrated appearance is preserved: `σ ≈ (0.922, 0.332,
+0.710) 1/unit` against the previous `(0.926, 0.329, 0.710)`.
+
+Both accompanying assets are owned by the dev gallery rather than the skill,
+because the material is geometry- and probe-agnostic. `sculpture.glb` is a
+scanned model distributed under CC-BY-4.0, which the published package does not
+take on; `bar.exr` is a CC0 studio HDRI. Both are pinned by hash and validated
+in place.
 
 ## Supplied external repositories
 
@@ -858,7 +927,7 @@ These sources are paraphrased. Official documentation remains the authority for 
 | `$threejs-camera-direction` | Stellar camera rig/runtime systems; Interstellar scene cameras, pointer look, floating-origin shots, and scene lifecycle |
 | `$threejs-procedural-animation` | Interstellar launch, staging, spin docking, and debris; Stellar frame-rate-independent response and quaternion control |
 | `$threejs-procedural-fields` | Stellar, MyCraft, `ez-tree`, `mecs-tower-defense-example` |
-| `$threejs-procedural-materials` | MyCraft, Stellar, `mecs-tower-defense-example`, `Very Hot Planet` CodePen, `GrassSystemThreeJS`, `diamonds`, PBR references |
+| `$threejs-procedural-materials` | MyCraft, Stellar, `mecs-tower-defense-example`, `Very Hot Planet` CodePen, `GrassSystemThreeJS`, `diamonds`, `glass_sculpture`, PBR references |
 | `$threejs-procedural-geometry` | local WebGPU submarine, race-car, and motorcycle HTML studies; ArtInLife, `ez-tree`, `procedural-bank` |
 | `$threejs-procedural-vegetation` | `ez-tree`, `stylized-scene` |
 | `$threejs-procedural-architecture` | `procedural-bank` |

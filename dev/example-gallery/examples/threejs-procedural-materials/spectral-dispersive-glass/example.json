@@ -1,0 +1,40 @@
+{
+  "title": "Spectral Dispersive Glass",
+  "description": "A glass body whose interior optical path is solved in image space: the view ray refracts in, locates its exit against a back-face normal-and-distance buffer, keeps reflecting past the critical angle, and is traced once per wavelength for true Cauchy dispersion recombined through CIE 1931.",
+  "backend": "WebGPU / TSL",
+  "techniques": [
+    "double-sided back-face data pass with inverted depth so the farthest surface wins",
+    "iterative image-space exit search along the refracted interior ray",
+    "exact unpolarised Fresnel with total internal reflection at every interface",
+    "per-wavelength Cauchy index from a catalogue (n_d, Abbe) pair",
+    "CIE 1931 piecewise-Gaussian spectral recombination into linear sRGB",
+    "Beer-Lambert absorption over the true internal path length"
+  ],
+  "defaultViewport": "responsive",
+  "defaultDpr": 2,
+  "debugModes": [
+    {
+      "value": "final",
+      "label": "Final"
+    },
+    {
+      "value": "thickness",
+      "label": "View-ray thickness"
+    },
+    {
+      "value": "exit-normal",
+      "label": "Back-face normal"
+    },
+    {
+      "value": "entry-fresnel",
+      "label": "Entry Fresnel"
+    }
+  ],
+  "controls": [
+    "orbit",
+    "pan",
+    "dpr",
+    "debugMode",
+    "capture"
+  ]
+}
