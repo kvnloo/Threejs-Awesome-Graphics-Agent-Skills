@@ -48,6 +48,52 @@
         "interstellar_wormhole.html": "b892321b3f2faca884d82b5151e89c1c48cac7691c5e0f86fce8415d216be88f"
       }
     },
+    "author-local-sea-park": {
+      "repository": "https://github.com/scottstts/Pearl-Sea-Park",
+      "revision": "888fc57b817514049b5fb33b0a3e115b585de067",
+      "license": "MIT by project rule",
+      "localDirectory": "SeaPark",
+      "files": {
+        "scripts/audit-geometry.mjs": "0e0b9a98e3e6ec2f3ba4363cfd931b0ed1d8f611ba688f35eee993e28546fe39",
+        "src/world/parkAmenities.ts": "9bb7ca47571e638c7bc940d96a3475697e04c9793f9206c393ac4d99e7509ac0",
+        "src/rides/torrentCarHull.ts": "b9c0f5288aff54f776a1d95589bf847b25bc75d8abc79f02da05991b4aa92ea1",
+        "src/rides/torrentTrack.ts": "a014dc221685ae23d5fa5675b6018bac38810f7c949e0bd5527207b7eab85bf4",
+        "src/rides/pearlLineCabin.ts": "5c3d486dfdd16ef7e71ceaea55c74f71d3ea583809515011f9f4af41ec3ce433",
+        "src/rides/descentBellGeometry.ts": "268def5724dfa37d9f9b41b7b4496f43426ee2f272a8d13fbead6176f24a467c",
+        "src/shows/noticeBoardGeometry.ts": "f13ec265f008682bdfcbd7fd9c56f9c5c9f8e6df630502bb29902d04d8049ded",
+        "src/rides/pearlRoute.ts": "763e64675713a115f936e2507989c6a7abfce666dd1ef54f83220441e18970c8"
+      }
+    },
+    "author-local-friends-apartment": {
+      "repository": "https://github.com/scottstts/Friends-Apartment",
+      "revision": "337fbb5c1fa48e51b983d35d137513118e7838b9",
+      "license": "MIT by project rule",
+      "localDirectory": "friends",
+      "files": {
+        "src/lib/mesh.ts": "f9b481e47f399d4749b559e9d9ed857a61643268c63c11c27e909ed6f4e235c3",
+        "src/lib/mlib.ts": "01aeceafd6d99ad0edef09e11a80a10775bfb54fd1f4294ed1732e9a1124891d",
+        "src/lib/molding.ts": "98d2a92ccd92e0b6d273808813873439ee0e58eb2e1831903dc5ac54796c1514",
+        "dev_docs/geometry-and-world.md": "4dd2ced11a05e09e16ea7f4df8364f4f71a15cc68097bdd459ea71613cf2d7f5",
+        "build_scripts/Central_Perk/audit.py": "e6333cbdecf013cc90359c8c485d7dff923b8622f34b6eb1fb35bd09b0ade0f4",
+        "build_scripts/Central_Perk/view.py": "3e04eadcef3e9544c99640e3fcf66efc38cdd58ca87b0575916fc004b45058cd"
+      }
+    },
+    "author-local-mars-park": {
+      "repository": "https://github.com/scottstts/Elysium-Mars-Park",
+      "revision": "4ccaea9a8c0d5e2057203a7fb38bbf314a75f4a4",
+      "license": "MIT by project rule",
+      "localDirectory": "mars_park",
+      "files": {
+        "dev_docs/craft/geometry-craft.md": "69df873f90e15d8bdf9cd163dc13f9767f2779a279255739c58525bf3e2280fb",
+        "src/archkit/meshdata.ts": "3351e7676fe6757da4d62f89ba8b1d62c1353feb3ddf84073c38e5c63cd8a286",
+        "src/archkit/audit.ts": "6bf40731249ea868fcd58a8164ae5c6aae7ee4786408f93e9a356321ced6dd25",
+        "src/archkit/auditHook.ts": "ad96c1051ed7c73ec88d6e15d88caea98f9ee8b3692057c99dc850c73a10f867",
+        "tools/archkit-selftest.mjs": "ac0a676654fdd5102256aad98368e43215b60841d1639f8023b85e95e05fa0e7",
+        "tools/amenity-audit.mjs": "c403d7e8965006a8b3f57577c04792e1a1f4779a4553493f4768f73680857397",
+        "tools/station-audit.mjs": "a5f2059671e1fe6680e52d7a3c8e2a1aaa7d61bdea5c2e394d5e3cfb2f20baf8",
+        "tools/starship-clearance-audit.mjs": "f0bb9b3c1eb8c98dcaeb1d41c3a7ac57e7b804802f638f7cb793dc20c8949c9d"
+      }
+    },
     "demo-2023-rain-puddle": {
       "repository": "https://github.com/Faraz-Portfolio/demo-2023-rain-puddle",
       "revision": "257066b63d08b227df8f982377e60f91752ddc81",

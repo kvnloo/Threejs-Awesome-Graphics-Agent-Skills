@@ -75,7 +75,7 @@
         "threejs-procedural-vegetation/structured-ash-growth",
         "threejs-procedural-architecture/procedural-financial-tower"
       ],
-      "rationale": "Complete hard-surface assemblies, vehicle-scale parameter-curve lofts, recess-opening sections, spanwise airfoil lofts, paint projectors, shell and fin lofts, profile sweeps, branch rings, and semantic mesh compilation cannot be reconstructed reliably from prose alone."
+      "rationale": "Complete hard-surface assemblies, vehicle-scale lofts, apertures, shell and fin construction, profile sweeps, branch rings, and semantic mesh compilation require implementation evidence; the portable JavaScript modeling and quality-gate assets add directly runnable topology, coplanar, clash, contract, and assembly checks."
     },
     "threejs-procedural-materials": {
       "classification": "example-required",

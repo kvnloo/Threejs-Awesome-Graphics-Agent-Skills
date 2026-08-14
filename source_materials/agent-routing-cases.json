@@ -83,6 +83,48 @@
       ]
     },
     {
+      "request": "Model a polished hard-surface ticket machine with real profile extrusion, inset panels, a thick shell, and scale-appropriate bevels instead of intersecting boxes and cylinders.",
+      "routes": [
+        {
+          "skill": "threejs-procedural-geometry",
+          "signals": [
+            "profile extrusion",
+            "solidify",
+            "bevels and fillets",
+            "primitive-built forms"
+          ]
+        }
+      ]
+    },
+    {
+      "request": "Audit this generated street fixture for coplanar flicker, loose or non-manifold geometry, detached parts, and substantial interpenetration before material merging.",
+      "routes": [
+        {
+          "skill": "threejs-procedural-geometry",
+          "signals": [
+            "coplanar flicker",
+            "loose/non-manifold geometry",
+            "detached parts",
+            "interpenetration"
+          ]
+        }
+      ]
+    },
+    {
+      "request": "Build and validate a hinged service hatch whose supports, closed contact, open clearance, shell thickness, and full swept envelope are explicit geometry contracts.",
+      "routes": [
+        {
+          "skill": "threejs-procedural-geometry",
+          "signals": [
+            "shell thickness",
+            "support",
+            "clearance",
+            "swept-envelope defects"
+          ]
+        }
+      ]
+    },
+    {
       "request": "Generate a deterministic deciduous tree species with branch hierarchy, foliage normals, and wind.",
       "routes": [
         {
