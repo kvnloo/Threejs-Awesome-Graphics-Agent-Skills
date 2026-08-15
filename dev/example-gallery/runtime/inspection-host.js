@@ -16,6 +16,7 @@ if (!adapter || typeof adapter.setup !== "function") {
   throw new Error(`${modulePath} must default-export an inspection adapter.`);
 }
 
+const rawWebGpu = adapter.backend === "raw-webgpu";
 const THREE = adapter.backend === "webgpu"
   ? await import("three/webgpu")
   : await import("three");
@@ -27,21 +28,25 @@ const rendererOptions = {
   preserveDrawingBuffer: true,
   ...(adapter.renderer?.options ?? {}),
 };
-const renderer = adapter.backend === "webgpu"
-  ? new THREE.WebGPURenderer(rendererOptions)
-  : new THREE.WebGLRenderer(rendererOptions);
+const renderer = rawWebGpu
+  ? null
+  : adapter.backend === "webgpu"
+    ? new THREE.WebGPURenderer(rendererOptions)
+    : new THREE.WebGLRenderer(rendererOptions);
 
-if (typeof renderer.init === "function") {
+if (typeof renderer?.init === "function") {
   await renderer.init();
 }
 
-renderer.outputColorSpace =
-  adapter.renderer?.outputColorSpace ?? THREE.SRGBColorSpace;
-renderer.toneMapping =
-  adapter.renderer?.toneMapping ?? THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = adapter.renderer?.exposure ?? 1;
+if (renderer) {
+  renderer.outputColorSpace =
+    adapter.renderer?.outputColorSpace ?? THREE.SRGBColorSpace;
+  renderer.toneMapping =
+    adapter.renderer?.toneMapping ?? THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = adapter.renderer?.exposure ?? 1;
+}
 
-if (adapter.renderer?.clearColor != null) {
+if (renderer && adapter.renderer?.clearColor != null) {
   renderer.setClearColor(
     adapter.renderer.clearColor,
     adapter.renderer.clearAlpha ?? 1,
@@ -69,6 +74,9 @@ const camera = cameraConfig.type === "orthographic"
 if (cameraConfig.position) {
   camera.position.fromArray(cameraConfig.position);
 }
+if (cameraConfig.up) {
+  camera.up.fromArray(cameraConfig.up);
+}
 
 const controlsConfig = adapter.controls ?? {};
 const controls = controlsConfig.enabled === false ||
@@ -91,7 +99,7 @@ if (controls) {
   controls.update();
 }
 
-exampleRuntime.bindRenderer(renderer);
+if (renderer) exampleRuntime.bindRenderer(renderer);
 exampleRuntime.setCaptureCanvas(canvas);
 
 const context = {
@@ -117,6 +125,8 @@ let metricElapsed = 0;
 let metricFrames = 0;
 let frameInProgress = false;
 const drawingBufferSize = new THREE.Vector2();
+let rawBufferWidth = 0;
+let rawBufferHeight = 0;
 
 exampleRuntime.onStateChange((state) => {
   runtimeState = state;
@@ -128,6 +138,29 @@ function resize() {
   const height = Math.max(1, canvas.clientHeight);
   const expectedWidth = Math.round(width * runtimeState.dpr);
   const expectedHeight = Math.round(height * runtimeState.dpr);
+  if (rawWebGpu) {
+    if (
+      rawBufferWidth === expectedWidth &&
+      rawBufferHeight === expectedHeight
+    ) {
+      return;
+    }
+    rawBufferWidth = expectedWidth;
+    rawBufferHeight = expectedHeight;
+    if (camera.isPerspectiveCamera) {
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    }
+    example.resize?.({
+      width,
+      height,
+      bufferWidth: expectedWidth,
+      bufferHeight: expectedHeight,
+      dpr: runtimeState.dpr,
+    });
+    return;
+  }
+
   renderer.getDrawingBufferSize(drawingBufferSize);
 
   if (
@@ -185,9 +218,9 @@ async function frame(now) {
         rawDelta,
         state: runtimeState,
       });
-    } else if (typeof renderer.renderAsync === "function") {
+    } else if (typeof renderer?.renderAsync === "function") {
       await renderer.renderAsync(scene, camera);
-    } else {
+    } else if (renderer) {
       renderer.render(scene, camera);
     }
 
@@ -196,8 +229,10 @@ async function frame(now) {
     if (metricElapsed >= 1) {
       exampleRuntime.reportMetrics({
         fps: Math.round(metricFrames / metricElapsed),
-        draws: renderer.info.render.calls,
-        triangles: renderer.info.render.triangles,
+        ...(renderer ? {
+          draws: renderer.info.render.calls,
+          triangles: renderer.info.render.triangles,
+        } : {}),
         ...example.metrics?.(),
       });
       metricElapsed = 0;
@@ -208,11 +243,21 @@ async function frame(now) {
   }
 }
 
+let rawAnimationFrame = 0;
+let rawLoopStopped = false;
+
 if (thumbnailMode) {
   // A gallery thumbnail is a still image. Rendering exactly once avoids doing
   // the same expensive post-processing and shader work every animation frame
   // while the parent waits for PNG encoding.
   await frame(performance.now());
+  exampleRuntime.ready();
+} else if (rawWebGpu) {
+  const rawLoop = async (now) => {
+    await frame(now);
+    if (!rawLoopStopped) rawAnimationFrame = requestAnimationFrame(rawLoop);
+  };
+  rawAnimationFrame = requestAnimationFrame(rawLoop);
   exampleRuntime.ready();
 } else {
   renderer.setAnimationLoop(frame);
@@ -220,8 +265,10 @@ if (thumbnailMode) {
 }
 
 window.addEventListener("pagehide", () => {
-  renderer.setAnimationLoop(null);
+  rawLoopStopped = true;
+  if (rawAnimationFrame) cancelAnimationFrame(rawAnimationFrame);
+  renderer?.setAnimationLoop(null);
   controls?.dispose();
   example.dispose?.();
-  renderer.dispose();
+  renderer?.dispose();
 }, { once: true });

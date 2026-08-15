@@ -58,6 +58,20 @@ in `source_materials/trace-manifest.json`.
 - Includes adapted shader utility, simplex noise, and FBM chunks required by
   the grass implementation.
 
+## siliconjungle/inkwell-webgpu-flowers
+
+- Source: https://github.com/siliconjungle/inkwell-webgpu-flowers
+- Copyright: 2026 James and Inkwell contributors
+- License: MIT
+- Used in:
+  `skills/threejs-procedural-vegetation/examples/gpu-culled-flower-field/`
+- Includes adapted raw-WebGPU candidate reconstruction, tile compaction,
+  distance-stream culling, indirect drawing, flower geometry, wind, and
+  instrumentation mechanisms.
+- Included effect assets:
+  - `skills/threejs-procedural-vegetation/assets/gpu-culled-flower-field/flower-petal-variants.png`
+  - `skills/threejs-procedural-vegetation/assets/gpu-culled-flower-field/painted-grass-atlas.png`
+
 ## achrefelouafi/SnowSystemThreeJS
 
 - Source: https://github.com/achrefelouafi/SnowSystemThreeJS

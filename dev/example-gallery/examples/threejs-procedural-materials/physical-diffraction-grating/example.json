@@ -1,0 +1,30 @@
+{
+  "title": "Physical Diffraction Grating",
+  "description": "A printed card substrate with an additive wave-optical foil layer whose embossed star and stripe groove fields return wavelength-selective radiance from a fixed strip emitter without time, framebuffer, or painted-rainbow inputs.",
+  "backend": "WebGPU / pure TSL node graph",
+  "techniques": [
+    "phase-grating diffraction orders",
+    "Bessel order efficiency",
+    "CIE 1931 spectral reconstruction",
+    "blackbody emitter weighting",
+    "finite-coherence azimuth broadening",
+    "pure TSL Fn, If, and Loop graph",
+    "embossed star and stripe microstructure",
+    "additive radiance over a printed substrate"
+  ],
+  "defaultViewport": { "width": 1440, "height": 900 },
+  "defaultDpr": 1,
+  "debugModes": [
+    { "value": "final", "label": "Calibrated foil" },
+    { "value": "no-stars", "label": "Stripe gratings" },
+    { "value": "shallow-relief", "label": "Shallow relief" },
+    { "value": "broad-azimuth", "label": "Broad azimuth" }
+  ],
+  "controls": [
+    "orbit",
+    "pan",
+    "dpr",
+    "debugMode",
+    "capture"
+  ]
+}

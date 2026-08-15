@@ -59,7 +59,12 @@ shader, and both files are pinned by hash. The glass-sculpture intake was
 reviewed against project state
 `05e02fe402ce2e48d3bc1fc6807b92cbd24f727f`; its script and its two accompanying
 assets are pinned by hash. The wormhole intake was reviewed against project
-state `d8822f93bca32567c4913a419827121bef23f761` and is pinned by hash.
+state `d8822f93bca32567c4913a419827121bef23f761` and is pinned by hash. The
+diffraction-grating and Optimus humanoid intakes retain project provenance at
+state `160cfb8360b811a5512d8f60de113260ad20677f`; the revised TSL diffraction
+working copy, both implementations, and the dev-only card artwork are pinned
+by exact file hashes. The author confirmed that both local projects are
+author-owned MIT material.
 
 | File | SHA-256 | Reviewed areas | Mechanisms distilled into |
 | --- | --- | --- | --- |
@@ -71,6 +76,8 @@ state `d8822f93bca32567c4913a419827121bef23f761` and is pinned by hash.
 | `source_materials/aurora-original-shader.js` | `6ea35226f37f08adf0bffe6f10df9e2ecab3e216b8b18aead215a4a7a8a896a3` | author-provided standalone WebGL aurora: finite X ±250 / Z ±500 footprint, 75-step uniform raymarch, exact warped curtain density, screen-space lower fade, sky, stars, tone mapping, and dithering | `$threejs-procedural-vfx`; the finite aurora footprint is consumed, while sky, stars, grading, runtime, and GUI remain outside the skill |
 | `source_materials/interstellar_wormhole.html` | `b892321b3f2faca884d82b5151e89c1c48cac7691c5e0f86fce8415d216be88f` | single-file WebGL geodesic wormhole renderer: ultrastatic cylindrical-throat metric with lensing shoulders, exact orbital-plane reduction with conserved angular momentum, adaptive RK4 null-geodesic integration, observer sphere frame parallel-transported through the throat, footprint-filtered galactic skies for both exterior regions, cube-face flux-conserving star layers, analytic ringed planet, display-aware bright-source point spread, progressive Halton accumulation, 13-tap bloom pyramid and ACES composite, WASD/pointer camera | `$threejs-raymarched-space-effects`; the integrator, observer, celestial spheres, accumulation and bloom are all distributed, while canvas sizing, the animation loop, and input binding remain in the dev gallery shim |
 | `source_materials/glass_sculpture/index.html` | `756f2753611352239f260f156cfe47e19ab1b73922328cf1635590dca1a939c2` | single-file WebGPU/TSL physically based glass: inverted-depth double-sided back-face data pass, image-space interior exit search, exact unpolarized Fresnel with total internal reflection, Beer-Lambert path absorption, Cauchy per-wavelength index from an (n_d, Abbe) pair, CIE 1931 spectral recombination, shared equirectangular probe, and thickness/normal/Fresnel debug views | `$threejs-procedural-materials`; only the glass system is distributed, while model normalization, camera, controls, GUI, and presentation remain in the dev gallery shim |
+| `source_materials/diffraction_grating/diffraction_grating.html` | `80eb43dfd45dfd28c16324cd233db2c6737963d8756d0ac11bda288352948470` | layered reflective diffraction card: pure TSL `Fn`/`If`/`Loop` optical graph, procedural groove masks, analytic spectral conversion, phase-grating order efficiency, coherence/azimuth broadening, finite-emitter integration, and additive HDR optical composition | `$threejs-procedural-materials`; the whole diffraction material system is distributed, while the printed card artwork is dev-only |
+| `source_materials/optimus.html` | `ccecce42bfd568c8b44753231f584f1c32ae4b25edeeec080a0b72fe51b0d8ee` | complete procedural humanoid geometry and material system: polygon operations, CSG difference, bevels, lofts, pillow panels, semantic body assembly, procedural PBR materials, and deterministic topology statistics | `$threejs-procedural-geometry`; the complete geometry and material implementation is distributed, while the studio, camera, controls, and runtime remain in the dev gallery shim |
 
 ### Local-project findings retained
 
@@ -239,6 +246,70 @@ pointer/key/wheel binding remain in the dev gallery shim, which drives the
 example's own `look`, `zoom`, and `move` entry points because the scene is flown
 rather than orbited.
 
+### `diffraction_grating/diffraction_grating.html`
+
+Reviewed:
+
+- the rounded printed substrate, slightly offset additive optical layer, and
+  dark physical backing with the exact card proportions and layer spacing;
+- star and three-family stripe masks that choose local groove angle, pitch,
+  and relief without encoding optical colour directly;
+- analytic CIE 1931 matching curves converted to linear sRGB and weighted by a
+  `5250 K` blackbody spectrum relative to `560 nm`;
+- reflective one-dimensional phase-grating orders `1–3`, Bessel-squared order
+  efficiency, Fresnel and blaze terms, finite-coherence broadening, azimuth
+  disorder, and the normalized `21`-sample strip-emitter integral;
+- the pure TSL graph expressed with `Fn`, `If`, and `Loop`, including bounded
+  Bessel, diffraction-order, and emitter loops without native shader strings;
+- world-space groove-axis updates from the card quaternion, additive HDR
+  composition, ACES display transform, light geometry, controls, GUI, HUD,
+  and runtime lifecycle.
+
+Accepted consumption:
+
+- `$threejs-procedural-materials`
+
+The distributed example owns the complete diffraction card and material
+system, including generated rounded alpha, printed substrate, pure TSL optical
+node graph, backing, every physical control uniform, and the object-axis update
+contract.
+Renderer creation, camera, emitter mesh, object-drag input, range controls,
+reset handling, resize, and animation lifecycle remain in the dev gallery
+adapter. On author instruction, `pokemon_card.png` is retained only as
+`dev/example-gallery/examples/threejs-procedural-materials/physical-diffraction-grating/assets/card-art.png`;
+the reusable material accepts any printed substrate texture and the published
+skill contains no card-art asset.
+
+### `optimus.html`
+
+Reviewed:
+
+- the polygon mesh container, shape-preserving and natural-cubic curves,
+  polynomial fitting, spatial-hash welding, shell winding repair, and split
+  angle-weighted corner normals;
+- exact BSP polygon difference and multi-segment, overlap-clamped bevel
+  construction, including sector-corner normals and generated-face ownership;
+- arc-length-balanced superellipse profiles, parameter and
+  parallel-transport spine lofts, pillow panels, outline extrusion, tubes, and
+  semantic mesh joining;
+- the full torso, head, paired arms, five-finger hands, hip, paired legs, and
+  feet: `176` objects and `891809` emitted triangles at `1.7321 m`;
+- all `14` PBR identities and their WebGPU node-material roughness, signed
+  Perlin-noise, derivative octave filtering, and object-space bump contracts;
+- the studio, loading/progress overlays, camera, controls, lighting, floor,
+  HUD, error handling, and runtime lifecycle.
+
+Accepted consumption:
+
+- `$threejs-procedural-geometry`
+
+The `procedural-optimus-humanoid` example distributes the complete geometry
+and material implementation behind one synchronous creator that returns the
+named hierarchy, shared material dictionary, semantic collections,
+deterministic statistics, and disposal contract. HTML presentation, renderer,
+camera, orbit controls, environment, lights, floor, loading UI, HUD, and error
+overlay remain in the dev gallery adapter.
+
 ## Supplied external repositories
 
 Repositories were cloned shallowly under this directory or reviewed from an
@@ -261,6 +332,7 @@ author-supplied read-only neighboring worktree.
 | [dedekpo/stylized-scene](https://github.com/dedekpo/stylized-scene) | `531c5721e3883412d0dde7db1a72732aa3ede155` | MIT | copied/adapted grass shader, blade, wind, path-mask, and noise mechanisms plus attributed effect-owned assets; scene dressing remains dev-only |
 | [sabosugi/Very Hot Planet CodePen](https://codepen.io/sabosugi/pen/RNKpmQj) | `339f879d3c56eda4238b009c318ca9b89e9eb3fc` content-derived capture id from editor init-data on 2026-06-27 | MIT by project rule | copied/adapted procedural lava material mechanisms |
 | [momentchan/r3f-procedural-grass](https://github.com/momentchan/r3f-procedural-grass) | `e441d2bd4eacaa0c913a8b64dfeb69bd0314a7b5`; `packages/r3f-gist` submodule `16bc424b75077a910965c98ea8ce0c5b564b54b1` | MIT; submodule has no observed license and is treated as MIT by project rule | copied/adapted realistic GPU-computed grass implementation for `$threejs-procedural-vegetation` |
+| [siliconjungle/inkwell-webgpu-flowers](https://github.com/siliconjungle/inkwell-webgpu-flowers) | `88fdb50d74fa160eda9cb8043ff4b2f791f42429` | MIT | copied/adapted the complete raw-WebGPU flower-field engine and its two effect-owned painted atlases for `$threejs-procedural-vegetation` |
 | [achrefelouafi/SnowSystemThreeJS](https://github.com/achrefelouafi/SnowSystemThreeJS) | `c7a3bfbd10c93f8d7b032c322c99b38326edeb80` | MIT | copied/adapted snowfall, snow accumulation, model snow capping, and frozen-lake mechanisms into `$threejs-precipitation-surfaces` |
 | [Faraz-Portfolio/demo-2023-rain-puddle](https://github.com/Faraz-Portfolio/demo-2023-rain-puddle) | `257066b63d08b227df8f982377e60f91752ddc81` | GPL-3.0 | copied/adapted wet asphalt puddle, rain, and splash mechanisms into GPL-covered precipitation example material |
 | [bandinopla/threejs-easyfire](https://github.com/bandinopla/threejs-easyfire) | `994806e27d14b9226c36789ad71ae4b3583dd7db` | MIT | copied/adapted the WebGPU volumetric fire, fluid compute, mesh-emitter, SDF collision, temperature-scattering, and dev-stage mechanisms for `$threejs-procedural-vfx` |
@@ -704,6 +776,36 @@ lighting mechanisms inside `$threejs-procedural-vegetation`. The dev gallery
 owns only the inspection scene, camera, source-like directional light,
 environment-only lighting, post pass, and debug presentation.
 
+### `inkwell-webgpu-flowers`
+
+Reviewed:
+
+- deterministic zero-record flower reconstruction from one integer candidate
+  ID, using a jittered lattice, a rotated three-octave ecology field, and
+  independent hashes for presence, species, scale, atlas mix, lean, and phase;
+- `32 × 32` conservative tile compaction, indirect candidate dispatch, and
+  atomic append into near, middle, and far four-byte visible-ID streams;
+- eight indirect draw paths for exact curved near stems, petals and centres,
+  reduced curved middle geometry, and species-preserving far stems and heads;
+- five compatible petal-atlas variants across eight species, terminal-tangent
+  head orientation, rooted two-frequency wind, and moving-contact bend;
+- timestamp, visibility, surviving-tile, candidate-test, draw-count, memory,
+  and expanded-transform comparison metrics;
+- the React controls/presentation layer, view controls, benchmark bridge, and
+  lifecycle around the raw WebGPU engine.
+
+Consumed by:
+
+- `$threejs-procedural-vegetation`
+
+The distributed `gpu-culled-flower-field` example owns the raw WebGPU device
+pipelines, buffers, compute and draw shaders, culling, indirect commands,
+metrics, disposal, and both byte-identical painted atlases. The dev gallery
+adapter supplies view-projection and camera state from its standard orbit/pan
+camera, elapsed time, resize, frame scheduling, and lifecycle. React, the
+controls panel, copy, telemetry DOM, benchmark bridge, profile buttons, page
+CSS, and footer are not distributed.
+
 ### `SnowSystemThreeJS`
 
 Reviewed:
@@ -989,9 +1091,9 @@ These sources are paraphrased. Official documentation remains the authority for 
 | `$threejs-camera-direction` | Stellar camera rig/runtime systems; Interstellar scene cameras, pointer look, floating-origin shots, and scene lifecycle |
 | `$threejs-procedural-animation` | Interstellar launch, staging, spin docking, and debris; Stellar frame-rate-independent response and quaternion control |
 | `$threejs-procedural-fields` | Stellar, MyCraft, `ez-tree`, `mecs-tower-defense-example` |
-| `$threejs-procedural-materials` | MyCraft, Stellar, `mecs-tower-defense-example`, `Very Hot Planet` CodePen, `GrassSystemThreeJS`, `diamonds`, `glass_sculpture`, PBR references |
-| `$threejs-procedural-geometry` | local WebGPU submarine, race-car, and motorcycle HTML studies; ArtInLife, `ez-tree`, `procedural-bank` |
-| `$threejs-procedural-vegetation` | `ez-tree`, `stylized-scene` |
+| `$threejs-procedural-materials` | MyCraft, Stellar, `mecs-tower-defense-example`, `Very Hot Planet` CodePen, `GrassSystemThreeJS`, `diamonds`, `glass_sculpture`, local diffraction grating, PBR references |
+| `$threejs-procedural-geometry` | local WebGPU submarine, race-car, motorcycle, and Optimus humanoid HTML studies; ArtInLife, `ez-tree`, `procedural-bank` |
+| `$threejs-procedural-vegetation` | `ez-tree`, `stylized-scene`, `inkwell-webgpu-flowers` |
 | `$threejs-procedural-architecture` | `procedural-bank` |
 | `$threejs-procedural-planets` | Stellar |
 | `$threejs-spectral-ocean` | Pearl Sea Park, `poseidon`, `OceanThreejs`, `FFTOCEAN`; directional-spectrum and FFT literature |

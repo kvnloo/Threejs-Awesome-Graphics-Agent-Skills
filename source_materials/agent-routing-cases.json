@@ -56,6 +56,18 @@
       ]
     },
     {
+      "request": "Build reflective embossed card foil whose star and stripe gratings derive visible colour from wavelength, groove pitch, relief, coherent length, and a fixed strip emitter rather than a rainbow texture.",
+      "routes": [
+        {
+          "skill": "threejs-procedural-materials",
+          "signals": [
+            "reflective wave-optical diffraction gratings",
+            "materials"
+          ]
+        }
+      ]
+    },
+    {
       "request": "Emit a sculpted rail sweep with deliberate caps, UV density, normals, and material groups.",
       "routes": [
         {
@@ -78,6 +90,20 @@
             "tilted shell lofts",
             "UV-owned apertures",
             "fin lofts"
+          ]
+        }
+      ]
+    },
+    {
+      "request": "Build a complete procedural humanoid robot from parameter-curve and spine lofts, pillow panels, exact polygon cuts, bevels, five-finger hands, and semantic mechanical subassemblies.",
+      "routes": [
+        {
+          "skill": "threejs-procedural-geometry",
+          "signals": [
+            "humanoid robots",
+            "spine lofts",
+            "pillow panels",
+            "exact polygon cuts"
           ]
         }
       ]
@@ -133,6 +159,19 @@
             "trees",
             "foliage",
             "wind deformation"
+          ]
+        }
+      ]
+    },
+    {
+      "request": "Render millions of virtual flowers without CPU transforms by reconstructing integer IDs, compacting visible tiles into distance tiers, and keeping stems rooted under wind and moving contact.",
+      "routes": [
+        {
+          "skill": "threejs-procedural-vegetation",
+          "signals": [
+            "GPU-culled virtual flower fields",
+            "distance-tiered plant geometry",
+            "rooted wind deformation"
           ]
         }
       ]

@@ -1,0 +1,31 @@
+{
+  "title": "GPU-Culled Flower Field",
+  "description": "A raw-WebGPU procedural meadow that reconstructs virtual flowers from integer IDs, compacts visible candidates through hierarchical tiles, and renders exact, reduced, and horizon-preserving flower tiers with indirect draws.",
+  "backend": "Raw WebGPU / WGSL",
+  "techniques": [
+    "zero-record integer flower reconstruction",
+    "rotated multi-octave ecology density",
+    "32 by 32 hierarchical tile culling",
+    "three compacted visible-ID streams",
+    "indirect near, middle, and far drawing",
+    "curved atlas-textured petals",
+    "rooted wind and moving contact bend"
+  ],
+  "defaultViewport": { "width": 1440, "height": 900 },
+  "defaultDpr": 1,
+  "debugModes": [
+    { "value": "final", "label": "Hierarchical compact" },
+    { "value": "direct", "label": "Direct reference" },
+    { "value": "flat", "label": "Flat compaction" },
+    { "value": "uniform-petals", "label": "One petal variant" }
+  ],
+  "controls": [
+    "orbit",
+    "pan",
+    "pause",
+    "timeScale",
+    "dpr",
+    "debugMode",
+    "capture"
+  ]
+}

@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
+import { transform } from "esbuild";
+import { Box3 } from "three";
 import { ashMedium } from "../skills/threejs-procedural-vegetation/examples/structured-ash-growth/ash-preset.js";
 import { compileAshTree } from "../skills/threejs-procedural-vegetation/examples/structured-ash-growth/tree-system.js";
 import { SUBMARINE_DIMENSIONS } from "../skills/threejs-procedural-geometry/examples/porcelain-brass-submarine/source/design-contract.js";
@@ -20,6 +22,15 @@ import {
   absorptionCoefficients,
   cauchyCoefficients,
 } from "../skills/threejs-procedural-materials/examples/spectral-dispersive-glass/glass-optics.js";
+import {
+  DIFFRACTION_GRATING_DEFAULTS,
+  diffractionEffectiveAzimuthSigma,
+  diffractionOrderWavelengthNm,
+} from "../skills/threejs-procedural-materials/examples/physical-diffraction-grating/physical-diffraction-grating.js";
+import {
+  OPTIMUS_COLLECTION_ORDER,
+  createProceduralOptimusHumanoid,
+} from "../skills/threejs-procedural-geometry/examples/procedural-optimus-humanoid/source/optimus-humanoid-system.js";
 import { wormholeRadius } from "../skills/threejs-raymarched-space-effects/examples/traversable-wormhole-transit/wormhole-effect.js";
 
 function assertVector(actual, expected, label, epsilon = 1e-5) {
@@ -210,10 +221,203 @@ function testTraversableWormholeShapeParity() {
   );
 }
 
+async function testGpuCulledFlowerFieldParity() {
+  const implementation = await readFile(
+    new URL(
+      "../skills/threejs-procedural-vegetation/examples/gpu-culled-flower-field/source/gpu-culled-flower-field.ts",
+      import.meta.url,
+    ),
+    "utf8",
+  );
+  const transpiled = await transform(implementation, {
+    loader: "ts",
+    format: "esm",
+    target: "es2022",
+  });
+  const contract = await import(
+    `data:text/javascript;base64,${Buffer.from(transpiled.code).toString("base64")}`
+  );
+
+  assert.deepEqual(
+    [...contract.FLOWER_DRAW_VERTEX_COUNTS],
+    [60, 528, 48, 24, 132, 18, 6, 6],
+    "flower field eight-draw geometry budget",
+  );
+  assert.equal(
+    contract.maximumFlowerGridSize({
+      maxStorageBufferBindingSize: 128 * 1024 * 1024,
+      maxBufferSize: 128 * 1024 * 1024,
+      maxComputeWorkgroupsPerDimension: 65535,
+    }),
+    2048,
+    "flower field baseline maximum grid",
+  );
+  assert.equal(
+    contract.maximumFlowerGridSize({
+      maxStorageBufferBindingSize: 16 * 1024,
+      maxBufferSize: 16 * 1024,
+      maxComputeWorkgroupsPerDimension: 64,
+    }),
+    64,
+    "flower field minimum grid",
+  );
+  assert.deepEqual(
+    contract.flowerStorageMetrics(2048 * 2048, 126041),
+    {
+      proceduralCandidateBytes: 0,
+      compactedIndexBytes: 504164,
+      expandedTransformBytes: 469762048,
+      compressionRatio: 469762048 / 504164,
+    },
+    "flower field zero-record storage contract",
+  );
+
+  for (const [pattern, label] of [
+    [/@compute @workgroup_size\(\$\{WORKGROUP_SIZE\}\)/, "configured compute workgroups"],
+    [/nearIds: array<u32>;[\s\S]*midIds: array<u32>;[\s\S]*farIds: array<u32>;/, "three compacted visible tiers"],
+    [/dispatchWorkgroupsIndirect/, "indirect candidate dispatch"],
+    [/drawIndirect/, "indirect flower drawing"],
+    [/view\.viewProjection\.some\([\s\S]*this\.cullDirty = true;/, "external-camera culling invalidation"],
+    [/let octave2 = vec2<f32>\(point\.x \* 0\.78 \+ point\.y \* 0\.63/, "rotated ecology octave"],
+    [/uniforms\.field\.y \* 8\.60/, "wide stochastic candidate jitter"],
+  ]) {
+    assert.match(implementation, pattern, `GPU flower field changed: ${label}`);
+  }
+}
+
+async function testPhysicalDiffractionGratingParity() {
+  assert.deepEqual(
+    DIFFRACTION_GRATING_DEFAULTS,
+    {
+      pitchNm: 1180,
+      reliefNm: 86,
+      coherenceUm: 14.5,
+      azimuthSigma: 0.013,
+      grooveAngleRadians: 31 * Math.PI / 180,
+      gain: 5.1,
+      lightHalfLength: 4.9,
+      lightTemperatureK: 5250,
+      lightPower: 128,
+    },
+    "diffraction grating calibrated defaults",
+  );
+  assert.equal(
+    diffractionOrderWavelengthNm(1180, 0.5, 1),
+    590,
+    "diffraction first-order wavelength",
+  );
+  assert.ok(
+    Math.abs(diffractionEffectiveAzimuthSigma(590, 14.5, 0.013) - 0.020076575829243104) < 1e-15,
+    "diffraction coherence and azimuth broadening",
+  );
+
+  const implementation = await readFile(
+    new URL(
+      "../skills/threejs-procedural-materials/examples/physical-diffraction-grating/physical-diffraction-grating.js",
+      import.meta.url,
+    ),
+    "utf8",
+  );
+  for (const [pattern, label] of [
+    [/\bFn, If, Loop, uv,/, "pure TSL control-flow imports"],
+    [/const cieXYZ = Fn\(/, "analytic CIE matching curves"],
+    [/const blackbodyRelative = Fn\(/, "blackbody spectral weighting"],
+    [/Loop\( \{ start: int\( 1 \), end: int\( 4 \)[\s\S]*name: 'm'/, "diffraction orders one through three"],
+    [/exp\( z\.mul\( z \)\.mul\( -0\.5 \) \)\.div\( sigmaEff\.mul\( 2\.50662827463 \) \)/, "normalised angular density"],
+    [/const jm = besselJ\( \{ m, x: phaseDepth \} \)/, "Bessel-squared order efficiency"],
+    [/Loop\( 21,/, "21-sample strip emitter"],
+    [/baseResponse\.mul\( 0\.018 \)[\s\S]*starResponse\.mul\( starMask \)\.mul\( 1\.10 \)/, "base, stripe, and star optical weights"],
+    [/material\.colorNode = physicalDiffractionCard\(/, "TSL radiance node ownership"],
+    [/material\.blending = THREE\.AdditiveBlending;/, "additive HDR optical layer"],
+    [/card\.getWorldQuaternion\(worldQ\)/, "object-frame groove axes"],
+  ]) {
+    assert.match(implementation, pattern, `physical diffraction grating changed: ${label}`);
+  }
+  assert.doesNotMatch(
+    implementation,
+    /\bwgslFn\b|\/\*\s*wgsl\s*\*\//i,
+    "physical diffraction grating must not embed native shader source",
+  );
+}
+
+function testProceduralOptimusHumanoidParity() {
+  const model = createProceduralOptimusHumanoid();
+  const bounds = new Box3().setFromObject(model.root);
+
+  assert.equal(model.root.name, "PROCEDURAL_OPTIMUS_HUMANOID", "Optimus root name");
+  assert.deepEqual(
+    model.stats,
+    { triangles: 891809, objects: 176, heightMetres: 1.73 },
+    "Optimus topology statistics",
+  );
+  assert.deepEqual(
+    Object.fromEntries(OPTIMUS_COLLECTION_ORDER.map((name) => [name, model.collections[name].length])),
+    { TORSO: 25, HEAD: 2, ARM: 22, HAND: 56, HIP: 27, LEG: 38, FOOT: 6 },
+    "Optimus semantic object counts",
+  );
+  assert.deepEqual(
+    Object.keys(model.materials),
+    [
+      "M_SHELL", "M_SHELL_LEG", "M_BLACK", "M_GLOSSBLACK", "M_VISOR",
+      "M_HELMET", "M_LED", "M_DARKMECH", "M_ALU", "M_STEEL", "M_RUBBER",
+      "M_FOOT", "M_LOGO", "M_DARKGREY",
+    ],
+    "Optimus material identities",
+  );
+  assert.deepEqual(
+    [
+      model.materials.M_SHELL.type,
+      model.materials.M_SHELL.roughness,
+      model.materials.M_SHELL.ior,
+      Boolean(model.materials.M_SHELL.roughnessNode),
+      Boolean(model.materials.M_SHELL.normalNode),
+    ],
+    ["MeshPhysicalNodeMaterial", 0.34, 1.47, true, true],
+    "Optimus white shell material contract",
+  );
+  assert.deepEqual(
+    [
+      model.materials.M_DARKMECH.metalness,
+      model.materials.M_DARKMECH.roughness,
+      Boolean(model.materials.M_DARKMECH.roughnessNode),
+      Boolean(model.materials.M_DARKMECH.normalNode),
+    ],
+    [0.72, 0.42, true, true],
+    "Optimus dark mechanism material contract",
+  );
+  assert.deepEqual(
+    [model.materials.M_VISOR.roughness, model.materials.M_VISOR.ior],
+    [0.018, 1.58],
+    "Optimus visor material contract",
+  );
+  assert.deepEqual(
+    [model.materials.M_LED.type, model.materials.M_LED.emissiveIntensity],
+    ["MeshStandardNodeMaterial", 11],
+    "Optimus emissive sensor material contract",
+  );
+  assertVector(
+    bounds.min.toArray(),
+    [-0.28222090005874634, -0.18700000643730164, -0.0016486322274431586],
+    "Optimus bounds minimum",
+    1e-8,
+  );
+  assertVector(
+    bounds.max.toArray(),
+    [0.28222090005874634, 0.19033148884773254, 1.7320995330810547],
+    "Optimus bounds maximum",
+    1e-8,
+  );
+
+  model.dispose();
+}
+
 testPorcelainBrassSubmarineHullParity();
 testEzTreeAshParity();
 testSpectralDispersiveGlassOpticsParity();
 testTraversableWormholeShapeParity();
+await testGpuCulledFlowerFieldParity();
+await testPhysicalDiffractionGratingParity();
+testProceduralOptimusHumanoidParity();
 
 const sourceTraceManifest = JSON.parse(
   await readFile(
@@ -644,6 +848,27 @@ await Promise.all([
     sourcePath: "bar.exr",
     copiedPath: "dev/example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/bar.exr",
     label: "glass sculpture environment probe",
+  }),
+  assertMatchesSourceHash({
+    source: "inkwell-webgpu-flowers",
+    collection: "assets",
+    sourcePath: "public/plant-lab/inkwell-flower-petal-variants-v2.png",
+    copiedPath: "skills/threejs-procedural-vegetation/assets/gpu-culled-flower-field/flower-petal-variants.png",
+    label: "flower petal variants atlas",
+  }),
+  assertMatchesSourceHash({
+    source: "inkwell-webgpu-flowers",
+    collection: "assets",
+    sourcePath: "public/textures/hearth-grass-atlas-v6-palette.png",
+    copiedPath: "skills/threejs-procedural-vegetation/assets/gpu-culled-flower-field/painted-grass-atlas.png",
+    label: "flower field painted grass atlas",
+  }),
+  assertMatchesSourceHash({
+    source: "author-local-diffraction-grating",
+    collection: "assets",
+    sourcePath: "pokemon_card.png",
+    copiedPath: "dev/example-gallery/examples/threejs-procedural-materials/physical-diffraction-grating/assets/card-art.png",
+    label: "diffraction gallery card art",
   }),
 ]);
 console.log("Reference example parity checks passed.");

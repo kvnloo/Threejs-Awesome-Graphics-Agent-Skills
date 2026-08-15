@@ -1,6 +1,98 @@
 {
   "schemaVersion": 1,
   "examples": {
+    "threejs-procedural-vegetation/gpu-culled-flower-field": [
+      {
+        "source": "inkwell-webgpu-flowers",
+        "files": [
+          "src/lib/webgpu-flower-engine.ts",
+          "src/components/webgpu-flower-lab-experience.tsx",
+          "test/webgpu-flower-engine.test.ts"
+        ],
+        "mechanisms": [
+          "zero-record flower reconstruction from one integer candidate ID and a deterministic seed, with wide jitter turning the lattice into an overlapping stochastic point cloud",
+          "rotated three-octave value-noise ecology field with separate deterministic hashes for presence, species, scale, dominant petal variant, compatible variant mixing, lean, and wind phase",
+          "32 by 32 conservative tile compaction feeding an indirect candidate dispatch, followed by atomic append into near, middle, and far four-byte visible-ID streams",
+          "eight indirect draws covering exact curved near stems, petals and centres, reduced curved middle geometry, and species-preserving far stems and procedural heads",
+          "five compatible atlas variants across eight flower species, terminal-tangent head orientation, rooted two-frequency wind, and moving-contact bend",
+          "GPU timestamp, visible-count, surviving-tile, candidate-test, draw-count, memory, and expanded-transform comparison metrics"
+        ],
+        "assets": [
+          {
+            "sourcePath": "public/plant-lab/inkwell-flower-petal-variants-v2.png",
+            "localPath": "skills/threejs-procedural-vegetation/assets/gpu-culled-flower-field/flower-petal-variants.png"
+          },
+          {
+            "sourcePath": "public/textures/hearth-grass-atlas-v6-palette.png",
+            "localPath": "skills/threejs-procedural-vegetation/assets/gpu-culled-flower-field/painted-grass-atlas.png"
+          }
+        ],
+        "boundary": "reference-extraction",
+        "divergences": [
+          "the raw WebGPU device, compute, culling, indirect drawing, shaders, atlases, metrics and disposal remain the reusable example while view-projection, camera position, elapsed time, resize, orbit/pan controls and gallery lifecycle are supplied by the dev adapter",
+          "the React host, controls panel, hero copy, telemetry DOM, benchmark bridge, profile buttons, page CSS and presentation footer are omitted",
+          "the two effect-owned atlas files are byte-identical and distributed under descriptive skill-local names",
+          "the gallery diagnostic selector maps to the existing compact, direct, flat-culling and compatible-petal controls without changing the calibrated final branch",
+          "the gallery uses the package camera implementation and exposes pan in addition to the reviewed orbit and zoom interaction"
+        ]
+      }
+    ],
+    "threejs-procedural-materials/physical-diffraction-grating": [
+      {
+        "source": "author-local-diffraction-grating",
+        "files": [
+          "diffraction_grating.html"
+        ],
+        "mechanisms": [
+          "rounded printed substrate, additive optical radiance layer and dark physical backing with exact relative offsets and calibrated physical-material parameters",
+          "pure TSL optical graph built from Fn, If and Loop nodes, with no embedded native shader source strings",
+          "procedural star and three-family stripe masks selecting local groove azimuth, pitch and relief without directly supplying hue or motif opacity",
+          "analytic CIE 1931 XYZ matching curves converted to linear sRGB and weighted by a 5250-kelvin blackbody spectrum relative to 560 nanometres",
+          "one-dimensional reflective phase grating over orders one through three with wavelength from the grating equation, Bessel-squared order efficiency, Fresnel and blaze envelopes",
+          "normalized finite-coherence and azimuth-disorder broadening plus a 21-sample far-field strip-emitter integral",
+          "world-space groove axes updated from the card's actual object quaternion and additive HDR composition before ACES tone mapping"
+        ],
+        "assets": [
+          {
+            "sourcePath": "pokemon_card.png",
+            "localPath": "dev/example-gallery/examples/threejs-procedural-materials/physical-diffraction-grating/assets/card-art.png"
+          }
+        ],
+        "boundary": "reference-extraction",
+        "divergences": [
+          "the card artwork is dev-shim-only on explicit author instruction; the reusable implementation accepts an arbitrary printed substrate texture",
+          "renderer, fixed camera, object-drag events, visible emitter mesh, resize handler, HUD, range inputs, checkbox and reset button live outside the reusable material module",
+          "the dev gallery uses standard orbit and pan controls while updating the material's object axes every frame from the actual card world quaternion",
+          "the pitch, relief, coherence, azimuth spread, groove angle, gain, star enable, emitter geometry, temperature and power nodes remain public through the returned uniform contract",
+          "the gallery modes exercise existing parameter ranges for star removal, shallow relief and broad azimuth without changing the calibrated final branch",
+          "the gallery and reusable module use the package-installed Three.js revision while retaining the supplied WebGPU and pure-TSL contracts"
+        ]
+      }
+    ],
+    "threejs-procedural-geometry/procedural-optimus-humanoid": [
+      {
+        "source": "author-local-optimus",
+        "files": [
+          "optimus.html"
+        ],
+        "mechanisms": [
+          "shape-preserving and natural-cubic parameter curves, least-squares polynomial fitting, vector/quaternion transforms, and a polygon mesh container with material and generated-face slots",
+          "spatial-hash welding, connected-shell winding repair, split angle-weighted corner normals, exact BSP polygon difference, and angle-limited multi-segment bevel construction",
+          "arc-length-balanced superellipse profiles, parameter lofts, parallel-transport spine lofts, paired pillow panels, outline extrusion, tubes, and semantic mesh joining",
+          "complete 176-object torso, head, arm, five-finger hand, hip, leg and foot assembly totalling 891809 emitted triangles at 1.7321 metres",
+          "fourteen PBR identities including shells, polymers, visor, helmet, emissive sensor, mechanisms, aluminium, steel, rubber, foot material, logo and covers",
+          "lookup3-hashed signed Perlin noise with derivative octave filtering, authored roughness mapping and object-space bump feeding WebGPU node materials"
+        ],
+        "boundary": "reference-extraction",
+        "divergences": [
+          "the reusable example contains the complete geometry and material implementation but omits HTML, loading veil, progress messages, error overlay, HUD, renderer, camera, orbit controls, studio environment, lights and floor",
+          "the seven build phases execute synchronously behind createProceduralOptimusHumanoid and return the named root hierarchy, shared material dictionary, semantic collections, deterministic statistics and disposal contract",
+          "the dev adapter owns the neutral Z-up inspection stage and exposes complete, wireframe, upper-body and lower-body modes without changing the final assembly",
+          "implementation comments are written as self-contained geometry and material contracts while preserving every coordinate, generator, material constant, polygon operation and emission order",
+          "the gallery and reusable module use the package-installed Three.js revision while retaining the supplied WebGPU and TSL contracts"
+        ]
+      }
+    ],
     "threejs-procedural-geometry/porcelain-brass-submarine": [
       {
         "source": "author-local-submarine",

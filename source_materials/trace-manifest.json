@@ -1,6 +1,41 @@
 {
   "schemaVersion": 1,
   "sources": {
+    "author-local-diffraction-grating": {
+      "repository": "https://github.com/scottstts/Threejs-Awesome-Graphics-Agent-Skills",
+      "revision": "160cfb8360b811a5512d8f60de113260ad20677f",
+      "license": "MIT",
+      "localDirectory": "diffraction_grating",
+      "files": {
+        "diffraction_grating.html": "80eb43dfd45dfd28c16324cd233db2c6737963d8756d0ac11bda288352948470"
+      },
+      "assets": {
+        "pokemon_card.png": "bcd64794e138f7ffc196e155ce585bcf634081df0d85acb8fed93c8e4edd70c1"
+      }
+    },
+    "author-local-optimus": {
+      "repository": "https://github.com/scottstts/Threejs-Awesome-Graphics-Agent-Skills",
+      "revision": "160cfb8360b811a5512d8f60de113260ad20677f",
+      "license": "MIT",
+      "files": {
+        "optimus.html": "ccecce42bfd568c8b44753231f584f1c32ae4b25edeeec080a0b72fe51b0d8ee"
+      }
+    },
+    "inkwell-webgpu-flowers": {
+      "repository": "https://github.com/siliconjungle/inkwell-webgpu-flowers",
+      "revision": "88fdb50d74fa160eda9cb8043ff4b2f791f42429",
+      "license": "MIT",
+      "localDirectory": "inkwell-webgpu-flowers",
+      "files": {
+        "src/lib/webgpu-flower-engine.ts": "fd3954a3c885483d32346a7b8223bf79443dda9c6f2fdf5782ef640947a8f7a6",
+        "src/components/webgpu-flower-lab-experience.tsx": "92c5d4dda5209d6bcfb8216c5935c5d7d532ab7ef70b3c839f77fc183cdd14bd",
+        "test/webgpu-flower-engine.test.ts": "6998ce39e829883a0d1790465be6dada239f6e596709df90ca52285b7fec892c"
+      },
+      "assets": {
+        "public/plant-lab/inkwell-flower-petal-variants-v2.png": "2a4a5eac6285e8c63a17d4d6f7cbbdcce9ed9294584e99d966b62956781f4858",
+        "public/textures/hearth-grass-atlas-v6-palette.png": "28d979165dba18ccef2c7d0821598966a82216e70a6e7758b1f778a625f4b256"
+      }
+    },
     "author-local-aurora": {
       "repository": "https://github.com/scottstts/Threejs-Awesome-Graphics-Agent-Skills",
       "revision": "c43ac9e2532373a947fb5548c705fe40814632bc",

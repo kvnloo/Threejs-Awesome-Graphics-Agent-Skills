@@ -1,0 +1,30 @@
+{
+  "title": "Procedural Optimus Humanoid",
+  "description": "A complete 1.73-metre humanoid robot assembled from parameter-curve lofts, pillow panels, exact CSG cuts, angle-limited bevels, five-finger hands, articulated mechanical subassemblies, and object-space procedural PBR materials.",
+  "backend": "WebGPU / TSL node materials",
+  "techniques": [
+    "shape-preserving and natural-cubic parameter curves",
+    "superellipse loft and parallel-transport spine kernels",
+    "pillow-shell panels with paired front and back surfaces",
+    "exact polygon CSG difference",
+    "angle-limited multi-segment bevel construction",
+    "corner-normal splitting across authored sharp edges",
+    "complete semantic humanoid assembly",
+    "filtered object-space procedural roughness and bump"
+  ],
+  "defaultViewport": { "width": 1440, "height": 900 },
+  "defaultDpr": 1,
+  "debugModes": [
+    { "value": "final", "label": "Complete assembly" },
+    { "value": "topology", "label": "Wireframe topology" },
+    { "value": "upper-body", "label": "Upper body" },
+    { "value": "lower-body", "label": "Lower body" }
+  ],
+  "controls": [
+    "orbit",
+    "pan",
+    "dpr",
+    "debugMode",
+    "capture"
+  ]
+}

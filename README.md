@@ -41,10 +41,10 @@ Every graphics system is expected to expose:
 | `threejs-camera-direction` | Authored lenses and shots, chase/side/orbit rigs, body-relative frames, handoffs, pointer look, floating origins. |
 | `threejs-procedural-animation` | Analytic timelines, gravity turns, staging, rotating-frame docking, springs, quaternion alignment, debris motion. |
 | `threejs-procedural-fields` | Shared scalar/vector fields, frequency bands, domain warping, causal masks, procedural normals. |
-| `threejs-procedural-materials` | Hybrid texture-backed PBR soil/moss with procedural fields, atlas filtering, specular AA, planetary materials, terrain wetness, lava/emissive surfaces, raytraced diamond/gem refraction, dispersive glass transmission, frame PBR, per-instance dissolve. |
+| `threejs-procedural-materials` | Hybrid texture-backed PBR soil/moss with procedural fields, atlas filtering, specular AA, planetary materials, terrain wetness, lava/emissive surfaces, raytraced diamond/gem refraction, physics-based diffraction grating, dispersive glass transmission, frame PBR, per-instance dissolve. |
 | `threejs-parallax-occlusion-mapping` | TSL height marching, clipped flat and curved silhouettes, inflated relief shells, self-shadowing, relief-aware shadow depth. |
 | `threejs-procedural-geometry` | Polygon modeling, loft/revolve/sweep/solidify/bevel, crafted assemblies, semantic joins, mesh and scene defect audits. |
-| `threejs-procedural-vegetation` | Growth hierarchies, surface-following ivy, stylized and GPU-computed grass, branch-ring geometry, foliage normals, rooted wind. |
+| `threejs-procedural-vegetation` | Growth hierarchies, surface-following ivy, stylized and GPU-computed grass, culled procedural flower field, branch-ring geometry, foliage normals, rooted wind. |
 | `threejs-procedural-architecture` | Massing and façade grammars, exposed-edge analysis, modules, material-slot compilation. |
 | `threejs-procedural-planets` | Spherical terrain, ridges, craters, biomes, procedural normals, altitude filtering. |
 | `threejs-spectral-ocean` | Validated FFT synthesis, hybrid FFT/Gerstner water, stylized above/below optics, submerged Snell windows, total internal reflection, aquatic perspective, caustic god rays, spectral cascades, choppy derivatives, Jacobian foam, ocean shading. |

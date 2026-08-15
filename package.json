@@ -61,6 +61,7 @@
   },
   "devDependencies": {
     "@petamoriken/float16": "^3.9.2",
+    "@webgpu/types": "^0.1.71",
     "astronomy-engine": "^2.1.19",
     "esbuild": "^0.25.3",
     "playwright": "^1.60.0",
