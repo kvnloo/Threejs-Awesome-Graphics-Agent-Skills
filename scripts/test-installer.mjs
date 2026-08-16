@@ -22,6 +22,7 @@ const temporaryRoot = await mkdtemp(
 const customRoot = path.join(temporaryRoot, "custom-skills");
 const targetPaths = {
   universal: [".agents", "skills"],
+  grok: [".grok", "skills"],
   codex: [".codex", "skills"],
   "claude-code": [".claude", "skills"],
   cursor: [".cursor", "skills"],
@@ -31,6 +32,7 @@ const targetPaths = {
 };
 const projectPaths = {
   universal: [".agents", "skills"],
+  grok: [".grok", "skills"],
   codex: [".codex", "skills"],
   "claude-code": [".claude", "skills"],
   cursor: [".cursor", "skills"],
