@@ -1,0 +1,31 @@
+{
+  "title": "Coastal Breaker Ocean",
+  "description": "A deterministic procedural ocean carried into the beach through a signed-distance coastline, shallow-water swash chains, wet-sand shading, persistent foam, and a camera-following warped ocean grid.",
+  "backend": "WebGPU / TSL",
+  "techniques": [
+    "band-limited gravity and capillary wave fields",
+    "signed-distance mainland and island coast",
+    "Lagrangian shallow-water swash chain",
+    "persistent world and film foam accumulation",
+    "shoreline wet-sand optical transition",
+    "camera-following nonuniform ocean grid"
+  ],
+  "defaultViewport": { "width": 1440, "height": 932 },
+  "defaultDpr": 1,
+  "debugModes": [
+    { "value": "final", "label": "Final coast" },
+    { "value": "normals", "label": "Surface normals" },
+    { "value": "foam", "label": "Foam fields" },
+    { "value": "shoreline", "label": "Signed coast" },
+    { "value": "wireframe", "label": "Warped grids" }
+  ],
+  "controls": [
+    "orbit",
+    "pan",
+    "pause",
+    "timeScale",
+    "dpr",
+    "debugMode",
+    "capture"
+  ]
+}

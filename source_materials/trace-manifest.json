@@ -1,6 +1,47 @@
 {
   "schemaVersion": 1,
   "sources": {
+    "author-local-coastal-breaker-ocean": {
+      "repository": "https://github.com/scottstts/Threejs-Awesome-Graphics-Agent-Skills",
+      "revision": "98453747cc0678f6a5d910f38d7483596a5f9a40",
+      "license": "MIT",
+      "localDirectory": "ocean_beach",
+      "files": {
+        "index.html": "ec93e9c6ecb55c13d82c7b2052eb07c73b5e547d70c1c3ac5eb30656665a6af6",
+        "src/camera.js": "c672c016fb979d310e9fa70fef5c89ff1914cd505003a2abb0ebd545699f483c",
+        "src/chain.js": "3f5b2959a1c69e9da6f1d9381bccaabe203ee9f1e5961b8f6d61721c97336959",
+        "src/coast.js": "33ac74babb6ed3aa0331974041e2b6d70b6b5552d59271a63dbaa32a9020151c",
+        "src/debug.js": "51b613bcac3545263f678d76400d9a81e98e452eed22ab8cc74e1e7ae1e0fba1",
+        "src/foam.js": "fde0528ce29989d0f4cb7652be14eae3a1b493b6417e6b1b5bf8dc3522fe30f8",
+        "src/main.js": "fff9a8d1748fca80eb6f363e8d79c9029b0b19ecadc5df732e3e8c32d6a3f532",
+        "src/noise.js": "e67701fb9e4bafc7a970ab1a7859e63cdbd608f3a3f507ffdec4c9300be5b891",
+        "src/ocean.js": "8c205a08a37a30f5f52a24142b8c0a031c40c492f8f9f57b63baf410724bee1c",
+        "src/sky.js": "f28206c991c3722736114e18d2d7156f375f40965f772c05c44d10ee056d9574",
+        "src/tsl.js": "cb06159d9c31a3f7caeefb86d74b41eeaddec419f64a19aa244593a8c6a6699b",
+        "src/ui.js": "dd6cdd3aea963233c7a63adbd9f23171b7e71436ff36685bc25fec4ff5bd7a54",
+        "src/waveField.js": "1b7cb220c3fb28575a4eec99b3a9e92a93357a52d46c38af13e1f8a901454bed"
+      },
+      "assets": {
+        "sand_base.jpg": "8db20e97254bd88f0795fbe60a914a1849de369705b9bced8cdf33fcc8833780",
+        "sand_normal.jpg": "cd6ad4f65d9892fd5d504c720b71669ac5cb2b6464a67c6647eb09c84f69d24a",
+        "sand_base_1k.jpg": "4e6bae88042a0194dca0ac45dead906b669b932acfef7c6cd3f79252cd50ca98",
+        "sand_normal_1k.jpg": "1cf3a3e9d1f32a6f1914c293393db24039f6dd0de01b9d6bea8a7cf6c8bcdcf7"
+      }
+    },
+    "author-local-thin-film-soap-bubbles": {
+      "repository": "https://github.com/scottstts/Threejs-Awesome-Graphics-Agent-Skills",
+      "revision": "98453747cc0678f6a5d910f38d7483596a5f9a40",
+      "license": "MIT",
+      "localDirectory": "soap_bubble",
+      "files": {
+        "soap_bubble.html": "af679c8840b996560b829f4d359c4e0fd156681c5124bc854dfa6af1174d1916"
+      },
+      "assets": {
+        "bg.exr": "580a912e23d2298f59e983496fd9b4a4646a0659877e0f0391fcddb8813f2034",
+        "bg_1k.exr": "9f09167a4d104c84045750451b0aee0c513372d3adee23c3b3fa2a2f40888196",
+        "background-2k.exr": "f080ad91860d28d5d05690c5b543d80442772edf8c07f1fe9a05cb2a0b4e3556"
+      }
+    },
     "author-local-diffraction-grating": {
       "repository": "https://github.com/scottstts/Threejs-Awesome-Graphics-Agent-Skills",
       "revision": "160cfb8360b811a5512d8f60de113260ad20677f",

@@ -1,6 +1,80 @@
 {
   "schemaVersion": 1,
   "examples": {
+    "threejs-spectral-ocean/coastal-breaker-ocean": [
+      {
+        "source": "author-local-coastal-breaker-ocean",
+        "files": [
+          "index.html",
+          "src/camera.js",
+          "src/chain.js",
+          "src/coast.js",
+          "src/debug.js",
+          "src/foam.js",
+          "src/main.js",
+          "src/noise.js",
+          "src/ocean.js",
+          "src/sky.js",
+          "src/tsl.js",
+          "src/ui.js",
+          "src/waveField.js"
+        ],
+        "mechanisms": [
+          "five deterministic rotated band-limited gravity fields with coupled height, horizontal displacement, derivatives, comb weights and dispersion motion",
+          "signed-distance mainland and island coast synchronized with arclength tables, coast-normal ribbons and a camera-following mainland window",
+          "conserved-volume Lagrangian shallow-water swash chains driven from the completed offshore wave level",
+          "persistent world-space breaker foam and coast-parameterized film foam with separate generation smoothing and lifetime channels",
+          "camera-following nonuniform ocean geometry coupled to water-column wet sand, filtered sand normals, bed caustics, absorption and shared sky radiance"
+        ],
+        "assets": [
+          {
+            "sourcePath": "sand_base_1k.jpg",
+            "localPath": "skills/threejs-spectral-ocean/assets/coastal-breaker-ocean/sand-base.jpg"
+          },
+          {
+            "sourcePath": "sand_normal_1k.jpg",
+            "localPath": "skills/threejs-spectral-ocean/assets/coastal-breaker-ocean/sand-normal.jpg"
+          }
+        ],
+        "boundary": "reference-extraction",
+        "divergences": [
+          "the reusable example owns coast construction, generated wave fields, shallow-water chains, persistent foam targets, ocean and land geometry, materials, default parameters and exact sand texture configuration",
+          "renderer, gallery lifecycle, visible sky mesh, camera, orbit and pan controls remain in the development adapter; the shared analytic sky-radiance function stays with the ocean so reflection and visible sky cannot diverge",
+          "the gallery default camera is reframed down the channel between the island and mainland at position (14.5, 4.5, 32) m and target (-7.5, 0, 0) m, while the default viewport retains the supplied screenshot aspect",
+          "normal, foam, signed-coast and wireframe diagnostics are inspection-only branches and leave the calibrated final mode unchanged",
+          "both author-supplied 1K sand assets are preserved byte-identically under descriptive skill-local names"
+        ]
+      }
+    ],
+    "threejs-procedural-materials/thin-film-soap-bubbles": [
+      {
+        "source": "author-local-thin-film-soap-bubbles",
+        "files": [
+          "soap_bubble.html"
+        ],
+        "mechanisms": [
+          "exact s and p air-film-air Fresnel amplitude coefficients composed through Airy thin-film reflectance with a Cauchy aqueous index and three-tap RGB wavelength bands",
+          "rear and front deformed membrane passes with alpha-normalized reflected radiance and bounded one-bounce analytic reflection through six CPU-selected neighboring bubble proxies",
+          "volume-preserving radial capillary modes coupled to buoyancy, liquid-film mass, Reynolds-dependent drag, finite-correlation turbulence, local air vorticity and film drainage",
+          "camera-aware offscreen physical inflow, deterministic prewarming, expanded-frustum recycling and far-to-near paired membrane ordering",
+          "object-space geodesic puncture, Taylor-Culick film retraction, mass-derived incoherent liquid rim and pooled millimetre-scale drop aftermath"
+        ],
+        "assets": [
+          {
+            "sourcePath": "background-2k.exr",
+            "localPath": "dev/example-gallery/examples/threejs-procedural-materials/thin-film-soap-bubbles/assets/background-2k.exr"
+          }
+        ],
+        "boundary": "reference-extraction",
+        "divergences": [
+          "the reusable module owns every bubble-specific optical, geometry, mechanics, interaction, rupture, drop, deterministic validation and disposal mechanism while accepting an already configured environment, camera, orbit target and input element",
+          "renderer, scene, camera and orbit-control construction plus EXR loading remain in the development adapter",
+          "the adapter consumes the supplied 2K EXR and applies background blurriness 0.025 while leaving sharp environment sampling available to the bubble optics",
+          "environment-only, spherical-membrane and rear-membrane diagnostics toggle existing contracts and leave the calibrated final mode unchanged",
+          "the gallery runtime clock replaces page-owned animation and resize handlers while retaining the 120-hertz fixed mechanics step, five-step cap, membrane order and interaction timing"
+        ]
+      }
+    ],
     "threejs-procedural-vegetation/gpu-culled-flower-field": [
       {
         "source": "inkwell-webgpu-flowers",

@@ -606,6 +606,32 @@
           ]
         }
       ]
+    },
+    {
+      "request": "Build the close beach view where procedural breaker waves hand into a moving swash film, persistent foam, wet sand, and a curved signed-distance shoreline.",
+      "routes": [
+        {
+          "skill": "threejs-spectral-ocean",
+          "signals": [
+            "coastal breaker transitions",
+            "signed-distance coastlines",
+            "shallow-water swash chains",
+            "wet sand"
+          ]
+        }
+      ]
+    },
+    {
+      "request": "Create physically moving soap bubbles whose colour comes from wavelength-dependent air-film-air interference, with front and rear membranes instead of glass refraction.",
+      "routes": [
+        {
+          "skill": "threejs-procedural-materials",
+          "signals": [
+            "thin-film soap bubbles",
+            "airy interference"
+          ]
+        }
+      ]
     }
   ],
   "boundaries": [

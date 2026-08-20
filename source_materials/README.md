@@ -63,8 +63,10 @@ state `d8822f93bca32567c4913a419827121bef23f761` and is pinned by hash. The
 diffraction-grating and Optimus humanoid intakes retain project provenance at
 state `160cfb8360b811a5512d8f60de113260ad20677f`; the revised TSL diffraction
 working copy, both implementations, and the dev-only card artwork are pinned
-by exact file hashes. The author confirmed that both local projects are
-author-owned MIT material.
+by exact file hashes. The coastal-breaker and soap-bubble intakes were reviewed
+against project state `98453747cc0678f6a5d910f38d7483596a5f9a40`; all code
+and both resolution tiers of the bubble environment are pinned by exact file
+hashes. The author explicitly confirmed that both projects are MIT material.
 
 | File | SHA-256 | Reviewed areas | Mechanisms distilled into |
 | --- | --- | --- | --- |
@@ -76,6 +78,8 @@ author-owned MIT material.
 | `source_materials/aurora-original-shader.js` | `6ea35226f37f08adf0bffe6f10df9e2ecab3e216b8b18aead215a4a7a8a896a3` | author-provided standalone WebGL aurora: finite X ±250 / Z ±500 footprint, 75-step uniform raymarch, exact warped curtain density, screen-space lower fade, sky, stars, tone mapping, and dithering | `$threejs-procedural-vfx`; the finite aurora footprint is consumed, while sky, stars, grading, runtime, and GUI remain outside the skill |
 | `source_materials/interstellar_wormhole.html` | `b892321b3f2faca884d82b5151e89c1c48cac7691c5e0f86fce8415d216be88f` | single-file WebGL geodesic wormhole renderer: ultrastatic cylindrical-throat metric with lensing shoulders, exact orbital-plane reduction with conserved angular momentum, adaptive RK4 null-geodesic integration, observer sphere frame parallel-transported through the throat, footprint-filtered galactic skies for both exterior regions, cube-face flux-conserving star layers, analytic ringed planet, display-aware bright-source point spread, progressive Halton accumulation, 13-tap bloom pyramid and ACES composite, WASD/pointer camera | `$threejs-raymarched-space-effects`; the integrator, observer, celestial spheres, accumulation and bloom are all distributed, while canvas sizing, the animation loop, and input binding remain in the dev gallery shim |
 | `source_materials/glass_sculpture/index.html` | `756f2753611352239f260f156cfe47e19ab1b73922328cf1635590dca1a939c2` | single-file WebGPU/TSL physically based glass: inverted-depth double-sided back-face data pass, image-space interior exit search, exact unpolarized Fresnel with total internal reflection, Beer-Lambert path absorption, Cauchy per-wavelength index from an (n_d, Abbe) pair, CIE 1931 spectral recombination, shared equirectangular probe, and thickness/normal/Fresnel debug views | `$threejs-procedural-materials`; only the glass system is distributed, while model normalization, camera, controls, GUI, and presentation remain in the dev gallery shim |
+| `source_materials/ocean_beach/index.html` | `ec93e9c6ecb55c13d82c7b2052eb07c73b5e547d70c1c3ac5eb30656665a6af6` | modular WebGPU/TSL coastal ocean: deterministic directional gravity/capillary fields, signed-distance mainland and island, arclength coast tables, conserved-volume swash chains, persistent world/film foam, warped camera-following geometry, wet-sand optics, shared analytic sky, camera, controls, and diagnostics | `$threejs-spectral-ocean`; the complete ocean/coast/swash/foam/sand implementation is distributed, while renderer lifecycle, visible sky mesh, camera, controls, and gallery integration remain in the dev shim |
+| `source_materials/soap_bubble/soap_bubble.html` | `af679c8840b996560b829f4d359c4e0fd156681c5124bc854dfa6af1174d1916` | single-file WebGPU/TSL soap-bubble system: exact air-film-air Airy reflectance, RGB wavelength bands, front/rear membranes, analytic neighboring-bubble reflections, physical flight and capillary modes, camera-aware inflow, Taylor-Culick rupture, and pooled visible drops | `$threejs-procedural-materials`; every bubble-specific mechanism is distributed, while renderer, scene, camera, controls, and the selected 2K EXR remain in the dev gallery shim |
 | `source_materials/diffraction_grating/diffraction_grating.html` | `80eb43dfd45dfd28c16324cd233db2c6737963d8756d0ac11bda288352948470` | layered reflective diffraction card: pure TSL `Fn`/`If`/`Loop` optical graph, procedural groove masks, analytic spectral conversion, phase-grating order efficiency, coherence/azimuth broadening, finite-emitter integration, and additive HDR optical composition | `$threejs-procedural-materials`; the whole diffraction material system is distributed, while the printed card artwork is dev-only |
 | `source_materials/optimus.html` | `ccecce42bfd568c8b44753231f584f1c32ae4b25edeeec080a0b72fe51b0d8ee` | complete procedural humanoid geometry and material system: polygon operations, CSG difference, bevels, lofts, pillow panels, semantic body assembly, procedural PBR materials, and deterministic topology statistics | `$threejs-procedural-geometry`; the complete geometry and material implementation is distributed, while the studio, camera, controls, and runtime remain in the dev gallery shim |
 
@@ -92,6 +96,83 @@ author-owned MIT material.
 - A camera handoff needs one interpolation owner; stacked transition and follow smoothing creates a visible half-halt.
 - Authored motion should separate analytic travel phases, spring convergence, exact terminal poses, and secondary motion.
 - Rotating-frame docking is stable when axial/radial error, alignment, and spin are solved independently.
+
+### `ocean_beach/`
+
+Reviewed:
+
+- five deterministic frequency-domain gravity fields with rotated directional
+  band passes, a `0.87` scale comb, coupled height/displacement/derivative
+  channels, physical copy speeds, and a separate isotropic capillary field;
+- a `512 × 512` half-float signed coastline spanning `±384 m`, a `2048`-entry
+  mainland arclength table at `0.8 m`, and a clockwise `96`-column island;
+- `256 × 64` coast-normal conserved-volume swash chains with four substeps,
+  shock viscosity, friction, a `0.25 m` handoff depth, and camera-following
+  mainland row shifts;
+- persistent `512 × 512` world foam and `128 × 256` film foam, stable display
+  targets, breaker-Jacobian and swash-compression generation, swallowed-film
+  decay, and deterministic foam-raft patterning;
+- the `512²` warped deep grid, mainland/island ribbons, terrain mesh, shared
+  water/sand shader, derivative-filtered sand normals, caustics, absorption,
+  shared analytic sky, exact default parameter set, camera, controls, UI, and
+  debug overlay;
+- the original `2K` sand textures and the author-supplied `1K` delivery
+  textures, each pinned by hash.
+
+Accepted consumption:
+
+- `$threejs-spectral-ocean`
+
+The distributed example uses a modular `source/` system because the coast,
+simulation targets, geometry and TSL material are one coupled implementation.
+Effect code includes the generated fields, coast baker, swash solver, foam,
+geometry, uniforms, shader graph, default parameters, exact texture setup and
+both author-supplied `1K` sand assets. The dev adapter owns renderer lifecycle, the visible sky
+sphere, camera, controls and gallery metadata. The analytic sky-radiance
+function stays with the ocean and is consumed by the dev sky material so the
+visible surround and water reflection share one function. The gallery view is
+reframed down the channel between the island and mainland with camera position
+`(14.5, 4.5, 32) m` and target `(-7.5, 0, 0) m`; the gallery viewport keeps the
+supplied screenshot aspect. Camera height is clamped above the shader's `3 m`
+maximum terrain height plus the near plane and a `0.05 m` margin by a
+distance-aware OrbitControls polar-angle limit. Normal, foam,
+signed-coast and wireframe diagnostics were added without changing final mode.
+
+### `soap_bubble/soap_bubble.html`
+
+Reviewed:
+
+- exact s/p amplitude coefficients for an air-film-air boundary with
+  `n_air = 1.000277`, Cauchy aqueous index, infinite-reflection Airy response,
+  and three-tap bands centered at `610/545/460 nm`;
+- separate back/front radial membranes, exact radial-graph normals,
+  volume-preserving low-order capillary modes, gravity drainage, Plateau-border
+  thickening, advected thickness structure, and alpha-normalized reflection;
+- six CPU-ranked analytic neighboring sphere proxies per bubble with a bounded
+  near/far membrane reflection and one return transmission;
+- twenty log-normal bubbles with film mass, buoyancy, Reynolds-dependent drag,
+  finite-correlation turbulence, local-air vorticity, capillary forcing,
+  physical offscreen inflow, `6.5 s` prewarm, and expanded-frustum recycling;
+- object-space geodesic puncture, Taylor-Culick retraction, mass-derived liquid
+  rim, `2–5` visible drops, and a fixed `64`-instance drop pool;
+- CPU optical, mechanics, volume, rupture and mass-conservation gates;
+- `bg.exr`, `bg_1k.exr`, and the author-supplied `2048 × 1024` gallery
+  environment, each pinned by hash.
+
+Accepted consumption:
+
+- `$threejs-procedural-materials`
+
+The distributed module owns all bubble-specific optics, geometry, simulation,
+camera-aware lifecycle, interaction, rupture, visible-drop aftermath, tests and
+cleanup. It accepts an already configured equirectangular environment, camera,
+orbit target and pointer element so renderer, scene, camera, controls and EXR
+loading stay in the dev adapter. On author instruction, the adapter uses the
+`2K` environment and sets background blur to `0.025`; optical reflection still
+samples the unblurred environment texture.
+Environment-only, spherical-membrane and rear-membrane diagnostics toggle
+existing branches and leave final mode unchanged. Both projects are author-
+confirmed MIT material.
 
 ### `aurora-snow-desert.html` and `aurora-original-shader.js`
 

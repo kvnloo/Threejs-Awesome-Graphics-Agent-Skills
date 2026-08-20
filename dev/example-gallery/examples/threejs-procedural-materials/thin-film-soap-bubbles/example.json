@@ -1,0 +1,32 @@
+{
+  "title": "Thin-Film Soap Bubbles",
+  "description": "Air-film-air soap bubbles with Airy thin-film reflectance, wavelength-dependent film index, two membrane passes, bounded inter-bubble reflections, capillary deformation, physical flight, puncture retraction, and visible liquid-drop aftermath.",
+  "backend": "WebGPU / TSL",
+  "techniques": [
+    "Airy thin-film Fresnel reflectance",
+    "finite RGB spectral-band integration",
+    "front and rear membrane passes",
+    "bounded analytic inter-bubble reflections",
+    "buoyancy drag and capillary shape modes",
+    "Taylor-Culick puncture retraction",
+    "camera-aware physical inflow"
+  ],
+  "defaultViewport": { "width": 1440, "height": 900 },
+  "defaultDpr": 1.75,
+  "debugModes": [
+    { "value": "final", "label": "Final bubbles" },
+    { "value": "no-interreflection", "label": "Environment only" },
+    { "value": "spherical-membranes", "label": "Spherical membranes" },
+    { "value": "rear-membranes", "label": "Rear membranes" }
+  ],
+  "controls": [
+    "orbit",
+    "pan",
+    "click to puncture",
+    "pause",
+    "timeScale",
+    "dpr",
+    "debugMode",
+    "capture"
+  ]
+}
