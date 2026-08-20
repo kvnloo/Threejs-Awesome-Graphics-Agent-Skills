@@ -28,6 +28,11 @@ const targets = {
     project: [".agents", "skills"],
     user: [".agents", "skills"],
   },
+  grok: {
+    label: "Grok",
+    project: [".grok", "skills"],
+    user: [".grok", "skills"],
+  },
   codex: {
     label: "OpenAI Codex",
     project: [".codex", "skills"],
@@ -77,7 +82,7 @@ Usage:
   threejs-awesome-graphics-agent-skills uninstall --agent <target> [options]
 
 Targets:
-  universal, codex, claude-code, cursor, github-copilot, gemini-cli, windsurf
+  universal, grok, codex, claude-code, cursor, github-copilot, gemini-cli, windsurf
   custom (requires --path)
 
 Options:

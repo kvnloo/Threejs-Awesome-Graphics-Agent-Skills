@@ -88,6 +88,7 @@ Supported targets:
 | Target | User scope | Project scope |
 | --- | --- | --- |
 | `universal` | `~/.agents/skills` | `.agents/skills` |
+| `grok` | `~/.grok/skills` | `.grok/skills` |
 | `codex` | `~/.codex/skills` | `.codex/skills` |
 | `claude-code` | `~/.claude/skills` | `.claude/skills` |
 | `cursor` | `~/.cursor/skills` | `.cursor/skills` |
