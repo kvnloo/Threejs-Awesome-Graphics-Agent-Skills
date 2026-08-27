@@ -7,6 +7,10 @@ description: Author production real-time VFX in Three.js. Use for filmic HDR len
 
 Build effects from an event envelope, motion field, geometry representation, and shading response. Avoid independent particle emitters that happen to share a color.
 
+This skill contains exemplary examples and assets beyond descriptive guidance,
+they're worth studying, referencing, or even copying. Use them sufficiently
+when relevant and do NOT blindly skip them.
+
 ## Effect graph
 
 ```text

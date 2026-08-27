@@ -7,6 +7,10 @@ description: Implement physically motivated sky and aerial-perspective systems i
 
 Treat sky rendering and aerial perspective as two views of the same scattering model. They must share radii, density profiles, coefficients, sun direction, exposure scale, and coordinate transforms.
 
+This skill contains exemplary examples and assets beyond descriptive guidance,
+they're worth studying, referencing, or even copying. Use them sufficiently
+when relevant and do NOT blindly skip them.
+
 ## Choose the implementation tier
 
 - Small scene with no orbital camera: analytic height/distance approximation.

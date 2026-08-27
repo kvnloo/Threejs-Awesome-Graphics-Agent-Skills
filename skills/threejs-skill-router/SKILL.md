@@ -7,6 +7,10 @@ description: Route ambitious Three.js graphics work to the smallest expert skill
 
 Treat the model's Three.js knowledge and official documentation as prerequisites. Load only the expertise that changes the visual result.
 
+This pack goes beyond procedural guidance: its working examples and supporting
+assets contain much of its practical implementation value. When they are
+relevant, give them particular attention.
+
 ## Route by the visual system being authored
 
 | Required result | Load |

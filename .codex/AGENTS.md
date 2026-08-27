@@ -91,6 +91,7 @@ These apply to every SKILL.md and every md under references/.
 ### SKILL.md
 
 - Every example link carries a one-line purpose clause ("read X for A, B, C") whose claims are verifiable in that file.
+- Every skill with examples includes this reminder near its opening: "This skill contains exemplary examples and assets beyond descriptive guidance, they're worth studying, referencing, or even copying. Use them sufficiently when relevant and do NOT blindly skip them."
 - The frontmatter `Use for` triggers, the router-table row, and the routing fixture signals in source_materials/agent-routing-cases.json are one unit — maintain them together in the same change.
 - A new skill that overlaps an existing one gets reciprocal `$skill` mentions in both Routing boundary sections plus a boundary entry in the routing fixtures.
 - Cross-skill pointers are encouraged when a mechanism's canonical implementation lives in another skill's example — route to it (`$skill` + example name) instead of re-describing it.
