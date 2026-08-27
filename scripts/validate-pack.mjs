@@ -5,7 +5,7 @@ import path from "node:path";
 import process from "node:process";
 import { promisify } from "node:util";
 import { parseDocument } from "yaml";
-import { discoverExamples } from "../dev/example-gallery/discovery.mjs";
+import { discoverExamples } from "../example-gallery/discovery.mjs";
 
 const root = process.cwd();
 const skillsRoot = path.join(root, "skills");
@@ -377,7 +377,7 @@ for (const example of discoveredExamples) {
             continue;
           }
           const assetPath =
-            asset.localPath.startsWith("dev/") ||
+            asset.localPath.startsWith("example-gallery/") ||
               asset.localPath.startsWith("skills/")
               ? path.join(root, asset.localPath)
               : path.join(exampleRoot, asset.localPath);
@@ -409,7 +409,7 @@ for (const example of discoveredExamples) {
       );
     }
   }
-  if (!example.entry.includes("/dev/example-gallery/runtime/index.html?module=")) {
+  if (!example.entry.includes("/example-gallery/runtime/index.html?module=")) {
     errors.push(`${example.id}: inspection entry must use the shared dev runtime`);
   }
   const skillText = await readFile(
@@ -432,10 +432,10 @@ for (const skillFile of await collectFiles(skillsRoot)) {
       relative,
     )
   ) {
-    errors.push(`${relative}: supporting asset or runtime file must live under dev/`);
+    errors.push(`${relative}: supporting asset or runtime file must live under example-gallery/`);
   }
   if (/(?:^|\/)(?:scene|runtime|inspection-host)\.[cm]?[jt]s$/i.test(relative)) {
-    errors.push(`${relative}: supporting scene/runtime implementation must live under dev/`);
+    errors.push(`${relative}: supporting scene/runtime implementation must live under example-gallery/`);
   }
 }
 
@@ -750,7 +750,7 @@ for (const staleName of stalePackNames) {
 for (const codeRoot of [
   path.join(root, "bin"),
   path.join(root, "scripts"),
-  path.join(root, "dev", "example-gallery"),
+  path.join(root, "example-gallery"),
 ]) {
   const codeFiles = (await collectFiles(codeRoot)).filter(
     (file) => file.endsWith(".js") || file.endsWith(".mjs"),

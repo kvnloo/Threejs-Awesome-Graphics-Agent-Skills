@@ -40,7 +40,7 @@
           "fflate": "/node_modules/fflate/esm/browser.js",
           "postprocessing": "/node_modules/postprocessing/build/index.js",
           "three-mesh-bvh": "/node_modules/three-mesh-bvh/build/index.module.js",
-          "three-stdlib": "/dev/example-gallery/runtime/three-stdlib-exr-loader.js"
+          "three-stdlib": "/example-gallery/runtime/three-stdlib-exr-loader.js"
         }
       }
     </script>
@@ -55,7 +55,7 @@
         if (params.get("galleryBackend") === "webgpu") {
           preloads.push("/node_modules/three/build/three.webgpu.js");
         }
-        if (modulePath?.startsWith("/dev/example-gallery/examples/")) {
+        if (modulePath?.startsWith("/example-gallery/examples/")) {
           preloads.push(modulePath);
         }
 

@@ -19,7 +19,7 @@ export default {
       detailNormalTexture,
     ] = await Promise.all([
       loader.loadAsync(
-        "/dev/example-gallery/examples/threejs-temporal-surfaces/touch-history-frost/assets/winter_forest.jpeg",
+        "/example-gallery/examples/threejs-temporal-surfaces/touch-history-frost/assets/winter_forest.jpeg",
       ),
       loader.loadAsync(
         "/skills/threejs-temporal-surfaces/assets/touch-history-frost/noise.webp",

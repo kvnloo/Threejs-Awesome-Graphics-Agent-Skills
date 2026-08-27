@@ -9,7 +9,7 @@ in `source_materials/trace-manifest.json`.
 - Source: https://github.com/scottstts/Pearl-Sea-Park
 - License: MIT by project rule
 - Used in: `skills/threejs-spectral-ocean/examples/submerged-snell-ocean/`
-  and its corresponding `dev/example-gallery/` scene
+  and its corresponding `example-gallery/` scene
 - Includes adapted WebGPU spectral simulation, underwater ocean surface,
   shared HDR sky, differential-area caustics, aquatic medium, god rays,
   particulates, procedural sand and far-saucer geometry, and
@@ -80,8 +80,8 @@ in `source_materials/trace-manifest.json`.
 - Includes adapted snowfall, snow accumulation, model capping, frozen lake, and
   material injection mechanisms.
 - Dev-only copied assets:
-  - `dev/example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/asphalt/`
-  - `dev/example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/old_rusty_car_2.glb`
+  - `example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/asphalt/`
+  - `example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/old_rusty_car_2.glb`
 
 ## Faraz-Portfolio/demo-2023-rain-puddle
 
@@ -95,7 +95,7 @@ in `source_materials/trace-manifest.json`.
   - `skills/threejs-precipitation-surfaces/assets/wet-puddle-rain/Splash.png`
   - `skills/threejs-precipitation-surfaces/assets/wet-puddle-rain/road/`
 - Dev-only copied assets:
-  - `dev/example-gallery/examples/threejs-precipitation-surfaces/wet-puddle-rain/assets/`
+  - `example-gallery/examples/threejs-precipitation-surfaces/wet-puddle-rain/assets/`
 
 ## gl-noise
 
@@ -139,7 +139,7 @@ source examples. Its package build output is not copied into skill examples.
 - Bundled assets:
   - `skills/threejs-procedural-materials/assets/hybrid-soil-moss-surface/`
 - Reused dev-only model asset:
-  - `dev/example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/old_rusty_car_2.glb`
+  - `example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/old_rusty_car_2.glb`
 
 ## rocksdanister/rain
 
@@ -148,7 +148,7 @@ source examples. Its package build output is not copied into skill examples.
 - Used in: `skills/threejs-temporal-surfaces/examples/refractive-window-rain/`
 - Includes the copied procedural droplet, refraction, blur, and presentation shader.
 - Dev-only copied asset:
-  - `dev/example-gallery/examples/threejs-temporal-surfaces/refractive-window-rain/assets/background.webp`
+  - `example-gallery/examples/threejs-temporal-surfaces/refractive-window-rain/assets/background.webp`
 
 ## achrefelouafi/VegetationGeneratorThreeJS
 
@@ -176,7 +176,7 @@ source examples. Its package build output is not copied into skill examples.
   mesh-surface emitters, signed-distance collisions, temperature-tier volume
   scattering, and render-pipeline integration.
 - Dev-only copied asset:
-  - `dev/example-gallery/examples/threejs-procedural-vfx/volumetric-fluid-fire/assets/demo-scene.glb`
+  - `example-gallery/examples/threejs-procedural-vfx/volumetric-fluid-fire/assets/demo-scene.glb`
 
 ## N8python/diamonds
 
@@ -198,7 +198,7 @@ source examples. Its package build output is not copied into skill examples.
 - License: CC-BY-4.0 (https://creativecommons.org/licenses/by/4.0/)
 - Changes: recentered on the origin and uniformly scaled to a fixed height.
 - Not distributed in the published package. Dev-only inspection asset:
-  - `dev/example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/sculpture.glb`
+  - `example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/sculpture.glb`
 
 ## Poly Haven HDRI
 
@@ -206,7 +206,7 @@ source examples. Its package build output is not copied into skill examples.
 - License: CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)
 - Changes: renamed only.
 - Not distributed in the published package. Dev-only inspection asset:
-  - `dev/example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/bar.exr`
+  - `example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/bar.exr`
 
 Additional bundled asset folders may include local `THIRD_PARTY_LICENSES.md`
 files with asset-specific notices.

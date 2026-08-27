@@ -118,7 +118,7 @@ async function loadExample(projectRoot, candidate, origin) {
     backend:
       typeof metadata.backend === "string" ? metadata.backend : "unspecified",
     entry: origin === "skill"
-      ? `/dev/example-gallery/runtime/index.html?module=/${relativeDirectory}/scene.js`
+      ? `/example-gallery/runtime/index.html?module=/${relativeDirectory}/scene.js`
       : `/${relativeDirectory}/index.html`,
     source: `/${relativeDirectory}/`,
     preview:
@@ -146,7 +146,6 @@ export async function discoverExamples(
 ) {
   const examplesRoot = path.join(
     projectRoot,
-    "dev",
     "example-gallery",
     "examples",
   );
@@ -161,7 +160,6 @@ export async function discoverExamples(
   if (includeFixtures) {
     const fixtureRoot = path.join(
       projectRoot,
-      "dev",
       "example-gallery",
       "fixtures",
     );

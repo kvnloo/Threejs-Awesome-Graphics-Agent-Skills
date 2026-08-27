@@ -388,7 +388,7 @@ contract.
 Renderer creation, camera, emitter mesh, object-drag input, range controls,
 reset handling, resize, and animation lifecycle remain in the dev gallery
 adapter. On author instruction, `pokemon_card.png` is retained only as
-`dev/example-gallery/examples/threejs-procedural-materials/physical-diffraction-grating/assets/card-art.png`;
+`example-gallery/examples/threejs-procedural-materials/physical-diffraction-grating/assets/card-art.png`;
 the reusable material accepts any printed substrate texture and the published
 skill contains no card-art asset.
 
@@ -758,7 +758,7 @@ The accepted example keeps the reusable water simulation, pool caustics pass,
 pool/water/sphere shader implementation, and water-volume assets inside
 `$threejs-water-optics`. The tile and cubemap images are effect inputs for the
 reference optical result, while camera, interaction, and visual inspection
-framing remain in `dev/example-gallery/`.
+framing remain in `example-gallery/`.
 
 ### `OceanThreejs`
 
@@ -822,7 +822,7 @@ that are intrinsic to an accepted example.
 The accepted example stores `grass-blades-up.glb`, `path.webp`, and
 `perlin.webp` under the skill because they directly define blade geometry and
 the authored grass/path field. Ground textures, grass surface textures, tree
-meshes, leaf alpha, and skybox are copied only into `dev/example-gallery/` as
+meshes, leaf alpha, and skybox are copied only into `example-gallery/` as
 inspection context.
 
 ### `Very Hot Planet` CodePen
@@ -950,7 +950,7 @@ capping, sparkle, and optional frozen-lake composition inside
 `$threejs-precipitation-surfaces`. Dev-only asphalt inputs, the original
 reference rusty car GLB, compressed-model loader support, source-matched model
 recentering/resting, cinematic post presentation, and scene framing remain
-under `dev/example-gallery/`. The user-supplied compressed car handoff was
+under `example-gallery/`. The user-supplied compressed car handoff was
 copied to `source_materials/user-supplied/old-rusty-car.glb` with SHA-256
 `f2f29c4d6d7192e1d44d88238311bccb7fd5251517138c5769439ca71bce4d6b`, but the
 gallery uses `source_materials/SnowSystemThreeJS/public/old_rusty_car_2.glb`

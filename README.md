@@ -115,7 +115,7 @@ npm run capture:examples
 Inspect every included graphics example from one development surface:
 
 ```sh
-npm run dev:examples
+npm run dev
 ```
 
 The gallery is meant for visual inspection of each example included in the 
@@ -129,4 +129,4 @@ This split is intentional:
 - The gallery is for viewing purpose, the agent doesn't need to know that scene setup
 
 The gallery contract is documented in
-[`dev/example-gallery/README.md`](dev/example-gallery/README.md).
+[`example-gallery/README.md`](example-gallery/README.md).

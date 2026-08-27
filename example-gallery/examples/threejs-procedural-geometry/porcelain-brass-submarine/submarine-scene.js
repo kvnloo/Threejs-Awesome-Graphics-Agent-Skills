@@ -1,4 +1,4 @@
-import { createStudioStage } from "/dev/example-gallery/support/studio-stage.js";
+import { createStudioStage } from "/example-gallery/support/studio-stage.js";
 import { createPorcelainBrassSubmarine } from
   "/skills/threejs-procedural-geometry/examples/porcelain-brass-submarine/submarine-model.js";
 

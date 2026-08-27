@@ -12,7 +12,7 @@ import { discoverExamples } from "./discovery.mjs";
 import { createThumbnailRenderer } from "./thumbnail-renderer.mjs";
 
 const galleryRoot = path.dirname(fileURLToPath(import.meta.url));
-const projectRoot = path.resolve(galleryRoot, "../..");
+const projectRoot = path.resolve(galleryRoot, "..");
 const publicRoot = path.join(galleryRoot, "public");
 
 const contentTypes = new Map([
@@ -60,7 +60,7 @@ function parseArgs(argv) {
       console.log(`Three.js example gallery
 
 Usage:
-  node dev/example-gallery/server.mjs [options]
+  node example-gallery/server.mjs [options]
 
 Options:
   --host <host>          Bind host (default: 127.0.0.1)
@@ -349,11 +349,11 @@ export function createExampleGalleryServer({ includeFixtures = false } = {}) {
 
       const allowedProjectPrefixes = [
         "/skills/",
-        "/dev/example-gallery/",
+        "/example-gallery/",
         "/node_modules/",
       ];
       if (includeFixtures) {
-        allowedProjectPrefixes.push("/dev/example-gallery/fixtures/");
+        allowedProjectPrefixes.push("/example-gallery/fixtures/");
       }
       if (
         allowedProjectPrefixes.some((prefix) =>

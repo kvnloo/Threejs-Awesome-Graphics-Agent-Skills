@@ -45,9 +45,9 @@
   "scripts": {
     "validate": "node scripts/validate-pack.mjs",
     "test": "npm run validate && npm run test:routing && npm run test:references && npm run test:installer && npm run test:assets && npm run test:geometry-kit",
-    "dev:examples": "node dev/example-gallery/server.mjs --open",
-    "dev:examples:no-open": "node dev/example-gallery/server.mjs",
-    "dev:examples:fixture": "node dev/example-gallery/server.mjs --open --include-fixtures",
+    "dev": "node example-gallery/server.mjs --open",
+    "dev:examples:no-open": "node example-gallery/server.mjs",
+    "dev:examples:fixture": "node example-gallery/server.mjs --open --include-fixtures",
     "capture:examples": "node scripts/capture-examples.mjs",
     "test:references": "node scripts/test-reference-examples.mjs",
     "test:routing": "node scripts/test-agent-routing.mjs",

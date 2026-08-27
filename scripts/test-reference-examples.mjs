@@ -825,7 +825,7 @@ await Promise.all([
     source: "grass-system-threejs",
     collection: "assets",
     sourcePath: "public/old_rusty_car_2.glb",
-    copiedPath: "dev/example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/old_rusty_car_2.glb",
+    copiedPath: "example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/old_rusty_car_2.glb",
     label: "shared rusty car model",
   }),
   assertMatchesSourceHash({
@@ -839,14 +839,14 @@ await Promise.all([
     source: "author-local-glass-sculpture",
     collection: "assets",
     sourcePath: "sculpture.glb",
-    copiedPath: "dev/example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/sculpture.glb",
+    copiedPath: "example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/sculpture.glb",
     label: "glass sculpture subject",
   }),
   assertMatchesSourceHash({
     source: "author-local-glass-sculpture",
     collection: "assets",
     sourcePath: "bar.exr",
-    copiedPath: "dev/example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/bar.exr",
+    copiedPath: "example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/bar.exr",
     label: "glass sculpture environment probe",
   }),
   assertMatchesSourceHash({
@@ -867,7 +867,7 @@ await Promise.all([
     source: "author-local-diffraction-grating",
     collection: "assets",
     sourcePath: "pokemon_card.png",
-    copiedPath: "dev/example-gallery/examples/threejs-procedural-materials/physical-diffraction-grating/assets/card-art.png",
+    copiedPath: "example-gallery/examples/threejs-procedural-materials/physical-diffraction-grating/assets/card-art.png",
     label: "diffraction gallery card art",
   }),
 ]);

@@ -5,7 +5,7 @@ const params = new URLSearchParams(window.location.search);
 const modulePath = params.get("module");
 const thumbnailMode = params.get("galleryThumbnail") === "1";
 
-if (!modulePath?.startsWith("/dev/example-gallery/examples/")) {
+if (!modulePath?.startsWith("/example-gallery/examples/")) {
   throw new Error("Inspection runtime requires a dev example module.");
 }
 

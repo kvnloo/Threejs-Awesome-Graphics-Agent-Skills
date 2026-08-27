@@ -6,7 +6,7 @@ import {
 } from "/skills/threejs-procedural-materials/examples/hybrid-soil-moss-surface/hybrid-soil-moss-surface.js";
 import { createModelMossAccumulation } from "/skills/threejs-procedural-materials/examples/hybrid-soil-moss-surface/model-moss-accumulation.js";
 
-const CAR_URL = "/dev/example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/old_rusty_car_2.glb";
+const CAR_URL = "/example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/old_rusty_car_2.glb";
 
 export default {
   renderer: {

@@ -1,8 +1,8 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
-import { discoverExamples } from "../dev/example-gallery/discovery.mjs";
-import { startExampleGallery } from "../dev/example-gallery/server.mjs";
+import { discoverExamples } from "../example-gallery/discovery.mjs";
+import { startExampleGallery } from "../example-gallery/server.mjs";
 
 const root = process.cwd();
 const forbidden = /(?:^|[/"'`(])(?:\.\.\/)*source_materials(?:\/|$)|\/source_materials\//;

@@ -62,7 +62,7 @@
         "assets": [
           {
             "sourcePath": "background-2k.exr",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-materials/thin-film-soap-bubbles/assets/background-2k.exr"
+            "localPath": "example-gallery/examples/threejs-procedural-materials/thin-film-soap-bubbles/assets/background-2k.exr"
           }
         ],
         "boundary": "reference-extraction",
@@ -129,7 +129,7 @@
         "assets": [
           {
             "sourcePath": "pokemon_card.png",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-materials/physical-diffraction-grating/assets/card-art.png"
+            "localPath": "example-gallery/examples/threejs-procedural-materials/physical-diffraction-grating/assets/card-art.png"
           }
         ],
         "boundary": "reference-extraction",
@@ -341,27 +341,27 @@
         "assets": [
           {
             "sourcePath": "public/Material_1/Asphalt025C_1K-JPG_AmbientOcclusion.jpg",
-            "localPath": "dev/example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/asphalt/Asphalt025C_1K-JPG_AmbientOcclusion.jpg"
+            "localPath": "example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/asphalt/Asphalt025C_1K-JPG_AmbientOcclusion.jpg"
           },
           {
             "sourcePath": "public/Material_1/Asphalt025C_1K-JPG_Color.jpg",
-            "localPath": "dev/example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/asphalt/Asphalt025C_1K-JPG_Color.jpg"
+            "localPath": "example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/asphalt/Asphalt025C_1K-JPG_Color.jpg"
           },
           {
             "sourcePath": "public/Material_1/Asphalt025C_1K-JPG_Displacement.jpg",
-            "localPath": "dev/example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/asphalt/Asphalt025C_1K-JPG_Displacement.jpg"
+            "localPath": "example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/asphalt/Asphalt025C_1K-JPG_Displacement.jpg"
           },
           {
             "sourcePath": "public/Material_1/Asphalt025C_1K-JPG_NormalGL.jpg",
-            "localPath": "dev/example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/asphalt/Asphalt025C_1K-JPG_NormalGL.jpg"
+            "localPath": "example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/asphalt/Asphalt025C_1K-JPG_NormalGL.jpg"
           },
           {
             "sourcePath": "public/Material_1/Asphalt025C_1K-JPG_Roughness.jpg",
-            "localPath": "dev/example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/asphalt/Asphalt025C_1K-JPG_Roughness.jpg"
+            "localPath": "example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/asphalt/Asphalt025C_1K-JPG_Roughness.jpg"
           },
           {
             "sourcePath": "public/old_rusty_car_2.glb",
-            "localPath": "dev/example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/old_rusty_car_2.glb"
+            "localPath": "example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/old_rusty_car_2.glb"
           }
         ],
         "boundary": "reference-extraction",
@@ -417,23 +417,23 @@
           },
           {
             "sourcePath": "public/decals/trash/shmpulh_4K_AO.jpg",
-            "localPath": "dev/example-gallery/examples/threejs-precipitation-surfaces/wet-puddle-rain/assets/trash/shmpulh_4K_AO.jpg"
+            "localPath": "example-gallery/examples/threejs-precipitation-surfaces/wet-puddle-rain/assets/trash/shmpulh_4K_AO.jpg"
           },
           {
             "sourcePath": "public/decals/trash/shmpulh_4K_Albedo.jpg",
-            "localPath": "dev/example-gallery/examples/threejs-precipitation-surfaces/wet-puddle-rain/assets/trash/shmpulh_4K_Albedo.jpg"
+            "localPath": "example-gallery/examples/threejs-precipitation-surfaces/wet-puddle-rain/assets/trash/shmpulh_4K_Albedo.jpg"
           },
           {
             "sourcePath": "public/decals/trash/shmpulh_4K_Normal.jpg",
-            "localPath": "dev/example-gallery/examples/threejs-precipitation-surfaces/wet-puddle-rain/assets/trash/shmpulh_4K_Normal.jpg"
+            "localPath": "example-gallery/examples/threejs-precipitation-surfaces/wet-puddle-rain/assets/trash/shmpulh_4K_Normal.jpg"
           },
           {
             "sourcePath": "public/decals/trash/shmpulh_4K_Opacity.jpg",
-            "localPath": "dev/example-gallery/examples/threejs-precipitation-surfaces/wet-puddle-rain/assets/trash/shmpulh_4K_Opacity.jpg"
+            "localPath": "example-gallery/examples/threejs-precipitation-surfaces/wet-puddle-rain/assets/trash/shmpulh_4K_Opacity.jpg"
           },
           {
             "sourcePath": "public/decals/trash/shmpulh_4K_Roughness.jpg",
-            "localPath": "dev/example-gallery/examples/threejs-precipitation-surfaces/wet-puddle-rain/assets/trash/shmpulh_4K_Roughness.jpg"
+            "localPath": "example-gallery/examples/threejs-precipitation-surfaces/wet-puddle-rain/assets/trash/shmpulh_4K_Roughness.jpg"
           }
         ],
         "boundary": "reference-extraction",
@@ -769,55 +769,55 @@
           },
           {
             "sourcePath": "public/grass_texture/grass_05_basecolor_1k.webp",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/grass_texture/grass_05_basecolor_1k.webp"
+            "localPath": "example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/grass_texture/grass_05_basecolor_1k.webp"
           },
           {
             "sourcePath": "public/grass_texture/grass_05_normal_gl_1k.webp",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/grass_texture/grass_05_normal_gl_1k.webp"
+            "localPath": "example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/grass_texture/grass_05_normal_gl_1k.webp"
           },
           {
             "sourcePath": "public/grass_texture/grass_05_roughness_1k.webp",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/grass_texture/grass_05_roughness_1k.webp"
+            "localPath": "example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/grass_texture/grass_05_roughness_1k.webp"
           },
           {
             "sourcePath": "public/ground_texture/ground_07_4k/ground_07__ambientocclusion_1k.webp",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/ground_texture/ground_07_4k/ground_07__ambientocclusion_1k.webp"
+            "localPath": "example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/ground_texture/ground_07_4k/ground_07__ambientocclusion_1k.webp"
           },
           {
             "sourcePath": "public/ground_texture/ground_07_4k/ground_07__basecolor_1k.webp",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/ground_texture/ground_07_4k/ground_07__basecolor_1k.webp"
+            "localPath": "example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/ground_texture/ground_07_4k/ground_07__basecolor_1k.webp"
           },
           {
             "sourcePath": "public/ground_texture/ground_07_4k/ground_07__height_1k.webp",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/ground_texture/ground_07_4k/ground_07__height_1k.webp"
+            "localPath": "example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/ground_texture/ground_07_4k/ground_07__height_1k.webp"
           },
           {
             "sourcePath": "public/ground_texture/ground_07_4k/ground_07__metallic_1k.webp",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/ground_texture/ground_07_4k/ground_07__metallic_1k.webp"
+            "localPath": "example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/ground_texture/ground_07_4k/ground_07__metallic_1k.webp"
           },
           {
             "sourcePath": "public/ground_texture/ground_07_4k/ground_07__normal_gl_1k.webp",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/ground_texture/ground_07_4k/ground_07__normal_gl_1k.webp"
+            "localPath": "example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/ground_texture/ground_07_4k/ground_07__normal_gl_1k.webp"
           },
           {
             "sourcePath": "public/ground_texture/ground_07_4k/ground_07__roughness_1k.webp",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/ground_texture/ground_07_4k/ground_07__roughness_1k.webp"
+            "localPath": "example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/ground_texture/ground_07_4k/ground_07__roughness_1k.webp"
           },
           {
             "sourcePath": "public/leaves-alpha-map.png",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/leaves-alpha-map.png"
+            "localPath": "example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/leaves-alpha-map.png"
           },
           {
             "sourcePath": "public/skybox/sky_88_2k.png",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/skybox/sky_88_2k.png"
+            "localPath": "example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/skybox/sky_88_2k.png"
           },
           {
             "sourcePath": "public/tree-leaves-mesh.glb",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/tree-leaves-mesh.glb"
+            "localPath": "example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/tree-leaves-mesh.glb"
           },
           {
             "sourcePath": "public/tree-tronk-transformed.glb",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/tree-tronk-transformed.glb"
+            "localPath": "example-gallery/examples/threejs-procedural-vegetation/stylized-meadow-grass/assets/tree-tronk-transformed.glb"
           }
         ],
         "boundary": "reference-extraction",
@@ -844,7 +844,7 @@
         "assets": [
           {
             "sourcePath": "bg_1k.exr",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-vfx/filmic-lens-flare/assets/bg_1k.exr"
+            "localPath": "example-gallery/examples/threejs-procedural-vfx/filmic-lens-flare/assets/bg_1k.exr"
           }
         ],
         "boundary": "reference-extraction",
@@ -942,7 +942,7 @@
         "assets": [
           {
             "sourcePath": "demo/public/demo-scene.glb",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-vfx/volumetric-fluid-fire/assets/demo-scene.glb"
+            "localPath": "example-gallery/examples/threejs-procedural-vfx/volumetric-fluid-fire/assets/demo-scene.glb"
           }
         ],
         "boundary": "reference-extraction",
@@ -1032,23 +1032,23 @@
         "assets": [
           {
             "sourcePath": "public/Ground098_1K-JPG_AmbientOcclusion.jpg",
-            "localPath": "dev/example-gallery/examples/threejs-spectral-ocean/hybrid-clear-water-ocean/assets/sand/Ground098_1K-JPG_AmbientOcclusion.jpg"
+            "localPath": "example-gallery/examples/threejs-spectral-ocean/hybrid-clear-water-ocean/assets/sand/Ground098_1K-JPG_AmbientOcclusion.jpg"
           },
           {
             "sourcePath": "public/Ground098_1K-JPG_Color.jpg",
-            "localPath": "dev/example-gallery/examples/threejs-spectral-ocean/hybrid-clear-water-ocean/assets/sand/Ground098_1K-JPG_Color.jpg"
+            "localPath": "example-gallery/examples/threejs-spectral-ocean/hybrid-clear-water-ocean/assets/sand/Ground098_1K-JPG_Color.jpg"
           },
           {
             "sourcePath": "public/Ground098_1K-JPG_Displacement.jpg",
-            "localPath": "dev/example-gallery/examples/threejs-spectral-ocean/hybrid-clear-water-ocean/assets/sand/Ground098_1K-JPG_Displacement.jpg"
+            "localPath": "example-gallery/examples/threejs-spectral-ocean/hybrid-clear-water-ocean/assets/sand/Ground098_1K-JPG_Displacement.jpg"
           },
           {
             "sourcePath": "public/Ground098_1K-JPG_NormalDX.jpg",
-            "localPath": "dev/example-gallery/examples/threejs-spectral-ocean/hybrid-clear-water-ocean/assets/sand/Ground098_1K-JPG_NormalDX.jpg"
+            "localPath": "example-gallery/examples/threejs-spectral-ocean/hybrid-clear-water-ocean/assets/sand/Ground098_1K-JPG_NormalDX.jpg"
           },
           {
             "sourcePath": "public/Ground098_1K-JPG_Roughness.jpg",
-            "localPath": "dev/example-gallery/examples/threejs-spectral-ocean/hybrid-clear-water-ocean/assets/sand/Ground098_1K-JPG_Roughness.jpg"
+            "localPath": "example-gallery/examples/threejs-spectral-ocean/hybrid-clear-water-ocean/assets/sand/Ground098_1K-JPG_Roughness.jpg"
           }
         ],
         "boundary": "reference-extraction",
@@ -1455,7 +1455,7 @@
         "assets": [
           {
             "sourcePath": "public/tiles.jpg",
-            "localPath": "dev/example-gallery/examples/threejs-water-optics/interactive-pool-volume/assets/tiles.jpg"
+            "localPath": "example-gallery/examples/threejs-water-optics/interactive-pool-volume/assets/tiles.jpg"
           }
         ],
         "boundary": "reference-extraction",
@@ -1521,7 +1521,7 @@
           },
           {
             "sourcePath": "public/old_rusty_car_2.glb",
-            "localPath": "dev/example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/old_rusty_car_2.glb"
+            "localPath": "example-gallery/examples/threejs-precipitation-surfaces/snow-accumulation/assets/old_rusty_car_2.glb"
           }
         ],
         "boundary": "reference-extraction",
@@ -1574,7 +1574,7 @@
         "assets": [
           {
             "sourcePath": "media/image.webp",
-            "localPath": "dev/example-gallery/examples/threejs-temporal-surfaces/refractive-window-rain/assets/background.webp"
+            "localPath": "example-gallery/examples/threejs-temporal-surfaces/refractive-window-rain/assets/background.webp"
           }
         ],
         "boundary": "reference-extraction",
@@ -1745,11 +1745,11 @@
         "assets": [
           {
             "sourcePath": "sculpture.glb",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/sculpture.glb"
+            "localPath": "example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/sculpture.glb"
           },
           {
             "sourcePath": "bar.exr",
-            "localPath": "dev/example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/bar.exr"
+            "localPath": "example-gallery/examples/threejs-procedural-materials/spectral-dispersive-glass/assets/bar.exr"
           }
         ],
         "boundary": "reference-extraction",

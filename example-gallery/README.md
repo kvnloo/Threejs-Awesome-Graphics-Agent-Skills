@@ -5,7 +5,7 @@ This is repository-level development tooling. It is not distributed as an agent 
 Run:
 
 ```sh
-npm run dev:examples
+npm run dev
 ```
 
 Capture all examples or one exact/partial example ID:
@@ -19,8 +19,8 @@ npm run capture:examples -- --example weather-volume-clouds --debug density
 The server discovers development adapters:
 
 ```text
-dev/example-gallery/examples/<skill-name>/<example-name>/scene.js
-dev/example-gallery/examples/<skill-name>/<example-name>/example.json
+example-gallery/examples/<skill-name>/<example-name>/scene.js
+example-gallery/examples/<skill-name>/<example-name>/example.json
 ```
 
 The matching skill example contains only the reusable effect implementation.
@@ -52,9 +52,9 @@ gallery page. Each thumbnail remains a 960 × 540 render at DPR 1.5 (a 1440 ×
 ```
 
 Development provenance belongs in
-[`source_materials/example-traces.json`](../../source_materials/example-traces.json),
+[`source_materials/example-traces.json`](../source_materials/example-traces.json),
 keyed by the discovered `<skill>/<example>` ID. Source IDs must exist in
-[`source_materials/trace-manifest.json`](../../source_materials/trace-manifest.json).
+[`source_materials/trace-manifest.json`](../source_materials/trace-manifest.json).
 Every listed file and copied asset is validated against the reviewed trace.
 Trace boundaries use `reference-extraction` for accepted implementation sources
 and `reviewed-reference` for supporting or negative evidence. Development
@@ -66,7 +66,7 @@ Import the optional runtime contract:
 ```js
 import {
   exampleRuntime,
-} from "/dev/example-gallery/runtime/example-runtime.js"
+} from "/example-gallery/runtime/example-runtime.js"
 ```
 
 Use it to:

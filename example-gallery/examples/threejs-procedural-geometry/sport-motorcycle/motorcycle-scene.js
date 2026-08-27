@@ -1,5 +1,5 @@
 import * as THREE from "three/webgpu";
-import { createStudioStage } from "/dev/example-gallery/support/studio-stage.js";
+import { createStudioStage } from "/example-gallery/support/studio-stage.js";
 import { createSportMotorcycle } from
   "/skills/threejs-procedural-geometry/examples/sport-motorcycle/motorcycle-model.js";
 
