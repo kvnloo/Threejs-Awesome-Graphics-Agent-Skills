@@ -360,6 +360,21 @@
       ]
     },
     {
+      "request": "Build a standalone filmic HDR lens-flare compositor with highlight-derived ghosts, field-angle pupil deformation, spectral rings, localized bloom, and veiling glare.",
+      "routes": [
+        {
+          "skill": "threejs-procedural-vfx",
+          "signals": [
+            "filmic HDR lens-flare compositors",
+            "highlight-derived radial ghosts",
+            "field-angle pupil deformation",
+            "spectral pupil rings",
+            "localized glare and bloom"
+          ]
+        }
+      ]
+    },
+    {
       "request": "Build screen-space frost that accumulates and clears through touch history, blur, and refraction.",
       "routes": [
         {

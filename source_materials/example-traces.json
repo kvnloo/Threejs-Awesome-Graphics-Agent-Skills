@@ -828,6 +828,36 @@
         ]
       }
     ],
+    "threejs-procedural-vfx/filmic-lens-flare": [
+      {
+        "source": "author-local-filmic-lens-flare",
+        "files": [
+          "filmic_lens_flare.html"
+        ],
+        "mechanisms": [
+          "fullscreen WebGPU TSL panorama compositor with top-origin view reconstruction and one-time EXR row inversion",
+          "maximum-HDR-luminance sun detection refined by a 22-percent-threshold weighted centroid",
+          "four highlight-derived radial RGB ghosts plus finite terminal, cool, warm, micro-pupil, and residual-haze families on one optical axis",
+          "object-space field-cosine pupil foreshortening with a stable sensor-space radial direction and bounded off-frame visibility",
+          "spectral pupil ring, source-centred finite diffraction star, three localized bloom nodes, veiling glare, print density, shoulder, vignette, and animated film grain"
+        ],
+        "assets": [
+          {
+            "sourcePath": "bg_1k.exr",
+            "localPath": "dev/example-gallery/examples/threejs-procedural-vfx/filmic-lens-flare/assets/bg_1k.exr"
+          }
+        ],
+        "boundary": "reference-extraction",
+        "divergences": [
+          "the reusable example contains the complete TSL compositor, HDR sun detector, panorama view solver, source projector, exact optical families, bloom nodes, and film response without renderer or interaction lifecycle",
+          "the gallery adapter owns WebGPU renderer configuration, RenderPipeline execution, EXR loading, camera controls, viewport state, and debug-mode selection",
+          "the gallery uses only the supplied 1K equirectangular HDRI; the full-resolution HDRI is not copied into the gallery or distributed skill",
+          "the panorama drag and wheel controls are represented by an orbitable, pannable gallery camera whose distance maps to the exact 26-to-105-degree FOV range",
+          "plate, flare-only, and no-flare diagnostics select existing graph branches or uniforms without changing the final formulas",
+          "visual parity inspection is reserved for the author by explicit instruction"
+        ]
+      }
+    ],
     "threejs-procedural-vfx/raymarched-aurora-curtains": [
       {
         "source": "author-local-aurora",

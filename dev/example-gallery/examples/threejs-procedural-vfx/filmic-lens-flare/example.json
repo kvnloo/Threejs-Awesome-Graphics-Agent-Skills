@@ -1,0 +1,31 @@
+{
+  "title": "Filmic HDR Lens Flare",
+  "description": "A fullscreen TSL compositor that derives finite optical ghost families from an HDR emitter, deforms pupil footprints by true field angle, and combines spectral rings, localized bloom, veiling glare, and a calibrated film response.",
+  "backend": "WebGPU / TSL fullscreen compositor",
+  "techniques": [
+    "HDR highlight-derived radial ghosts",
+    "finite field-angle-deformed pupil families",
+    "spectral pupil ring and source diffraction star",
+    "localized multi-scale bloom and veiling glare",
+    "filmic density, shoulder, vignette, and grain"
+  ],
+  "defaultViewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "defaultDpr": 1,
+  "debugModes": [
+    { "value": "final", "label": "Final" },
+    { "value": "no-flare", "label": "No flare" },
+    { "value": "plate", "label": "HDR plate" },
+    { "value": "flare-only", "label": "Flare only" }
+  ],
+  "controls": [
+    "orbit",
+    "pan",
+    "zoom",
+    "dpr",
+    "debugMode",
+    "capture"
+  ]
+}

@@ -67,6 +67,9 @@ by exact file hashes. The coastal-breaker and soap-bubble intakes were reviewed
 against project state `98453747cc0678f6a5d910f38d7483596a5f9a40`; all code
 and both resolution tiers of the bubble environment are pinned by exact file
 hashes. The author explicitly confirmed that both projects are MIT material.
+The filmic lens-flare intake was reviewed against project state
+`1ad2171695a3594d282558a0d813ce336f11678b`; its compositor and both HDRI tiers
+are pinned by exact hashes, and the author explicitly confirmed MIT licensing.
 
 | File | SHA-256 | Reviewed areas | Mechanisms distilled into |
 | --- | --- | --- | --- |
@@ -76,6 +79,7 @@ hashes. The author explicitly confirmed that both projects are MIT material.
 | `source_materials/motorcycle.html` | `56c43b3083037a69c438a6c46e9441c5f48d2117aa80be57111af9a2ae8697d9` | single-file WebGPU/TSL procedural supersport motorcycle: steering-axis placement, slot-tagged mesh writer, revolve/transport/upright sweeps, panel shells, spoked wheels and petal rotor masks, bore-local engine volumes, superellipse bodywork, catenary chain, signed-volume orientation guard | `$threejs-procedural-geometry` |
 | `source_materials/aurora-snow-desert.html` | `3e021544cbe272db54f120eb0339455dea0fce6034d56ec887b56b0515c1ff07` | single-file WebGL polar-night scene: horizon-reaching aurora slab, warped curtain density, geometric ray steps, per-step jitter, limb extinction, shared perspective/equirectangular radiance, polar-night backdrop and stars, live terrain irradiance, clipmap snow desert, and spindrift | `$threejs-procedural-vfx`; only the aurora implementation is distributed, while all other scene systems remain in the dev gallery shim |
 | `source_materials/aurora-original-shader.js` | `6ea35226f37f08adf0bffe6f10df9e2ecab3e216b8b18aead215a4a7a8a896a3` | author-provided standalone WebGL aurora: finite X ±250 / Z ±500 footprint, 75-step uniform raymarch, exact warped curtain density, screen-space lower fade, sky, stars, tone mapping, and dithering | `$threejs-procedural-vfx`; the finite aurora footprint is consumed, while sky, stars, grading, runtime, and GUI remain outside the skill |
+| `source_materials/lens_flare/filmic_lens_flare.html` | `c3af411ae57edb830d2236c4ab423d964bb6ef49d491230b1f88967444981d5a` | single-file WebGPU/TSL HDR panorama compositor: HDR sun detection, perspective panorama reprojection, finite highlight-derived and synthetic ghost families, field-angle pupil deformation, spectral ring, source star, localized bloom, veiling glare, film response, camera, and controls | `$threejs-procedural-vfx`; the complete effect graph and view/source math are distributed, renderer and controls remain in the gallery adapter, and only `bg_1k.exr` is copied as a dev-only presentation asset |
 | `source_materials/interstellar_wormhole.html` | `b892321b3f2faca884d82b5151e89c1c48cac7691c5e0f86fce8415d216be88f` | single-file WebGL geodesic wormhole renderer: ultrastatic cylindrical-throat metric with lensing shoulders, exact orbital-plane reduction with conserved angular momentum, adaptive RK4 null-geodesic integration, observer sphere frame parallel-transported through the throat, footprint-filtered galactic skies for both exterior regions, cube-face flux-conserving star layers, analytic ringed planet, display-aware bright-source point spread, progressive Halton accumulation, 13-tap bloom pyramid and ACES composite, WASD/pointer camera | `$threejs-raymarched-space-effects`; the integrator, observer, celestial spheres, accumulation and bloom are all distributed, while canvas sizing, the animation loop, and input binding remain in the dev gallery shim |
 | `source_materials/glass_sculpture/index.html` | `756f2753611352239f260f156cfe47e19ab1b73922328cf1635590dca1a939c2` | single-file WebGPU/TSL physically based glass: inverted-depth double-sided back-face data pass, image-space interior exit search, exact unpolarized Fresnel with total internal reflection, Beer-Lambert path absorption, Cauchy per-wavelength index from an (n_d, Abbe) pair, CIE 1931 spectral recombination, shared equirectangular probe, and thickness/normal/Fresnel debug views | `$threejs-procedural-materials`; only the glass system is distributed, while model normalization, camera, controls, GUI, and presentation remain in the dev gallery shim |
 | `source_materials/ocean_beach/index.html` | `ec93e9c6ecb55c13d82c7b2052eb07c73b5e547d70c1c3ac5eb30656665a6af6` | modular WebGPU/TSL coastal ocean: deterministic directional gravity/capillary fields, signed-distance mainland and island, arclength coast tables, conserved-volume swash chains, persistent world/film foam, warped camera-following geometry, wet-sand optics, shared analytic sky, camera, controls, and diagnostics | `$threejs-spectral-ocean`; the complete ocean/coast/swash/foam/sand implementation is distributed, while renderer lifecycle, visible sky mesh, camera, controls, and gallery integration remain in the dev shim |
@@ -173,6 +177,33 @@ samples the unblurred environment texture.
 Environment-only, spherical-membrane and rear-membrane diagnostics toggle
 existing branches and leave final mode unchanged. Both projects are author-
 confirmed MIT material.
+
+### `lens_flare/filmic_lens_flare.html`
+
+Reviewed:
+
+- maximum-HDR-luminance sun detection with a `22%` centroid cutoff;
+- top-origin perspective panorama reprojection with one EXR row inversion;
+- four highlight-derived radial RGB ghosts and finite terminal, cool, warm,
+  micro-pupil, spectral-ring, residual-haze, and source-star families;
+- object-space field-angle pupil foreshortening, stable sensor-space radial
+  direction, behind-camera rejection, and a `0.36`-UV off-frame fade;
+- three localized bloom nodes, warm veil and milk masks, print density,
+  shoulder, vignette, grain, ACES tone mapping, camera, and controls;
+- `bg.exr` and `bg_1k.exr`, both pinned by hash.
+
+Accepted consumption:
+
+- `$threejs-procedural-vfx`
+
+The distributed example owns the complete TSL compositor, HDR sun detector,
+panorama view solver, source projection, exact ghost families, bloom nodes, and
+film response. Renderer lifecycle, EXR loading, camera controls, viewport state,
+and debug selection remain in the dev adapter. On author instruction, only the
+`1K` HDRI is copied into the dev gallery; the full-resolution HDRI is not copied
+into either the gallery or skill. Plate, flare-only, and no-flare diagnostics
+select existing graph outputs or uniforms without changing final formulas.
+Visual parity inspection remains for the author by explicit instruction.
 
 ### `aurora-snow-desert.html` and `aurora-original-shader.js`
 
@@ -1182,7 +1213,7 @@ These sources are paraphrased. Official documentation remains the authority for 
 | `$threejs-atmosphere-aerial-perspective` | `jeantimex/geospatial`, Stellar, `three-geospatial`, atmosphere references |
 | `$threejs-volumetric-clouds` | `jeantimex/geospatial`, `three-geospatial` |
 | `$threejs-raymarched-space-effects` | interstellarThreeJS; local Schwarzschild black-hole HTML |
-| `$threejs-procedural-vfx` | `aurora-snow-desert.html`, `aurora-original-shader.js`, Stellar, `mecs-tower-defense-example`, `holographic-shader-visualizer-three.Js`, `threejs-easyfire` |
+| `$threejs-procedural-vfx` | local filmic lens flare, `aurora-snow-desert.html`, `aurora-original-shader.js`, Stellar, `mecs-tower-defense-example`, `holographic-shader-visualizer-three.Js`, `threejs-easyfire` |
 | `$threejs-temporal-surfaces` | `frozen`, conceptual only |
 | `$threejs-shadow-systems` | MyCraft, `procedural-bank` |
 | `$threejs-screen-space-ambient-occlusion` | MyCraft, `procedural-bank`, `three-geospatial` |

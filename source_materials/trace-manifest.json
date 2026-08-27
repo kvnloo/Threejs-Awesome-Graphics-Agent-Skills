@@ -86,6 +86,19 @@
         "aurora-original-shader.js": "6ea35226f37f08adf0bffe6f10df9e2ecab3e216b8b18aead215a4a7a8a896a3"
       }
     },
+    "author-local-filmic-lens-flare": {
+      "repository": "https://github.com/scottstts/Threejs-Awesome-Graphics-Agent-Skills",
+      "revision": "1ad2171695a3594d282558a0d813ce336f11678b",
+      "license": "MIT",
+      "localDirectory": "lens_flare",
+      "files": {
+        "filmic_lens_flare.html": "c3af411ae57edb830d2236c4ab423d964bb6ef49d491230b1f88967444981d5a"
+      },
+      "assets": {
+        "bg.exr": "896e0979265e93746daf8424fefe28589d6047268ec91e1067f0e14b2a621070",
+        "bg_1k.exr": "7e33754241427076656189a143c78ca33ddc4b4ded9a005851d962326c83a0b7"
+      }
+    },
     "author-local-glass-sculpture": {
       "repository": "https://github.com/scottstts/Threejs-Awesome-Graphics-Agent-Skills",
       "revision": "05e02fe402ce2e48d3bc1fc6807b92cbd24f727f",
